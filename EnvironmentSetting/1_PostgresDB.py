@@ -39,20 +39,14 @@ os.system('docker exec -i postgresdb apt-get install -y git')  # 安裝 git
 os.system('docker exec -i postgresdb bash -c "apt-get install make"')  # 安裝 make
 os.system('docker exec -i postgresdb bash -c "apt-get install gcc -y"')  # 安裝 gcc
 os.system('docker exec -i postgresdb bash -c "apt-get install postgresql-contrib -y"')  # 安裝 postgresql-contrib
-os.system(
-    'docker exec -i postgresdb bash -c "apt-get install postgresql-server-dev-15 -y"')  # 安裝 postgresql-server-dev-15
-os.system(
-    'docker exec -i postgresdb bash -c "cd usr/share/postgresql/15/contrib && git clone https://github.com/pgpartman/pg_partman.git"')  # 下載 pg_partman, https://github.com/pgpartman/pg_partman
-os.system(
-    'docker exec -i postgresdb bash -c "cd usr/share/postgresql/15/contrib/pg_partman && make install"')  # 安裝 pg_partman, https://dbastreet.com/?p=1447
-os.system(
-    'docker exec -i postgresdb bash -c "cd usr/share/postgresql/15/contrib/pg_partman && make installcheck"')  # 測試 pg_partman
+os.system('docker exec -i postgresdb bash -c "apt-get install postgresql-server-dev-15 -y"')  # 安裝 postgresql-server-dev-15
+os.system('docker exec -i postgresdb bash -c "cd usr/share/postgresql/15/contrib && git clone https://github.com/pgpartman/pg_partman.git"')  # 下載 pg_partman, https://github.com/pgpartman/pg_partman
+os.system('docker exec -i postgresdb bash -c "cd usr/share/postgresql/15/contrib/pg_partman && make install"')  # 安裝 pg_partman, https://dbastreet.com/?p=1447
+os.system('docker exec -i postgresdb bash -c "cd usr/share/postgresql/15/contrib/pg_partman && make installcheck"')  # 測試 pg_partman
 
 ############################################## 建立DataBase & Table With Partition ##############################################
-os.system(
-    "docker exec -i postgresdb psql -U postgres -c \"create role postgresuser with login password 'postgresuser';\"")  # 建立 postgresUser
-os.system(
-    'docker exec -i postgresdb psql -U postgres -c "create database postgresdbuser owner postgresuser"')  # 建立 postgresdb1
+os.system("docker exec -i postgresdb psql -U postgres -c \"create role postgresuser with login password 'postgresuser';\"")  # 建立 postgresUser
+os.system('docker exec -i postgresdb psql -U postgres -c "create database postgresdbuser owner postgresuser"')  # 建立 postgresdb1
 os.system('docker exec -i postgresdb psql -U postgres -d postgresdbuser -c "create schema userschema"')  # 建立 schema
 os.system(
     'docker exec -i postgresdb psql -U postgres -d postgresdbuser -c "\
@@ -70,8 +64,7 @@ os.system(
 )  # 建立 Table, https://docs.postgresql.tw/the-sql-language/ddl/table-partitioning#5.11.5.-partitioning-and-constraint-exclusion
 
 # 使用pg_partman建立分區表
-os.system(
-    'docker exec -i postgresdb psql -U postgres -d postgresdbuser -c "create extension pg_partman"')  # 建立 pg_partman, chrome-extension://noogafoofpebimajpfpamcfhoaifemoa/suspended.html#ttl=%E4%BD%BF%E7%94%A8%20pg_partman%20%E6%93%B4%E5%85%85%E5%8A%9F%E8%83%BD%E4%BE%86%E7%AE%A1%E7%90%86%20PostgreSQL%20%E5%88%86%E5%89%B2%E5%8D%80%20-%20Amazon%20Relational%20Database%20Service&pos=0&uri=https://docs.aws.amazon.com/zh_tw/AmazonRDS/latest/UserGuide/PostgreSQL_Partitions.html#PostgreSQL_Partitions.enable
+os.system('docker exec -i postgresdb psql -U postgres -d postgresdbuser -c "create extension pg_partman"')  # 建立 pg_partman, chrome-extension://noogafoofpebimajpfpamcfhoaifemoa/suspended.html#ttl=%E4%BD%BF%E7%94%A8%20pg_partman%20%E6%93%B4%E5%85%85%E5%8A%9F%E8%83%BD%E4%BE%86%E7%AE%A1%E7%90%86%20PostgreSQL%20%E5%88%86%E5%89%B2%E5%8D%80%20-%20Amazon%20Relational%20Database%20Service&pos=0&uri=https://docs.aws.amazon.com/zh_tw/AmazonRDS/latest/UserGuide/PostgreSQL_Partitions.html#PostgreSQL_Partitions.enable
 os.system(
     'docker exec -i postgresdb psql -U postgres -d postgresdbuser -c \
     "select create_parent(\'userschema.userextract\', \'dt\', \'native\', \'daily\', p_start_partition := \'2021-01-01\')"\
