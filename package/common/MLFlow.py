@@ -4,7 +4,11 @@ class dataFlow(object):
     def __init__(self):
         pass
     @classmethod
-    def dataflow(cls, flowFunction, *args, **kwargs):
+    def dataflow(cls, flowFunction, **kwargs):
+        # 將args和kwargs分開
+        args = kwargs['args']
+        del kwargs['args']
+
         # 紀錄當今時間(年月日時分秒)
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 計算程式執行時間
@@ -32,12 +36,11 @@ class MLFlow(object):
         self.mlFlowObject = mlFlowObject
 
     def __getattr__(self, name):
-        # 印出self 的名稱
-        print(f'__getattr__:{name}')
-        def func_(*args, **kwargs):
-            return dataFlow.dataflow(flowFunction=getattr(self.mlFlowObject, name), *args, **kwargs)
+        def func_(*args, **kwargs): # 這裡的*args, **kwargs是為了接收dataFlow.dataflow()的參數
+            kwargs['args'] = args
+            return dataFlow.dataflow(flowFunction = getattr(self.mlFlowObject, name), **kwargs)
         return func_
 
     def __getattribute__(self, item):
-        print(f'__getattribute__:{item}')
         return object.__getattribute__(self, item)
+
