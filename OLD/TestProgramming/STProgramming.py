@@ -4,7 +4,7 @@ from tqdm import tqdm
 from dotenv import load_dotenv, find_dotenv
 import openai
 
-load_dotenv(find_dotenv('../env/.env'))
+load_dotenv(find_dotenv('../../env/.env'))
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 if __name__ == '__main__':

@@ -1,18 +1,18 @@
 from tqdm import tqdm
-from package.mlops.MLFlow import MLFlow
+
 
 # 用工廠模式派生的機器學習流程
-class NoteByFile(MLFlow):
+class translationByChatGPT():
     def __init__(self):
         pass
     @classmethod
-    def rawdata(cls, filePath, alert, **kwargs):
+    def rawdata(cls, filePath, alert=False, **kwargs):
         # 讀txt檔案
         with open(filePath, 'r') as f:
             data = f.readlines()
-            data = ''.join(data)
-            data = data.replace('\n', '')
-            data = data.split('。')
+            data = ' '.join(data)
+            data = data.split('.')
+            data = [_.replace('\n', '') + '.' for _ in data]
             if alert: print(data)
 
         return data
@@ -22,7 +22,7 @@ class NoteByFile(MLFlow):
         sentencesTmp = ''
         setencesALL = []
         for sentence_ in sentences:
-            sentencesTmp += sentence_
+            sentencesTmp += sentence_.replace('\n', '')
             if len(sentencesTmp) < sentenceLength:
                 continue
             else:
@@ -39,7 +39,7 @@ class NoteByFile(MLFlow):
         skipStr = ['「', '」']
         modelObject.api_key = api_key
         for sentence_ in tqdm(sentences):
-            prompt = f"幫我做大綱筆記，大綱筆記要有「題目」、「主題」和「內容」，以下是給你的資料：\n'{sentence_}'"
+            prompt = f"請將以下句子翻譯成中文:\n'{sentence_}'"
             while True:
                 try:
                     completion = modelObject.Completion.create(
@@ -55,8 +55,7 @@ class NoteByFile(MLFlow):
                     for skipStr_ in skipStr:
                         completionStr = completionStr.replace(skipStr_, '')
                     data.append(completionStr)
-                    if alert:
-                        print(completion.choices[0].text)
+                    if alert: print(completion.choices[0].text)
 
                     break
                 except Exception as e:
@@ -64,5 +63,6 @@ class NoteByFile(MLFlow):
                     continue
 
         return data
+
 
 

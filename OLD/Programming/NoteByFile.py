@@ -2,11 +2,11 @@ import os
 
 from dotenv import load_dotenv, find_dotenv
 import openai
-from package.mlops.MLFlow import MLFlow, dataFlow
-from package.mlops.FileSystem import FileSystem
-from Modeling.Application.NoteByFile import NoteByFile
+from package.common.MLFlow import MLFlow, dataFlow
+from package.common.FileSystem import FileSystem
+from OLD.Modeling.Application.NoteByFile import NoteByFile
 os.chdir('./File/MLOPS_w2')
-load_dotenv(find_dotenv('../env/.env'))
+load_dotenv(find_dotenv('../../env/.env'))
 
 '''註冊function'''
 # NoteByFile = MLFlow(NoteByFile())

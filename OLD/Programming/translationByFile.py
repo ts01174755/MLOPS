@@ -1,12 +1,12 @@
-import os
-
+import os; os.chdir('./File/MLOPS_w3')
 from dotenv import load_dotenv, find_dotenv
 import openai
-from package.mlops.MLFlow import MLFlow, dataFlow
-from package.mlops.FileSystem import FileSystem
-from Modeling.Application.translationByChatGPT import translationByChatGPT
-os.chdir('./File/MLOPS_w3')
-load_dotenv(find_dotenv('../env/.env'))
+from package.common.MLFlow import MLFlow, dataFlow
+from package.common.FileSystem import FileSystem
+from OLD.Modeling.Application.translationByChatGPT import translationByChatGPT
+
+
+load_dotenv(find_dotenv('../../env/.env'))
 
 if __name__ == '__main__':
     # 用工廠模式派生多個機器學習流程
