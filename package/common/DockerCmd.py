@@ -13,15 +13,17 @@ class DockerContainer:
     def __init__(self):
         self.shellcmd = shellCmd()
 
-    def dockerRun(self, tag, name, port, volume, envDict = {}, detach=True, interactive=True, TTY=False): # 建立docker container
+    def dockerRun(self, tag, name, port, volume, envDict = {}, detach=True, interactive=True, TTY=False, network=""):  # 建立docker container
         env = ""
         for key, value in envDict.items(): env += f"-e {key}={value} "
         par = "-" if interactive | detach | TTY else ""
         par += "i" if interactive else ""
         par += "d" if detach else ""
         par += "t" if TTY else ""
-        print(f"docker run --name {name} -p {port} -v {volume} {env}{par} {tag}")
-        self.shellcmd.execute(f"docker run --name {name} -p {port} -v {volume} {env}{par} {tag}",shell=True)
+
+        if network != "": network = f"--network {network}"
+        print(f"docker run {par} {env} --name {name} -p {port} -v {volume} {network} {tag}")
+        self.shellcmd.execute(f"docker run {par} {env} --name {name} -p {port} -v {volume} {network} {tag}", shell=True)
 
     def dockerCreate(self, tag, name, port, volume):  # 建立docker container
         print(f"docker create --name {name} -p {port} -v {volume} {tag}")
@@ -94,8 +96,40 @@ class DockerImage:
         print("docker images")
         self.shellcmd.execute("docker images", shell=True)
 
+class dockerNetwork:
+    def __init__(self):
+        self.shellcmd = shellCmd()
+
+    def dockerNetworkCreate(self, name, detach=True): # 建立docker network
+        par = "-" if detach else ""
+        par += "d" if detach else ""
+        print(f"docker network create {par} {name}")
+        self.shellcmd.execute(f"docker network create {par} {name}", shell=True)
+
+    def dockerNetworkRemove(self, name): # 刪除docker network
+        print(f"docker network rm {name}")
+        self.shellcmd.execute(f"docker network rm {name}", shell=True)
+
+    def dockerNetworkConnect(self, name, container): # 將docker container加入docker network
+        print(f"docker network connect {name} {container}")
+        self.shellcmd.execute(f"docker network connect {name} {container}", shell=True)
+
+    def dockerNetworkDisconnect(self, name, container): # 將docker container從docker network移除
+        print(f"docker network disconnect {name} {container}")
+        self.shellcmd.execute(f"docker network disconnect {name} {container}", shell=True)
+
+    def dockerNetworkInspect(self, name): # 查看docker network的詳細資訊，並回傳成Jason格式
+        print(f"docker network inspect {name}")
+        return self.shellcmd.getoutput(f"docker network inspect {name}")
+
+    def dockerNetworkLs(self): # 查看docker network
+        print("docker network ls")
+        self.shellcmd.execute("docker network ls", shell=True)
+
+
+
 # 將docker的操作進行封裝
-class DockerCmd(DockerFileSystem, DockerContainer, DockerImage):
+class DockerCmd(DockerFileSystem, DockerContainer, DockerImage, dockerNetwork):
     def __init__(self):
         self.shellcmd = shellCmd()
 
