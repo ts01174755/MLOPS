@@ -9,6 +9,12 @@ class DockerFileSystem:
         print(f"docker exec -i {name} /bin/bash -c 'echo {data} > {path}'")
         self.shellcmd.execute(f"docker exec -i {name} /bin/bash -c 'echo -e \"{data}\" > {path}'", shell=True)
 
+    def dockerCopy(self, name, filePath, targetPath):
+        # 把資料寫入docker container
+        print(f"docker cp {filePath} {name}:{targetPath}")
+        self.shellcmd.execute(f"docker cp {filePath} {name}:{targetPath}", shell=True)
+
+
 class DockerContainer:
     def __init__(self):
         self.shellcmd = shellCmd()
@@ -125,8 +131,6 @@ class dockerNetwork:
     def dockerNetworkLs(self): # 查看docker network
         print("docker network ls")
         self.shellcmd.execute("docker network ls", shell=True)
-
-
 
 # 將docker的操作進行封裝
 class DockerCmd(DockerFileSystem, DockerContainer, DockerImage, dockerNetwork):

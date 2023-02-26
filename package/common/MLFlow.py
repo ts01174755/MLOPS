@@ -1,4 +1,5 @@
 import time
+from package.common.DockerCmd import DockerCmd
 
 class dataFlow(object):
     def __init__(self):
@@ -34,6 +35,7 @@ class dataFlow(object):
 class MLFlow(object):
     def __init__(self, mlFlowObject=None):
         self.mlFlowObject = mlFlowObject
+        self.dockerdeploy = False
 
     def __getattr__(self, name):
         def func_(*args, **kwargs): # 這裡的*args, **kwargs是為了接收dataFlow.dataflow()的參數
@@ -43,4 +45,27 @@ class MLFlow(object):
 
     def __getattribute__(self, item):
         return object.__getattribute__(self, item)
+
+    def dockerDeploy(self, containerName, gitHubUrl, targetPath):
+        self.dockerdeploy = True
+
+        # 把gitHub上的程式碼clone到docker container中
+        dockerCmd = DockerCmd()
+        dockerCmd.dockerExec(
+            name=containerName,
+            cmd=f'git clone {gitHubUrl} {targetPath}',
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
+
+    def dockerCIUpdate(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
+        if self.dockerdeploy == True:
+            dockerCmd = DockerCmd()
+            dockerCmd.dockerCopy(
+                name=containerName,
+                filePath = filePath,
+                targetPath = targetPath
+            )
+
 
