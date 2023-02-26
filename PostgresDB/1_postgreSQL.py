@@ -16,7 +16,7 @@ if __name__ == '__main__':
         PROJECTNAME = 'PostgresDB'
         mlflow = MLFlow()
         # 用dockerDeploy()把gitHub上的程式碼clone到docker container中
-        mlflow.dockerDeploy(
+        mlflow.deploy(
             containerName='postgres15.2',
             gitHubUrl='https://github.com/ts01174755/MLOPS.git',
             targetPath='/Users/peiyuwu/MLOPS',
@@ -25,14 +25,14 @@ if __name__ == '__main__':
         )
 
         # 用dockerCI()把現在執行的程式更新到container中
-        mlflow.dockerCI(
+        mlflow.CI(
             containerName='postgres15.2',
             filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/PostgresDB/1_postgreSQL.py',
             targetPath='/Users/peiyuwu/MLOPS/PostgresDB/1_postgreSQL.py',
         )
 
         # 用dockerCD()在container中執行程式
-        mlflow.dockerCD(
+        mlflow.CD(
             containerName='postgres15.2',
             interpreter='python3.9',
             targetPath='/Users/peiyuwu/MLOPS/PostgresDB/1_postgreSQL.py',

@@ -46,7 +46,7 @@ class MLFlow(object):
     def __getattribute__(self, item):
         return object.__getattribute__(self, item)
 
-    def dockerDeploy(self, containerName, gitHubUrl, targetPath, envObj, envKeys): # 把gitHub上的程式碼clone到docker container中
+    def deploy(self, containerName, gitHubUrl, targetPath, envObj, envKeys): # 把gitHub上的程式碼clone到docker container中
         self.dockerdeploy = True
 
         # 把gitHub上的程式碼clone到docker container中
@@ -88,7 +88,7 @@ class MLFlow(object):
                     TTY=False,
                 )
 
-    def dockerCI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
+    def CI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
         dockerCmd = DockerCmd()
         # 把現在執行的程式更新到container中
         dockerCmd.dockerCopy(
@@ -97,7 +97,7 @@ class MLFlow(object):
             targetPath = targetPath
         )
 
-    def dockerCD(self, containerName, interpreter, targetPath, paramArgs):
+    def CD(self, containerName, interpreter, targetPath, paramArgs):
         dockerCmd = DockerCmd()
         # 執行container中的程式
         dockerCmd.dockerExec(
