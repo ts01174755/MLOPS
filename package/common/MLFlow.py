@@ -46,11 +46,22 @@ class MLFlow(object):
     def __getattribute__(self, item):
         return object.__getattribute__(self, item)
 
-    def dockerDeploy(self, containerName, gitHubUrl, targetPath):
+    def dockerDeploy(self, containerName, gitHubUrl, targetPath, envObj, envKeys): # 把gitHub上的程式碼clone到docker container中
         self.dockerdeploy = True
 
         # 把gitHub上的程式碼clone到docker container中
         dockerCmd = DockerCmd()
+
+        # 移除container中的舊程式
+        dockerCmd.dockerExec(
+            name=containerName,
+            cmd=f'rm -rf {targetPath}',
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
+
+        # 把gitHub上的程式碼clone到docker container中
         dockerCmd.dockerExec(
             name=containerName,
             cmd=f'git clone {gitHubUrl} {targetPath}',
@@ -58,14 +69,41 @@ class MLFlow(object):
             interactive=True,
             TTY=False,
         )
+        # 建立一個.env檔案，寫入一行"ROLE=containerName"
+        # 在TargetPath中建立一個.env檔案，寫入一行"ROLE=containerName"
+        dockerCmd.dockerExec(
+            name=containerName,
+            cmd=f'bash -c \'echo "ROLE={containerName}" > {targetPath}/env/.env\'',
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
+        for key_ in envObj:
+            if key_ in envKeys:
+                dockerCmd.dockerExec(
+                    name=containerName,
+                    cmd=f'bash -c \'echo "{key_}={envObj[key_]}" >> {targetPath}/env/.env\'',
+                    detach=False,
+                    interactive=True,
+                    TTY=False,
+                )
 
-    def dockerCIUpdate(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
-        if self.dockerdeploy == True:
-            dockerCmd = DockerCmd()
-            dockerCmd.dockerCopy(
-                name=containerName,
-                filePath = filePath,
-                targetPath = targetPath
-            )
+    def dockerCI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
+        dockerCmd = DockerCmd()
+        # 把現在執行的程式更新到container中
+        dockerCmd.dockerCopy(
+            name=containerName,
+            filePath = filePath,
+            targetPath = targetPath
+        )
 
-
+    def dockerCD(self, containerName, interpreter, targetPath, paramArgs):
+        dockerCmd = DockerCmd()
+        # 執行container中的程式
+        dockerCmd.dockerExec(
+            name=containerName,
+            cmd=f'{interpreter} {targetPath} {paramArgs}',
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
