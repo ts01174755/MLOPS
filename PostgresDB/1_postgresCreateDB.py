@@ -20,8 +20,7 @@ if __name__ == '__main__':
             containerName='postgres15.2',
             gitHubUrl='https://github.com/ts01174755/MLOPS.git',
             targetPath='/Users/peiyuwu/MLOPS',
-            envObj=os.environ,
-            envKeys=['OPENAI_API_KEY']
+            envPATH='/Users/peiyuwu/MLOPS/PostgresDB/.env'
         )
 
         # 用dockerCI()把現在執行的程式更新到container中
