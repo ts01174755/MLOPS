@@ -69,14 +69,20 @@ class MLFlow(object):
             interactive=True,
             TTY=False,
         )
-        # 複製.env檔案到container中
-        # 並寫入一行"ROLE=containerName"的設定
+        # 建立一個env資料夾
         dockerCmd.dockerExec(
             name=containerName,
-            cmd=f'cp {envPATH} {targetPath}',
+            cmd=f'mkdir -p {envPATH}',
             detach=False,
             interactive=True,
             TTY=False,
+        )
+        # 複製.env檔案到container中
+        # 並寫入一行"ROLE=containerName"的設定
+        dockerCmd.dockerCopy(
+            name=containerName,
+            filePath = envPATH,
+            targetPath = targetPath
         )
         dockerCmd.dockerExec(
             name=containerName,
