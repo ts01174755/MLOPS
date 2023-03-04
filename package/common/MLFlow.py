@@ -60,7 +60,6 @@ class MLFlow(object):
             interactive=True,
             TTY=False,
         )
-
         # 把gitHub上的程式碼clone到docker container中
         dockerCmd.dockerExec(
             name=containerName,
@@ -72,7 +71,7 @@ class MLFlow(object):
         # 建立一個env資料夾
         dockerCmd.dockerExec(
             name=containerName,
-            cmd=f'mkdir -p {"/".join(envPATH.split("/")[:-1])}',
+            cmd=f'mkdir -p {targetPath}/env',
             detach=False,
             interactive=True,
             TTY=False,
@@ -82,11 +81,11 @@ class MLFlow(object):
         dockerCmd.dockerCopy(
             name=containerName,
             filePath = envPATH,
-            targetPath = targetPath
+            targetPath = f'{targetPath}/env'
         )
         dockerCmd.dockerExec(
             name=containerName,
-            cmd=f'echo "ROLE={containerName}" > {envPATH}',
+            cmd=f'bash -c \'echo "ROLE={containerName}\n" >> {targetPath}/env/.env\'',
             detach=False,
             interactive=True,
             TTY=False,
