@@ -72,7 +72,7 @@ class MLFlow(object):
         # 建立一個env資料夾
         dockerCmd.dockerExec(
             name=containerName,
-            cmd=f'mkdir -p {envPATH}',
+            cmd=f'mkdir -p {envPATH.split("/")[:-1]}',
             detach=False,
             interactive=True,
             TTY=False,
