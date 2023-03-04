@@ -16,30 +16,22 @@ class Database:
                 user=self.user,
                 password=self.password
             )
-        return self.conn
+        return self.conn # 這裡要回傳conn, 不然會出現NoneType has no attribute 'cursor'的錯誤
 
     def close(self):
         if self.conn is not None:
             self.conn.close()
             self.conn = None
 
-class DatabaseProxy:
-    def __init__(self, host, database, user, password):
-        self.db = Database(host, database, user, password)
+    def execute(self, query): # 執行資料庫指令
+        cursor = self.conn.cursor()
+        cursor.execute(query)
+        self.conn.commit() # 這裡要記得commit, 不然資料庫不會更新, 這是一個很常犯的錯誤
+        cursor.close()
 
-    def execute(self, query):
-        conn = self.db.connect()
-        cur = conn.cursor()
-        cur.execute(query)
-        rows = cur.fetchall()
-        cur.close()
+    def query(self, query): # 查詢資料
+        cursor = self.conn.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        cursor.close()
         return rows
-
-    def close(self):
-        self.db.close()
-
-# 測試程式碼
-db_proxy = DatabaseProxy("your_host", "your_database", "your_username", "your_password")
-result = db_proxy.execute("SELECT * FROM your_table")
-print(result)
-db_proxy.close()
