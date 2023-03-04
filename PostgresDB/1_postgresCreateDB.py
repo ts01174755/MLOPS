@@ -14,53 +14,36 @@ if __name__ == '__main__':
 
     load_dotenv(find_dotenv('env/.env'))
 
+    # 連接儲存爬蟲DataBase
     db = MLFlow(Database(
         host=os.getenv('POSTGRES_HOST'),
         user=os.getenv('POSTGRES_USER'),
         password=os.getenv('POSTGRES_PASSWORD'),
-        database='testdb'
+        database='originaldb'
     ))
-
     db.connect()
 
+    # 建立儲存爬蟲Schema
+    db.execute('CREATE SCHEMA IF NOT EXISTS crawler;') # 建立Schema
 
-    # # dockerCmd postgres:15.2 - 建立資料庫
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd="psql -U postgres -c \'CREATE DATABASE testdb;\'",
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立資料庫 testdb
-    #
-    # # dockerCmd postgres:15.2 - 建立Schema
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd="psql -U postgres -d testdb -c \'CREATE SCHEMA testschema;\'",
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立Schema testschema
-    #
-    # # dockerCmd postgres:15.2 - 建立資料表
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd="psql -U postgres -d testdb -c \'CREATE TABLE testtable (id serial PRIMARY KEY, name varchar(50), value int);\'",
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立資料表 testtable
-    #
-    # # dockerCmd postgres:15.2 - 刪除資料表
-    # dockerCmd.dockerExec(name='postgres15.2', cmd="psql -U postgres -d testdb -c \'DROP TABLE testtable;\'", detach=False, interactive=True, TTY=False)  # 刪除資料表 testtable
-    #
-    # # dockerCmd postgres:15.2 - 建立分區表
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd='bash -c "psql -U postgres -d testdb -c \'CREATE TABLE testtable (id serial, name varchar(50), value int, PRIMARY KEY (id, value)) PARTITION BY RANGE (value);\'"',
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立資料表 testtable
-    #
+    # 建立儲存爬蟲資料表
+    db.execute('''
+        CREATE TABLE IF NOT EXISTS crawler.original (\
+        id serial PRIMARY KEY, dt timestamp, memo varchar(50)\
+        , commondata varchar(50), commondata2 varchar(50), commondata3 varchar(50), commondata4 varchar(50), commondata5 varchar(50)\
+        , commondata6 varchar(50), commondata7 varchar(50), commondata8 varchar(50), commondata9 varchar(50), commondata10 varchar(50)\
+        , uniqueint int, uniqueint2 int, uniqueint3 int, uniqueint4 int, uniqueint5 int\
+        , uniqueint6 int, uniqueint7 int, uniqueint8 int, uniqueint9 int, uniqueint10 int\
+        , uniquefloat float, uniquefloat2 float, uniquefloat3 float, uniquefloat4 float, uniquefloat5 float\
+        , uniquefloat6 float, uniquefloat7 float, uniquefloat8 float, uniquefloat9 float, uniquefloat10 float\
+        , uniquefloat11 float, uniquefloat12 float, uniquefloat13 float, uniquefloat14 float, uniquefloat15 float\
+        , uniquestring text, uniquestring2 text, uniquestring3 text, uniquestring4 text, uniquestring5 text\
+        , uniquejason json\
+        );
+    ''') # 建立資料表
 
-    # 測試資料庫連線
-    db.connect()
-    db.execute('CREATE TABLE IF NOT EXISTS testschema.test (num integer, data varchar);') # 建立資料表
-    db.execute("INSERT INTO testschema.test (num, data) VALUES (100, 'abc');")  # 插入資料
-    rows = db.query('SELECT * FROM testschema.test;')
-    db.execute('DROP TABLE IF EXISTS testschema.test;') # 如果存在就刪除
+    # 插入測試資料
+    db.execute("INSERT INTO crawler.original (dt, memo, commondata, uniqueint, uniquefloat, uniquestring, uniquejason) VALUES (now(), 'test', 'test', 1, 1.1, 'test', '{\"test\":1}');")  # 插入資料
+    # 刪除測試資料
+    db.execute('DELETE FROM crawler.original WHERE memo = \'test\';') # 刪除資料
     db.close()
-    print(rows)

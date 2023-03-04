@@ -56,7 +56,6 @@ if __name__ == '__main__':
     # 把cmdStr的資料寫進docker裡
     dockerCmd.dockerWrite(name='postgres15.2', path='/Users/peiyuwu/dockerInspect.txt', data=cmdStr) # 查看 container 資訊，找出Networks.bridge.IPAddress
     os.system('open http://localhost:5050/') # 開啟 pgadmin4
-
     # >> 點擊 "Add Server"
     # >> Name: postgresdb
     # >> Host name/address: {Networks.bridge.IPAddress}
@@ -66,49 +65,24 @@ if __name__ == '__main__':
     # >> Password: postgres
 
     ####################################################################################################################
-    # # dockerCmd postgres:15.2 - 建立資料庫
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd="psql -U postgres -c \'CREATE DATABASE testdb;\'",
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立資料庫 testdb
-    #
-    # # dockerCmd postgres:15.2 - 建立Schema
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd="psql -U postgres -d testdb -c \'CREATE SCHEMA testschema;\'",
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立Schema testschema
-    #
-    # # dockerCmd postgres:15.2 - 建立資料表
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd="psql -U postgres -d testdb -c \'CREATE TABLE testtable (id serial PRIMARY KEY, name varchar(50), value int);\'",
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立資料表 testtable
-    #
-    # # dockerCmd postgres:15.2 - 刪除資料表
-    # dockerCmd.dockerExec(name='postgres15.2', cmd="psql -U postgres -d testdb -c \'DROP TABLE testtable;\'", detach=False, interactive=True, TTY=False)  # 刪除資料表 testtable
-    #
-    # # dockerCmd postgres:15.2 - 建立分區表
-    # dockerCmd.dockerExec(
-    #     name='postgres15.2',
-    #     cmd='bash -c "psql -U postgres -d testdb -c \'CREATE TABLE testtable (id serial, name varchar(50), value int, PRIMARY KEY (id, value)) PARTITION BY RANGE (value);\'"',
-    #     detach=False, interactive=True, TTY=False
-    # )  # 建立資料表 testtable
-    #
+    # dockerCmd postgres:15.2 - 建立資料庫
+    dockerCmd.dockerExec(
+        name='postgres15.2',
+        cmd="psql -U postgres -c \'CREATE DATABASE originaldb;\'",
+        detach=False, interactive=True, TTY=False
+    )  # 建立資料庫 crawlerdb
 
 
     ####################################################################################################################
     # 安裝python3.8.16
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y wget"', detach=False, interactive=True, TTY=False)  # 安裝 wget
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "wget https://www.python.org/ftp/python/3.8.16/Python-3.8.16.tgz"', detach=False, interactive=True, TTY=False)  # 下載 python3.8.16
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "tar -zxvf Python-3.8.16.tgz"', detach=False, interactive=True, TTY=False)  # 解壓縮 python3.8.16
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "cd Python-3.8.16 && ./configure --enable-optimizations"', detach=False, interactive=True, TTY=False)  # 安裝 python3.8.16
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "cd Python-3.8.16 && make altinstall"', detach=False, interactive=True, TTY=False)  # 安裝 python3.8.16
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "python3.8 -V"', detach=False, interactive=True, TTY=False)  # 查看 python3.8.16 版本
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y python3-pip"', detach=False, interactive=True, TTY=False)  # 安裝 pip3
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y wget"', detach=False, interactive=True, TTY=False)  # 安裝 wget
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "wget https://www.python.org/ftp/python/3.8.16/Python-3.8.16.tgz"', detach=False, interactive=True, TTY=False)  # 下載 python3.8.16
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "tar -zxvf Python-3.8.16.tgz"', detach=False, interactive=True, TTY=False)  # 解壓縮 python3.8.16
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "cd Python-3.8.16 && ./configure --enable-optimizations"', detach=False, interactive=True, TTY=False)  # 安裝 python3.8.16
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "cd Python-3.8.16 && make altinstall"', detach=False, interactive=True, TTY=False)  # 安裝 python3.8.16
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "python3.8 -V"', detach=False, interactive=True, TTY=False)  # 查看 python3.8.16 版本
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y python3-pip"', detach=False, interactive=True, TTY=False)  # 安裝 pip3
 
     # python 常用安裝包
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
-    # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install psycopg2-binary"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
+    dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install psycopg2-binary"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
