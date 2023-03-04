@@ -25,13 +25,13 @@ if __name__ == '__main__':
     # 用dockerCI()把現在執行的程式更新到container中
     mlflow.CI(
         containerName='postgres15.2',
-        filePath='/2_PostgresDB/0_postgresCICD.py',
+        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/2_PostgresDB/0_postgresCICD.py',
         targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/0_postgresCICD.py',
     )
 
     mlflow.CI(
         containerName='postgres15.2',
-        filePath='/2_PostgresDB/1_postgresCreateDB.py',
+        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
         targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
     )
 
