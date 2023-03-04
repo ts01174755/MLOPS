@@ -46,7 +46,7 @@ class MLFlow(object):
     def __getattribute__(self, item):
         return object.__getattribute__(self, item)
 
-    def deploy(self, containerName, gitHubUrl, targetPath, envObj, envKeys): # 把gitHub上的程式碼clone到docker container中
+    def deploy(self, containerName, gitHubUrl, targetPath, envPATH): # 把gitHub上的程式碼clone到docker container中
         self.dockerdeploy = True
 
         # 把gitHub上的程式碼clone到docker container中
@@ -69,24 +69,23 @@ class MLFlow(object):
             interactive=True,
             TTY=False,
         )
-        # 建立一個.env檔案，寫入一行"ROLE=containerName"
-        # 在TargetPath中建立一個.env檔案，寫入一行"ROLE=containerName"
+        # 複製.env檔案到container中
+        # 並寫入一行"ROLE=containerName"的設定
         dockerCmd.dockerExec(
             name=containerName,
-            cmd=f'bash -c \'echo "ROLE={containerName}" > {targetPath}/env/.env\'',
+            cmd=f'cp {envPATH} {targetPath}',
             detach=False,
             interactive=True,
             TTY=False,
         )
-        for key_ in envObj:
-            if key_ in envKeys:
-                dockerCmd.dockerExec(
-                    name=containerName,
-                    cmd=f'bash -c \'echo "{key_}={envObj[key_]}" >> {targetPath}/env/.env\'',
-                    detach=False,
-                    interactive=True,
-                    TTY=False,
-                )
+        dockerCmd.dockerExec(
+            name=containerName,
+            cmd=f'echo "ROLE={containerName}" > {envPATH}',
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
+
 
     def CI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
         dockerCmd = DockerCmd()

@@ -50,6 +50,22 @@ if __name__ == '__main__':
     # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y python"', detach=False, interactive=True, TTY=False) # 安裝python
     # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y vim"', detach=False, interactive=True, TTY=False) # 安裝pip
 
+    # # 查看 postgres:15.2 的 container 的資訊
+    # cmdStr = dockerCmd.dockerInspect(name='postgres15.2') # 查看 container 資訊，找出Networks.bridge.IPAddress
+    #
+    # # 把cmdStr的資料寫進docker裡
+    # dockerCmd.dockerWrite(name='postgres15.2', path='/Users/peiyuwu/dockerInspect.txt', data=cmdStr) # 查看 container 資訊，找出Networks.bridge.IPAddress
+    # os.system('open http://localhost:5050/') # 開啟 pgadmin4
+    #
+    # # >> 點擊 "Add Server"
+    # # >> Name: postgresdb
+    # # >> Host name/address: {Networks.bridge.IPAddress}
+    # # >> Port: 5432
+    # # >> Maintenance database: postgres
+    # # >> Username: postgres
+    # # >> Password: postgres
+
+    ####################################################################################################################
     # # dockerCmd postgres:15.2 - 建立資料庫
     # dockerCmd.dockerExec(
     #     name='postgres15.2',
@@ -81,22 +97,9 @@ if __name__ == '__main__':
     #     detach=False, interactive=True, TTY=False
     # )  # 建立資料表 testtable
     #
-    # # 查看 postgres:15.2 的 container 的資訊
-    # cmdStr = dockerCmd.dockerInspect(name='postgres15.2') # 查看 container 資訊，找出Networks.bridge.IPAddress
-    #
-    # # 把cmdStr的資料寫進docker裡
-    # dockerCmd.dockerWrite(name='postgres15.2', path='/Users/peiyuwu/dockerInspect.txt', data=cmdStr) # 查看 container 資訊，找出Networks.bridge.IPAddress
-    # os.system('open http://localhost:5050/') # 開啟 pgadmin4
-    #
-    # # >> 點擊 "Add Server"
-    # # >> Name: postgresdb
-    # # >> Host name/address: {Networks.bridge.IPAddress}
-    # # >> Port: 5432
-    # # >> Maintenance database: postgres
-    # # >> Username: postgres
-    # # >> Password: postgres
 
-    ############################################################################################################
+
+    ####################################################################################################################
     # 安裝python3.8.16
     # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "apt-get install -y wget"', detach=False, interactive=True, TTY=False)  # 安裝 wget
     # dockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "wget https://www.python.org/ftp/python/3.8.16/Python-3.8.16.tgz"', detach=False, interactive=True, TTY=False)  # 下載 python3.8.16
