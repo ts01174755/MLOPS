@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # 用dockerCD()在container中執行程式
     mlflow.CD(
         containerName='mongodb',
-        interpreter='python3.9',
+        interpreter='python3.8',
         targetPath='/Users/peiyuwu/MLOPS/1_MongoDB/1_mongoCreateDB.py',
         paramArgs=f'/Users/peiyuwu/MLOPS'
     )

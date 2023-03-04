@@ -14,8 +14,8 @@ if __name__ == '__main__':
     dockerCmd = MLFlow(DockerCmd())
 
     # dockerCmd pull Images
-    dockerCmd.dockerPull(tag='mongo:5.0.15')
-    dockerCmd.dockerPull(tag='mongo-express:0.54.0')
+    # dockerCmd.dockerPull(tag='mongo:5.0.15')
+    # dockerCmd.dockerPull(tag='mongo-express:0.54.0')
 
     # dockerCmd 建立網路
     dockerCmd.dockerNetworkRemove(name='mongo-net')
@@ -49,3 +49,21 @@ if __name__ == '__main__':
         detach=True, interactive=False, TTY=False
     )
     os.system('open http://localhost:8081/')
+
+    # ####################################################################################################################
+    # # dockerCmd mongodb - 基礎安裝
+    dockerCmd.dockerExec(name='mongodb', cmd='apt-get update', detach=False, interactive=True, TTY=False)  # 更新 apt-get
+    dockerCmd.dockerExec(name='mongodb', cmd='apt-get install -y git', detach=False, interactive=True, TTY=False)  # 安裝 git
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install make"', detach=False, interactive=True, TTY=False)  # 安裝 make
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y vim"', detach=False, interactive=True, TTY=False) # 安裝pip
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y libpq-dev"', detach=False, interactive=True, TTY=False)  # 安裝 libpq-dev
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install gcc -y"', detach=False, interactive=True, TTY=False)  # 安裝 gcc
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python"', detach=False, interactive=True, TTY=False) # 安裝python
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3"', detach=False, interactive=True, TTY=False) # 安裝python
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3-pip"', detach=False, interactive=True, TTY=False)  # 安裝 pip3
+
+    ####################################################################################################################
+    # # python 常用安裝包
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install psycopg2"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2
+    dockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install psycopg2-binary"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary

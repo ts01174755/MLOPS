@@ -1,6 +1,5 @@
 import os; import sys;
 if len(sys.argv) > 1:
-    print(sys.argv[1])
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
 from package.common.MLFlow import MLFlow
