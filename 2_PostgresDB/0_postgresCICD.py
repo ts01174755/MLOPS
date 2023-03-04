@@ -25,20 +25,20 @@ if __name__ == '__main__':
     # 用dockerCI()把現在執行的程式更新到container中
     mlflow.CI(
         containerName='postgres15.2',
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/PostgresDB/0_postgresCICD.py',
-        targetPath='/Users/peiyuwu/MLOPS/PostgresDB/0_postgresCICD.py',
+        filePath='/2_PostgresDB/0_postgresCICD.py',
+        targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/0_postgresCICD.py',
     )
 
     mlflow.CI(
         containerName='postgres15.2',
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/PostgresDB/1_postgresCreateDB.py',
-        targetPath='/Users/peiyuwu/MLOPS/PostgresDB/1_postgresCreateDB.py',
+        filePath='/2_PostgresDB/1_postgresCreateDB.py',
+        targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
     )
 
     # 用dockerCD()在container中執行程式
     mlflow.CD(
         containerName='postgres15.2',
         interpreter='python3.9',
-        targetPath='/Users/peiyuwu/MLOPS/PostgresDB/1_postgresCreateDB.py',
+        targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
         paramArgs=f'/Users/peiyuwu/MLOPS'
     )

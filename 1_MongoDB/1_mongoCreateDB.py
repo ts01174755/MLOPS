@@ -11,10 +11,8 @@ from dotenv import load_dotenv, find_dotenv
 
 
 if __name__ == '__main__':
-
-    load_dotenv(find_dotenv('env/.env'))
-
     # 連接儲存爬蟲DataBase
+    load_dotenv(find_dotenv('env/.env'))
     db = MLFlow(Database(
         host=os.getenv('POSTGRES_HOST'),
         user=os.getenv('POSTGRES_USER'),
@@ -44,6 +42,10 @@ if __name__ == '__main__':
 
     # 插入測試資料
     db.execute("INSERT INTO crawler.original (dt, memo, commondata, uniqueint, uniquefloat, uniquestring, uniquejason) VALUES (now(), 'test', 'test', 1, 1.1, 'test', '{\"test\":1}');")  # 插入資料
+    # 撈取測試資料
+    rows = db.query('SELECT * FROM crawler.original WHERE memo = \'test\';') # 撈取資料
+    print(rows)
+
     # 刪除測試資料
     db.execute('DELETE FROM crawler.original WHERE memo = \'test\';') # 刪除資料
     db.close()
