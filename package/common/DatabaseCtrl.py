@@ -1,6 +1,8 @@
+from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError, PyMongoError
 import psycopg2
 
-class Database:
+class PostgresCtrl:
     def __init__(self, host, database, user, password):
         self.host = host
         self.database = database
@@ -35,3 +37,77 @@ class Database:
         rows = cursor.fetchall()
         cursor.close()
         return rows
+
+
+class MongoDBCtrl:
+    def __init__(self, host, port, database_name):
+        self.client = MongoClient(host, port)
+        self.database = self.client[database_name]
+
+    def insert_document(self, collection_name, document):
+        collection = self.database[collection_name]
+        try:
+            document_id = collection.insert_one(document).inserted_id
+            return {'success': True, 'message': 'Document inserted successfully', 'document_id': str(document_id)}
+        except DuplicateKeyError as e:
+            return {'success': False, 'message': str(e)}
+        except PyMongoError as e:
+            return {'success': False, 'message': str(e)}
+
+    def find_document(self, collection_name, query, projection=None, limit=None, sort=None):
+        collection = self.database[collection_name]
+        results = collection.find(query, projection=projection, limit=limit, sort=sort)
+        return [result for result in results]
+
+    def find_one_document(self, collection_name, query, projection=None):
+        collection = self.database[collection_name]
+        result = collection.find_one(query, projection=projection)
+        return result
+
+    def update_document(self, collection_name, query, update):
+        collection = self.database[collection_name]
+        result = collection.update_many(query, update)
+        return {'success': True, 'message': 'Documents updated successfully', 'modified_count': result.modified_count}
+
+    def delete_document(self, collection_name, query):
+        collection = self.database[collection_name]
+        result = collection.delete_many(query)
+        return {'success': True, 'message': 'Documents deleted successfully', 'deleted_count': result.deleted_count}
+
+    def count_documents(self, collection_name, query):
+        collection = self.database[collection_name]
+        count = collection.count_documents(query)
+        return count
+
+    def create_index(self, collection_name, key_or_list, unique=False):
+        collection = self.database[collection_name]
+        index_name = collection.create_index(key_or_list, unique=unique)
+        return index_name
+
+    def list_indexes(self, collection_name):
+        collection = self.database[collection_name]
+        indexes = collection.index_information()
+        return indexes
+
+    def drop_index(self, collection_name, index_name):
+        collection = self.database[collection_name]
+        collection.drop_index(index_name)
+        return {'success': True, 'message': 'Index dropped successfully'}
+
+    def create_collection(self, collection_name):
+        collection = self.database.create_collection(collection_name)
+        return {'success': True, 'message': 'Collection created successfully'}
+
+    def list_collections(self):
+        collections = self.database.list_collection_names()
+        return collections
+
+    def drop_collection(self, collection_name):
+        collection = self.database[collection_name]
+        collection.drop()
+        return {'success': True, 'message': 'Collection dropped successfully'}
+
+    def aggregate(self, collection_name, pipeline):
+        collection = self.database[collection_name]
+        results = collection.aggregate(pipeline)
+        return [result for result in results]

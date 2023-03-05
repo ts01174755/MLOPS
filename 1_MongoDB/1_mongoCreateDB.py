@@ -4,7 +4,7 @@ if len(sys.argv) > 1:
     sys.path.append(os.getcwd())
 from package.common.MLFlow import MLFlow
 from package.common.DockerCmd import DockerCmd
-from package.common.DatabaseCtrl import Database
+from package.common.DatabaseCtrl import MongoDBCtrl
 from dotenv import load_dotenv, find_dotenv
 
 

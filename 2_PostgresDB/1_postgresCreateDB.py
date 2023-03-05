@@ -5,7 +5,7 @@ if len(sys.argv) > 1:
     sys.path.append(os.getcwd())
 from package.common.MLFlow import MLFlow
 from package.common.DockerCmd import DockerCmd
-from package.common.DatabaseCtrl import Database
+from package.common.DatabaseCtrl import PostgresCtrl
 from dotenv import load_dotenv, find_dotenv
 
 
@@ -13,7 +13,7 @@ from dotenv import load_dotenv, find_dotenv
 if __name__ == '__main__':
     # 連接儲存爬蟲DataBase
     load_dotenv(find_dotenv('env/.env'))
-    db = MLFlow(Database(
+    db = MLFlow(PostgresCtrl(
         host=os.getenv('POSTGRES_HOST'),
         user=os.getenv('POSTGRES_USER'),
         password=os.getenv('POSTGRES_PASSWORD'),
