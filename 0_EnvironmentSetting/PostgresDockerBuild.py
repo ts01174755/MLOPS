@@ -2,7 +2,7 @@ import os; os.chdir(os.path.dirname(os.path.abspath(__file__)).split('PostgresDB
 import sys; sys.path.append(os.getcwd())
 from package.common.MLFlow import MLFlow
 from package.common.DockerCmd import DockerCmd
-
+import time
 # 安裝postgres
 # >> https://medium.com/alberthg-docker-notes/docker%E7%AD%86%E8%A8%98-%E9%80%B2%E5%85%A5container-%E5%BB%BA%E7%AB%8B%E4%B8%A6%E6%93%8D%E4%BD%9C-postgresql-container-d221ba39aaec
 # >> https://docs.aws.amazon.com/zh_tw/AmazonRDS/latest/AuroraUserGuide/babelfish-connect-PostgreSQL.html
@@ -36,6 +36,7 @@ if __name__ == '__main__':
         envDict={'PGADMIN_DEFAULT_EMAIL': 'pgadmin4@gmail.com', 'PGADMIN_DEFAULT_PASSWORD': 'pgadmin4'},
         detach=True, interactive=False, TTY=False
     )
+    time.sleep(3)
 
     # 查看 postgres:15.2 的 container 的資訊
     cmdStr = dockerCmd.dockerInspect(name='postgres15.2') # 查看 container 資訊，找出Networks.bridge.IPAddress

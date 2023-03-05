@@ -23,6 +23,24 @@ if __name__ == '__main__':
     )
 
     # 用dockerCI()把現在執行的程式更新到container中
+    # package/common - CI
+    mlflow.CI(
+        containerName='postgres15.2',
+        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DatabaseCtrl.py',
+        targetPath='/Users/peiyuwu/MLOPS/package/common/DatabaseCtrl.py',
+    )
+    mlflow.CI(
+        containerName='postgres15.2',
+        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DockerCmd.py',
+        targetPath='/Users/peiyuwu/MLOPS/package/common/DockerCmd.py',
+    )
+    mlflow.CI(
+        containerName='postgres15.2',
+        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/MLFlow.py',
+        targetPath='/Users/peiyuwu/MLOPS/package/common/MLFlow.py',
+    )
+
+    # 用dockerCI()把現在執行的程式更新到container中
     mlflow.CI(
         containerName='postgres15.2',
         filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/2_PostgresDB/0_postgresCICD.py',

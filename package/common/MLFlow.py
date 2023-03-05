@@ -83,13 +83,6 @@ class MLFlow(object):
             filePath = envPATH,
             targetPath = f'{targetPath}/env'
         )
-        dockerCmd.dockerExec(
-            name=containerName,
-            cmd=f'bash -c \'echo "ROLE={containerName}\n" >> {targetPath}/env/.env\'',
-            detach=False,
-            interactive=True,
-            TTY=False,
-        )
 
     def CI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
         dockerCmd = DockerCmd()

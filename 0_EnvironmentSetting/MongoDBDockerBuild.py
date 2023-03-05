@@ -2,6 +2,7 @@ import os; os.chdir(os.path.dirname(os.path.abspath(__file__)).split('PostgresDB
 import sys; sys.path.append(os.getcwd())
 from package.common.MLFlow import MLFlow
 from package.common.DockerCmd import DockerCmd
+import time
 
 # 安裝postgres
 # >> https://medium.com/alberthg-docker-notes/docker%E7%AD%86%E8%A8%98-%E9%80%B2%E5%85%A5container-%E5%BB%BA%E7%AB%8B%E4%B8%A6%E6%93%8D%E4%BD%9C-postgresql-container-d221ba39aaec
@@ -48,10 +49,17 @@ if __name__ == '__main__':
         network='mongo-net',
         detach=True, interactive=False, TTY=False
     )
+    time.sleep(3)
     os.system('open http://localhost:8081/')
+    ####################################################################################################################
+    # MongoDB - 建立資料庫
+    # >> 用mongo_express建Database
+    # >> 或用mongodb Shell建Database
+    # $ mongo -u mongodb -p mongodb --authenticationDatabase admin
+    # > use originaldb
 
     # ####################################################################################################################
-    # # dockerCmd mongodb - 基礎安裝
+    # dockerCmd mongodb - 基礎安裝
     dockerCmd.dockerExec(name='mongodb', cmd='apt-get update', detach=False, interactive=True, TTY=False)  # 更新 apt-get
     dockerCmd.dockerExec(name='mongodb', cmd='apt-get install -y git', detach=False, interactive=True, TTY=False)  # 安裝 git
     dockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install make"', detach=False, interactive=True, TTY=False)  # 安裝 make
