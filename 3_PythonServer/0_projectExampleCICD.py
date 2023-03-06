@@ -12,7 +12,7 @@ from dotenv import load_dotenv, find_dotenv
 
 if __name__ == '__main__':
     CONTAINERNAME = 'python3.8.16'
-    PROJECTNAME = '0_ProjectExample'
+    PROJECTNAME = '3_PythonServer'
 
     mlflow = MLFlow()
     # 用dockerDeploy()把gitHub上的程式碼clone到docker container中
