@@ -19,7 +19,7 @@ class DockerContainer:
     def __init__(self):
         self.shellcmd = shellCmd()
 
-    def dockerRun(self, tag, name, port, volume, envDict = {}, detach=True, interactive=True, TTY=False, network=""):  # 建立docker container
+    def dockerRun(self, tag, name, volume, port="", envDict = {}, detach=True, interactive=True, TTY=False, network=""):  # 建立docker container
         env = ""
         for key, value in envDict.items(): env += f"-e {key}={value} "
         par = "-" if interactive | detach | TTY else ""
@@ -27,9 +27,10 @@ class DockerContainer:
         par += "d" if detach else ""
         par += "t" if TTY else ""
 
+        if port != "": port = f"-p {port}"
         if network != "": network = f"--network {network}"
-        print(f"docker run {par} {env} --name {name} -p {port} -v {volume} {network} {tag}")
-        self.shellcmd.execute(f"docker run {par} {env} --name {name} -p {port} -v {volume} {network} {tag}", shell=True)
+        print(f"docker run {par} {port} {env} {network} --name {name} -v {volume} {tag}")
+        self.shellcmd.execute(f"docker run {par} {port} {env} {network} --name {name} -v {volume} {tag}", shell=True)
 
     def dockerCreate(self, tag, name, port, volume):  # 建立docker container
         print(f"docker create --name {name} -p {port} -v {volume} {tag}")
