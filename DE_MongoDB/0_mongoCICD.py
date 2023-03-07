@@ -11,12 +11,13 @@ from dotenv import load_dotenv, find_dotenv
 
 
 if __name__ == '__main__':
-
+    CONTAINERNAME = 'mongodb'
+    PROJECTNAME = 'DE_MongoDB'
 
     mlflow = MLFlow()
     # 用dockerDeploy()把gitHub上的程式碼clone到docker container中
     mlflow.deploy(
-        containerName='postgres15.2',
+        containerName=CONTAINERNAME,
         gitHubUrl='https://github.com/ts01174755/MLOPS.git',
         targetPath='/Users/peiyuwu/MLOPS',
         envPATH='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env/.env'
@@ -25,38 +26,56 @@ if __name__ == '__main__':
     # 用dockerCI()把現在執行的程式更新到container中
     # package/common - CI
     mlflow.CI(
-        containerName='postgres15.2',
+        containerName=CONTAINERNAME,
         filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DatabaseCtrl.py',
         targetPath='/Users/peiyuwu/MLOPS/package/common/DatabaseCtrl.py',
     )
     mlflow.CI(
-        containerName='postgres15.2',
+        containerName=CONTAINERNAME,
         filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DockerCmd.py',
         targetPath='/Users/peiyuwu/MLOPS/package/common/DockerCmd.py',
     )
     mlflow.CI(
-        containerName='postgres15.2',
+        containerName=CONTAINERNAME,
         filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/MLFlow.py',
         targetPath='/Users/peiyuwu/MLOPS/package/common/MLFlow.py',
     )
 
-    # 用dockerCI()把現在執行的程式更新到container中
+    # mongoDB - CI
+    FILENAME = '0_mongoCICD.py'
     mlflow.CI(
-        containerName='postgres15.2',
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/2_PostgresDB/0_postgresCICD.py',
-        targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/0_postgresCICD.py',
+        containerName=CONTAINERNAME,
+        filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{FILENAME}',
+        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
     )
 
+    FILENAME = '1_mongoCreateDB.py'
     mlflow.CI(
-        containerName='postgres15.2',
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
-        targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
+        containerName=CONTAINERNAME,
+        filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{FILENAME}',
+        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
+    )
+
+    FILENAME = '2_STCrawler.py'
+    mlflow.CI(
+        containerName=CONTAINERNAME,
+        filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{FILENAME}',
+        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
     )
 
     # 用dockerCD()在container中執行程式
+    # FILENAME = '1_mongoCreateDB.py'
+    # mlflow.CD(
+    #     containerName=CONTAINERNAME,
+    #     interpreter='python3.8',
+    #     targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
+    #     paramArgs=f'/Users/peiyuwu/MLOPS'
+    # )
+
+    FILENAME = '2_STCrawler.py'
     mlflow.CD(
-        containerName='postgres15.2',
-        interpreter='python3.9',
-        targetPath='/Users/peiyuwu/MLOPS/2_PostgresDB/1_postgresCreateDB.py',
+        containerName=CONTAINERNAME,
+        interpreter='python3.8',
+        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
         paramArgs=f'/Users/peiyuwu/MLOPS'
     )
