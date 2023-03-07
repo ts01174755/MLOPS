@@ -13,6 +13,12 @@ from dotenv import load_dotenv, find_dotenv
 if __name__ == '__main__':
     print('Here is MongoCrwaler')
 
+    # 爬蟲
+    URL = 'http://roma254-1.kddns.info:8022/Course/AdminCourses.php'
+    stCrawler = MLFlow(STCrawler())
+    crawlerResText = stCrawler.get_st_all_data(URL)
+    # print(crawlerResText)
+
     # 連接MongoDB
     load_dotenv(find_dotenv('env/.env'))
     mongodb = MLFlow(MongoDBCtrl(
@@ -22,10 +28,5 @@ if __name__ == '__main__':
         port=int(os.getenv('MongoDB_PORT')),
         database_name='originaldb'
     ))
-
-    URL = 'http://roma254-1.kddns.info:8022/Course/AdminCourses.php'
-    stCrawler = MLFlow(STCrawler())
-    crawlerResText = stCrawler.get_st_all_data(URL)
-    print(crawlerResText)
-    print(mongodb.insert_document('tempdb', {"URL":URL, "HTML_SOUP": crawlerResText}))
+    mongodb.insert_document('tempdb', {"URL": URL, "HTML_SOUP": crawlerResText})
 
