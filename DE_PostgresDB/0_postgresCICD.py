@@ -60,7 +60,7 @@ if __name__ == '__main__':
     FILENAME = '1_postgresCreateDB.py'
     mlflow.CD(
         containerName=CONTAINERNAME,
-        interpreter='python3.8',
+        interpreter='python3.9',
         targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
         paramArgs=f'/Users/peiyuwu/MLOPS'
     )
