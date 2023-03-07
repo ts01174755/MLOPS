@@ -27,6 +27,11 @@ if __name__ == '__main__':
     # package/common - CI
     mlflow.CI(
         containerName=CONTAINERNAME,
+        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/bs4Crawler.py',
+        targetPath='/Users/peiyuwu/MLOPS/package/common/bs4Crawler.py',
+    )
+    mlflow.CI(
+        containerName=CONTAINERNAME,
         filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DatabaseCtrl.py',
         targetPath='/Users/peiyuwu/MLOPS/package/common/DatabaseCtrl.py',
     )
@@ -42,6 +47,7 @@ if __name__ == '__main__':
     )
 
     # mongoDB - CI
+    # main
     FILENAME = '0_mongoCICD.py'
     mlflow.CI(
         containerName=CONTAINERNAME,
@@ -61,6 +67,14 @@ if __name__ == '__main__':
         containerName=CONTAINERNAME,
         filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{FILENAME}',
         targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
+    )
+
+    # package
+    FILENAME = 'STCrawler.py'
+    mlflow.CI(
+        containerName=CONTAINERNAME,
+        filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/package/{FILENAME}',
+        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/package/{FILENAME}',
     )
 
     # 用dockerCD()在container中執行程式

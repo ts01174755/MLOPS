@@ -14,7 +14,7 @@ class bs4Crawler():
     # 獲取網頁內容
     @classmethod
     def get_soup(cls, res):
-        soup = BeautifulSoup(res, 'html.parser')
+        soup = BeautifulSoup(res.text, 'html.parser')
         return soup
 
     # 解析特定id內容

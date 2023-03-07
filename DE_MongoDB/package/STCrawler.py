@@ -4,10 +4,12 @@ class STCrawler():
     def __init__(self):
         pass
 
-    def get_st_all_data(self):
+    def get_st_all_data(self, URL):
         # 獲取網頁回應
-        crawler = bs4Crawler()
-        crawlerSoup = crawler.get_soup('http://roma254-1.kddns.info:8022/Course/AdminCourses.php')
-        print(crawlerSoup)
+        crawlerRes = bs4Crawler.get_res(URL)
+        print(crawlerRes.text)
 
-        return crawlerSoup
+        # 解析的部分留到下一階段
+        # crawlerSoup = bs4Crawler.get_soup(crawlerRes)
+        # print(crawlerSoup)
+        return crawlerRes.text
