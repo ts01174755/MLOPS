@@ -7,8 +7,11 @@ class bs4Crawler():
 
     # 獲取網頁回應
     @classmethod
-    def get_res(cls, url):
-        res = requests.get(url)
+    def get_res(cls, url, cookies=None):
+        if cookies:
+            res = requests.get(url, cookies=cookies)
+        else:
+            res = requests.get(url)
         return res
 
     # 獲取網頁內容
