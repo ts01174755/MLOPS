@@ -8,3 +8,4 @@ import os
 # 3. brew services restart jenkins-lts # 重啟
 shellcmd = shellCmd()
 shellcmd.execute("brew services start jenkins-lts", shell=True)
+

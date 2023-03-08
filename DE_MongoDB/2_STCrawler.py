@@ -8,7 +8,7 @@ from package.common.DatabaseCtrl import MongoDBCtrl
 from DE_MongoDB.package.STCrawler import STCrawler
 from dotenv import load_dotenv, find_dotenv
 import time
-
+from datetime import datetime
 
 if __name__ == '__main__':
     print('Here is MongoCrwaler')
@@ -29,6 +29,6 @@ if __name__ == '__main__':
         port=int(os.getenv('MongoDB_PORT')),
         database_name='originaldb'
     ))
-    # 把time.time()轉成2021-09-01 00:00:00格式
-    mongodb.insert_document('tempdb', {"URL": URL, "dt": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time())), "crawlerResText": crawlerResText})
+    now = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
+    mongodb.insert_document('st_all_data', {"URL": URL, "dt": time.strftime("%Y-%m-%d %H:%M:%S", now), "crawlerResText": crawlerResText})
 
