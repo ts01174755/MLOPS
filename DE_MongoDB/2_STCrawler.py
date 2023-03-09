@@ -14,8 +14,8 @@ if __name__ == '__main__':
     print('Here is MongoCrwaler')
 
     # 爬蟲
-    cookies = {'ST': 'WPU199208090986389515'}
-    URL = 'http://roma254-1.kddns.info:8022/Course/AdminCourses.php'
+    cookies = {'ST': os.getenv('ST_TOKEN')}
+    URL = os.getenv('ST_ALLURL')
     stCrawler = MLFlow(STCrawler())
     crawlerResText = stCrawler.get_st_all_data(URL, cookies=cookies)
     # print(crawlerResText)
