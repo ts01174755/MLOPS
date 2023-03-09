@@ -12,12 +12,15 @@ from datetime import datetime
 
 if __name__ == '__main__':
     print('Here is MongoCrwaler')
+    URL = os.getenv('ST_ALLURL')
+    cookies = {'ST': os.getenv('ST_TOKEN')}
 
     # 爬蟲
-    cookies = {'ST': os.getenv('ST_TOKEN')}
-    URL = os.getenv('ST_ALLURL')
     stCrawler = MLFlow(STCrawler())
-    crawlerResText = stCrawler.get_st_all_data(URL, cookies=cookies)
+    crawlerResText = stCrawler.get_st_all_data(
+        URL=URL,
+        cookies=cookies
+    )
     # print(crawlerResText)
 
     # 連接MongoDB
