@@ -33,7 +33,7 @@ if __name__ == '__main__':
         )
 
     # mongoDB - CI
-    for f_ in ['0_postgresCICD.py', '1_postgresCreateDB.py', '2_postgresParaseSTData.py']:
+    for f_ in ['0_postgresCICD.py', '1_postgresCreateDB.py', '2_postgresParseSTData.py']:
         mlflow.CI(
             containerName=CONTAINERNAME,
             filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{f_}',
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     # )
 
 
-    FILENAME = '2_postgresParaseSTData.py'
+    FILENAME = '2_postgresParseSTData.py'
     mlflow.CD(
         containerName=CONTAINERNAME,
         interpreter='python3.9',

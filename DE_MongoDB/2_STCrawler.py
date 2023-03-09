@@ -12,6 +12,8 @@ from datetime import datetime
 
 if __name__ == '__main__':
     print('Here is MongoCrwaler')
+
+    # 環境變數
     load_dotenv(find_dotenv('env/.env'))
     URL = os.getenv('ST_ALLURL')
     cookies = {'ST': os.getenv('ST_TOKEN')}
@@ -22,9 +24,8 @@ if __name__ == '__main__':
         URL=URL,
         cookies=cookies
     )
-    # print(crawlerResText)
 
-    # 連接MongoDB
+    # 連接MongoDB與寫入資料
     load_dotenv(find_dotenv('env/.env'))
     mongodb = MLFlow(MongoDBCtrl(
         user_name=os.getenv('MongoDB_USER'),
