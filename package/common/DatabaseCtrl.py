@@ -56,7 +56,10 @@ class MongoDBCtrl:
 
     def find_document(self, collection_name, query, projection=None, limit=None, sort=None): # 查詢資料
         collection = self.database[collection_name]
-        results = collection.find(query, projection=projection, limit=limit, sort=sort)
+        if limit is None:
+            results = collection.find(query, projection=projection, sort=sort)
+        else:
+            results = collection.find(query, projection=projection, limit=limit, sort=sort)
         return [result for result in results]
 
     def find_one_document(self, collection_name, query, projection=None): # 查詢資料

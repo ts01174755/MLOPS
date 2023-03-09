@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # dockerCmd.dockerNetworkRemove(name='mongo-net')
     # dockerCmd.dockerNetworkCreate(name='bridge mongo-net')
     #
-    # # dockerCmd run postgres:15.2
+    # # dockerCmd run mongodb
     # dockerCmd.dockerRun(
     #     tag='mongo:5.0.15',
     #     name='mongodb',

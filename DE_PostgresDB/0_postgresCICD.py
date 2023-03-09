@@ -25,39 +25,32 @@ if __name__ == '__main__':
 
     # 用dockerCI()把現在執行的程式更新到container中
     # package/common - CI
-    mlflow.CI(
-        containerName=CONTAINERNAME,
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DatabaseCtrl.py',
-        targetPath='/Users/peiyuwu/MLOPS/package/common/DatabaseCtrl.py',
-    )
-    mlflow.CI(
-        containerName=CONTAINERNAME,
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/DockerCmd.py',
-        targetPath='/Users/peiyuwu/MLOPS/package/common/DockerCmd.py',
-    )
-    mlflow.CI(
-        containerName=CONTAINERNAME,
-        filePath='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/MLFlow.py',
-        targetPath='/Users/peiyuwu/MLOPS/package/common/MLFlow.py',
-    )
+    for f_ in ['bs4Crawler.py', 'DatabaseCtrl.py', 'DockerCmd.py', 'MLFlow.py']:
+        mlflow.CI(
+            containerName=CONTAINERNAME,
+            filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/{f_}',
+            targetPath=f'/Users/peiyuwu/MLOPS/package/common/{f_}',
+        )
 
     # mongoDB - CI
-    FILENAME = '0_postgresCICD.py'
-    mlflow.CI(
-        containerName=CONTAINERNAME,
-        filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{FILENAME}',
-        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
-    )
-
-    FILENAME = '1_postgresCreateDB.py'
-    mlflow.CI(
-        containerName=CONTAINERNAME,
-        filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{FILENAME}',
-        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
-    )
+    for f_ in ['0_postgresCICD.py', '1_postgresCreateDB.py', '2_postgresParaseSTData.py']:
+        mlflow.CI(
+            containerName=CONTAINERNAME,
+            filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{f_}',
+            targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
+        )
 
     # 用dockerCD()在container中執行程式
-    FILENAME = '1_postgresCreateDB.py'
+    # FILENAME = '1_postgresCreateDB.py'
+    # mlflow.CD(
+    #     containerName=CONTAINERNAME,
+    #     interpreter='python3.9',
+    #     targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
+    #     paramArgs=f'/Users/peiyuwu/MLOPS'
+    # )
+
+
+    FILENAME = '2_postgresParaseSTData.py'
     mlflow.CD(
         containerName=CONTAINERNAME,
         interpreter='python3.9',
