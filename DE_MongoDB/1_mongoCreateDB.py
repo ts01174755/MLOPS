@@ -36,9 +36,6 @@ if __name__ == '__main__':
     # # 更新document - 等價於更新row
     # print(mongodb.update_document('test', {'name': 'Peter'}, {'$set': {'age': 19}}))
     #
-    # # 查詢document - 等價於查詢row
-    # print(mongodb.find_one_document('test', {'name': 'Peter'}))
-    #
     # # 刪除document - 等價於刪除row
     # print(mongodb.delete_document('test', {'name': 'Peter'}))
     #

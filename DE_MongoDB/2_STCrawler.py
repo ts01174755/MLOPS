@@ -10,8 +10,9 @@ from dotenv import load_dotenv, find_dotenv
 import time
 from datetime import datetime
 
+print('Here is MongoCrwaler')
 if __name__ == '__main__':
-    print('Here is MongoCrwaler')
+    load_dotenv(find_dotenv('env/.env'))
     URL = os.getenv('ST_ALLURL')
     cookies = {'ST': os.getenv('ST_TOKEN')}
 
