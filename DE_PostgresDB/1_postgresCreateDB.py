@@ -1,6 +1,5 @@
 import os; import sys;
 if len(sys.argv) > 1:
-    print(sys.argv[1])
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
 from package.common.MLFlow import MLFlow
@@ -21,11 +20,14 @@ if __name__ == '__main__':
     ))
     db.connect()
 
-    # # 刪除儲存原始區Schema
+    # 刪除儲存原始區Schema
     # db.execute('DROP SCHEMA IF EXISTS original CASCADE;')
 
     # 建立儲存原始區Schema
-    db.execute('CREATE SCHEMA IF NOT EXISTS original;') # 建立Schema
+    # db.execute('CREATE SCHEMA IF NOT EXISTS original;') # 建立Schema
+
+    # 刪除儲存原始區資料表
+    db.execute('DROP TABLE IF EXISTS original.st_all_data;')
 
     # 建立儲存原始區資料表
     db.execute('''
