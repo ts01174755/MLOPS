@@ -7,17 +7,40 @@ if len(sys.argv) > 1:
 from package.common.MLFlow import MLFlow
 from package.common.DockerCmd import DockerCmd
 from package.common.DatabaseCtrl import PostgresCtrl, MongoDBCtrl
-from package.common.BS4Crawler import bs4Crawler
+from package.common.BS4Crawler import BS4Crawler
 from dotenv import load_dotenv, find_dotenv
 from DE_PostgresDB.package.PostgresParseSTData import PostgresParseSTData
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import re
 
 if __name__ == '__main__':
-    # 連接儲存爬蟲DataBase
-    load_dotenv(find_dotenv('env/.env'))
     postgresParseSTData = MLFlow(PostgresParseSTData())
 
-    stData = postgresParseSTData.parseSTData()
-    print(stData)
+    # 每日執行
+    # 取得今天日期
+    today = datetime.today()
+    # 爬蟲
+    stData = postgresParseSTData.parseSTData(
+        dt1 = today.strftime('%Y-%m-%d'),
+        dt2 = (today + timedelta(days=1)).strftime('%Y-%m-%d')
+    )
+
+    # 連接PostgresDB與寫入資料
+    postgresParseSTData.insertSTData(DataList=stData, now=today.strftime('%Y-%m-%d %H:%M:%S'))
+
+    # # 指定執行日期範圍
+    # today = datetime(2023, 3, 9, 0, 0, 0)
+    # while today < datetime(2023, 3, 11, 0, 0, 0):
+    #     # 爬蟲
+    #     stData = postgresParseSTData.parseSTData(
+    #         dt1 = today.strftime('%Y-%m-%d'),
+    #         dt2 = (today + timedelta(days=1)).strftime('%Y-%m-%d')
+    #     )
+    #     # print(stData)
+    #
+    #     # 連接PostgresDB與寫入資料
+    #     postgresParseSTData.insertSTData(DataList=stData, now=today.strftime('%Y-%m-%d %H:%M:%S'))
+    #
+    #     # 往後一天
+    #     today = today + timedelta(days=1)

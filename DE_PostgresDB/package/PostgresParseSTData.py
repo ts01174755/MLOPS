@@ -8,7 +8,7 @@ if len(sys.argv) > 1:
 from package.common.MLFlow import MLFlow
 from package.common.DockerCmd import DockerCmd
 from package.common.DatabaseCtrl import PostgresCtrl, MongoDBCtrl
-from package.common.BS4Crawler import bs4Crawler
+from package.common.BS4Crawler import BS4Crawler
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime
 import time
@@ -19,7 +19,7 @@ class PostgresParseSTData():
         pass
 
     @classmethod
-    def parseSTData(cls):
+    def parseSTData(cls, dt1=None, dt2=None):
         # 連接儲存爬蟲DataBase
         load_dotenv(find_dotenv('env/.env'))
         mongodb = MLFlow(MongoDBCtrl(
@@ -30,32 +30,25 @@ class PostgresParseSTData():
             port=int(os.getenv('MongoDB_PORT')),
             database_name='originaldb'
         ))
-        # 取得當天的年
-        year = datetime.today().strftime('%Y')
-        # 取得當天的月
-        month = datetime.today().strftime('%m')
-        # 取得當天的日
-        day = datetime.today().strftime('%d')
-        nowOfStart = datetime(int(year), int(month), int(day), 0, 0, 0)
 
         # mongodb查詢一段時間內的資料
         rows = mongodb.find_document(
-            'st_all_data', {"dt": {"$gte": str(nowOfStart)}}
+            'st_all_data', {"dt": {"$gte": dt1, "$lt": dt2}},
         )
         crawlerResText = rows[-1]['crawlerResText']
+
+        # 連接儲存解析後的DataBase
         reStr = re.search(r'events: \[\n\n\{.*\},    \]', crawlerResText).group(0)
         reStr = reStr.replace('events: [\n\n', '').replace(',    ]', '')
         reStrList = reStr.split('},{')
-
-        # 連接儲存解析後的DataBase
         crawlerDataList = []
         for reStr in reStrList:
             crawlerData = []
             reStr = reStr.replace('{', '').replace('}', '').replace('title:', '').replace('start:', '').replace('end:', '')
             reStrs = reStr.split(',')
 
-            crawlerData.append(reStrs[-2])
-            crawlerData.append(reStrs[-1])
+            crawlerData.append(reStrs[-2].replace('\'', ''))
+            crawlerData.append(reStrs[-1].replace('\'', ''))
             reStrDataList = reStrs[0].replace("\'", "").split('\t')
             crawlerData.append(reStrDataList[0].replace('所屬單位：', ''))
             crawlerData.append(reStrDataList[1].replace('上課地點：', ''))
@@ -68,7 +61,33 @@ class PostgresParseSTData():
             crawlerData.append(reStrDataList[8].replace('結束時間：', ''))
 
             crawlerDataList.append(crawlerData)
-        print(crawlerDataList)
 
         return crawlerDataList
+
+    @classmethod
+    def insertSTData(cls, DataList, now):
+        # 連接儲存解析後的DataBase
+        load_dotenv(find_dotenv('env/.env'))
+        db = MLFlow(PostgresCtrl(
+            host=os.getenv('POSTGRES_HOST'),
+            user=os.getenv('POSTGRES_USER'),
+            password=os.getenv('POSTGRES_PASSWORD'),
+            database='originaldb'
+        ))
+        db.connect()
+
+        # 資料寫入 original.st_all_data
+        for data_ in DataList:
+            db.execute(f"\
+            INSERT INTO original.st_all_data (\
+                dt, memo, \
+                commondata1, \
+                uniquechar1, uniquechar2, uniquechar3, uniquechar4, uniquechar5, uniquechar6, uniquechar7, uniquechar8\
+            ) \
+            VALUES (\
+                '{now}', 'ST所有課程資料', \
+                'AdminCourses', \
+                '{data_[0]}', '{data_[1]}', '{data_[2]}', '{data_[3]}', '{data_[4]}', '{data_[5]}', '{data_[6]}', '{data_[7]}'\
+            );")  # 插入資料
+        db.close()
 

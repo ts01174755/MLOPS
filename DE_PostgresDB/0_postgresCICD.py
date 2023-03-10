@@ -48,7 +48,7 @@ if __name__ == '__main__':
             targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/package/{f_}',
         )
 
-    # 用dockerCD()在container中執行程式
+    # # 用dockerCD()在container中執行程式
     # FILENAME = '1_postgresCreateDB.py'
     # mlflow.CD(
     #     containerName=CONTAINERNAME,
