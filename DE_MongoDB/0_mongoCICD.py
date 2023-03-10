@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # 用dockerCI()把現在執行的程式更新到container中
     # package/common - CI
-    for f_ in ['bs4Crawler.py', 'DatabaseCtrl.py', 'DockerCmd.py', 'MLFlow.py']:
+    for f_ in ['BS4Crawler.py', 'DatabaseCtrl.py', 'DockerCmd.py', 'MLFlow.py']:
         mlflow.CI(
             containerName=CONTAINERNAME,
             filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/{f_}',

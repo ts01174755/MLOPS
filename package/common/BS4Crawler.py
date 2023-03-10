@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-class bs4Crawler():
+class BS4Crawler():
     def __init__(self):
         pass
 
@@ -17,7 +17,10 @@ class bs4Crawler():
     # 獲取網頁內容
     @classmethod
     def get_soup(cls, res):
-        soup = BeautifulSoup(res.text, 'html.parser')
+        if type(res) == str:
+            soup = BeautifulSoup(res, 'html.parser')
+        else:
+            soup = BeautifulSoup(res.text, 'html.parser')
         return soup
 
     # 解析特定id內容
@@ -35,8 +38,11 @@ class bs4Crawler():
 
     # 解析特定標籤下所有內容
     @classmethod
-    def get_data_tag(cls, soup, tag):
-        data = soup.find_all(tag)
+    def get_data_tag(cls, soup, tag, attrs=None):
+        if attrs:
+            data = soup.find_all(tag, attrs=attrs)
+        else:
+            data = soup.find_all(tag)
         return data
 
     # 解析特定標籤下所有內容的文字
@@ -46,16 +52,8 @@ class bs4Crawler():
         data_text = [i.text for i in data]
         return data_text
 
-    # 解析特定標籤下所有內容的連結
+    # soup 漂亮的印出
     @classmethod
-    def get_data_href(cls, soup, tag):
-        data = soup.find_all(tag)
-        data_href = [i['href'] for i in data]
-        return data_href
+    def print_soup(cls, soup):
+        print(soup.prettify())
 
-    # 解析特定標籤下所有內容的連結與文字
-    @classmethod
-    def get_data_href_text(cls, soup, tag):
-        data = soup.find_all(tag)
-        data_href_text = [(i['href'], i.text) for i in data]
-        return data_href_text
