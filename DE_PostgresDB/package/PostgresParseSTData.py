@@ -68,12 +68,12 @@ class PostgresParseSTData():
     def insertSTData(cls, DataList, now):
         # 連接儲存解析後的DataBase
         load_dotenv(find_dotenv('env/.env'))
-        db = MLFlow(PostgresCtrl(
+        db = PostgresCtrl(
             host=os.getenv('POSTGRES_HOST'),
             user=os.getenv('POSTGRES_USER'),
             password=os.getenv('POSTGRES_PASSWORD'),
             database='originaldb'
-        ))
+        )
         db.connect()
 
         # 資料寫入 original.st_all_data
