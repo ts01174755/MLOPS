@@ -22,14 +22,14 @@ class PostgresParseSTData():
     def parseSTData(cls, dt1=None, dt2=None):
         # 連接儲存爬蟲DataBase
         load_dotenv(find_dotenv('env/.env'))
-        mongodb = MLFlow(MongoDBCtrl(
+        mongodb = MongoDBCtrl(
             user_name=os.getenv('MongoDB_USER'),
             user_password=os.getenv('MongoDB_PASSWORD'),
             # host=os.getenv('MongoDB_HOST'), # 這個是用來連接外部的MongoDB(外部連接)
             host='mongodb',     # docker-compose.yml中的service name(在docker container中連接)
             port=int(os.getenv('MongoDB_PORT')),
             database_name='originaldb'
-        ))
+        )
 
         # mongodb查詢一段時間內的資料
         rows = mongodb.find_document(
