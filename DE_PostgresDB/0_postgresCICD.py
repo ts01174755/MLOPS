@@ -49,19 +49,11 @@ if __name__ == '__main__':
         )
 
     # # 用dockerCD()在container中執行程式
-    # FILENAME = '1_postgresCreateDB.py'
-    # mlflow.CD(
-    #     containerName=CONTAINERNAME,
-    #     interpreter='python3.9',
-    #     targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
-    #     paramArgs=f'/Users/peiyuwu/MLOPS'
-    # )
-
-
-    FILENAME = '2_postgresParseSTData.py'
-    mlflow.CD(
-        containerName=CONTAINERNAME,
-        interpreter='python3.9',
-        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
-        paramArgs=f'/Users/peiyuwu/MLOPS'
-    )
+    for f_ in ['1_postgresCreateDB.py', '2_postgresParseSTData.py']:
+        if f_ == '1_postgresCreateDB.py': continue
+        mlflow.CD(
+            containerName=CONTAINERNAME,
+            interpreter='python3.9',
+            targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
+            paramArgs=f'/Users/peiyuwu/MLOPS'
+        )

@@ -33,7 +33,6 @@ if __name__ == '__main__':
         )
 
     # mongoDB - CI
-    # main
     for f_ in ['0_mongoCICD.py', '1_mongoCreateDB.py', '2_STCrawler.py']:
         mlflow.CI(
             containerName=CONTAINERNAME,
@@ -50,18 +49,11 @@ if __name__ == '__main__':
         )
 
     # 用dockerCD()在container中執行程式
-    # FILENAME = '1_mongoCreateDB.py'
-    # mlflow.CD(
-    #     containerName=CONTAINERNAME,
-    #     interpreter='python3.8',
-    #     targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
-    #     paramArgs=f'/Users/peiyuwu/MLOPS'
-    # )
-
-    FILENAME = '2_STCrawler.py'
-    mlflow.CD(
-        containerName=CONTAINERNAME,
-        interpreter='python3.8',
-        targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{FILENAME}',
-        paramArgs=f'/Users/peiyuwu/MLOPS'
-    )
+    for f_ in ['1_mongoCreateDB.py', '2_STCrawler.py']:
+        if f_ == '1_mongoCreateDB.py':continue
+        mlflow.CD(
+            containerName=CONTAINERNAME,
+            interpreter='python3.8',
+            targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
+            paramArgs=f'/Users/peiyuwu/MLOPS'
+        )
