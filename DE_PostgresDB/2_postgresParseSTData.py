@@ -3,15 +3,9 @@ import sys;
 if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
-from package.common.MLFlow import MLFlow
-from package.common.DockerCmd import DockerCmd
-from package.common.DatabaseCtrl import PostgresCtrl, MongoDBCtrl
-from package.common.BS4Crawler import BS4Crawler
-from dotenv import load_dotenv, find_dotenv
+from package.CICD.MLFlow import MLFlow
 from DE_PostgresDB.package.PostgresParseSTData import PostgresParseSTData
-from datetime import datetime, timedelta
 import time
-import re
 
 if __name__ == '__main__':
     postgresParseSTData = MLFlow(PostgresParseSTData())

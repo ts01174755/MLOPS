@@ -4,13 +4,10 @@ import sys;
 if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
-from package.common.MLFlow import MLFlow
-from package.common.DockerCmd import DockerCmd
-from package.common.DatabaseCtrl import PostgresCtrl, MongoDBCtrl
-from package.common.BS4Crawler import BS4Crawler
+from package.controller.PostgresCtrl import PostgresCtrl
+from package.controller.MongoDBCtrl import MongoDBCtrl
 from dotenv import load_dotenv, find_dotenv
-from datetime import datetime
-import time
+
 
 class PostgresParseSTData():
 

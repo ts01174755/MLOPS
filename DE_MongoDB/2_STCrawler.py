@@ -2,13 +2,11 @@ import os; import sys;
 if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
-from package.common.MLFlow import MLFlow
-from package.common.DockerCmd import DockerCmd
-from package.common.DatabaseCtrl import MongoDBCtrl
+from package.CICD.MLFlow import MLFlow
+from package.controller.MongoDBCtrl import MongoDBCtrl
 from DE_MongoDB.package.STCrawler import STCrawler
 from dotenv import load_dotenv, find_dotenv
 import time
-from datetime import datetime
 
 if __name__ == '__main__':
     print('Here is MongoCrwaler')
