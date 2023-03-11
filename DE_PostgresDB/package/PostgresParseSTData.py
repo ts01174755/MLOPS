@@ -61,7 +61,7 @@ class PostgresParseSTData():
         return crawlerDataList
 
     @classmethod
-    def insertSTData(cls, DataList, now):
+    def insertSTData(cls, table, dataList, now):
         # 連接儲存解析後的DataBase
         load_dotenv(find_dotenv('env/.env'))
         db = PostgresCtrl(
@@ -73,9 +73,9 @@ class PostgresParseSTData():
         db.connect()
 
         # 資料寫入 original.st_all_data
-        for data_ in DataList:
+        for data_ in dataList:
             db.execute(f"\
-            INSERT INTO original.st_all_data (\
+            INSERT INTO original.{table} (\
                 dt, memo, \
                 commondata1, \
                 uniquechar1, uniquechar2, uniquechar3, uniquechar4, uniquechar5, uniquechar6, uniquechar7, uniquechar8\

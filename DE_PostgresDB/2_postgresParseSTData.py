@@ -1,29 +1,26 @@
 import os;
 import sys;
-if len(sys.argv) > 1:
-    os.chdir(sys.argv[1])
-    sys.path.append(os.getcwd())
+os.chdir(sys.argv[1])
+sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
 from DE_PostgresDB.package.PostgresParseSTData import PostgresParseSTData
 from datetime import datetime, timedelta
 import time
 
 if __name__ == '__main__':
-    postgresParseSTData = MLFlow(PostgresParseSTData())
+    TODAY = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
+    TOMORROW = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 時間校準
+    TABLE = sys.argv[2]
 
-    # 每日執行
-    # 取得今天日期
-    today = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
-    # 取得明天日期
-    tomorrow = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 時間校準
-    # 爬蟲
+    # 每日執行 - 爬蟲
+    postgresParseSTData = MLFlow(PostgresParseSTData())
     stData = postgresParseSTData.parseSTData(
-        dt1 = time.strftime("%Y-%m-%d", today),
-        dt2 = time.strftime("%Y-%m-%d", tomorrow)
+        dt1 = time.strftime("%Y-%m-%d", TODAY),
+        dt2 = time.strftime("%Y-%m-%d", TOMORROW)
     )
 
     # 連接PostgresDB與寫入資料
-    postgresParseSTData.insertSTData(DataList=stData, now=time.strftime("%Y-%m-%d %H:%M:%S", today))
+    postgresParseSTData.insertSTData(table = TABLE, dataList=stData, now=time.strftime("%Y-%m-%d %H:%M:%S", TODAY))
 
     # # 指定執行日期範圍
     # today = datetime(2023, 3, 9, 0, 0, 0)

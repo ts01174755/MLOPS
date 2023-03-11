@@ -1,15 +1,11 @@
 import os;
-import sys;
-if len(sys.argv) > 1:
-    os.chdir(sys.argv[1])
-    sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
 
 
 
 if __name__ == '__main__':
-    CONTAINERNAME = 'mongodb'
-    PROJECTNAME = 'DE_MongoDB'
+    CONTAINERNAME = 'postgres15.2'
+    PROJECTNAME = 'DE_PostgresDB'
 
     mlflow = MLFlow()
     mlflow.deploy(
@@ -29,7 +25,7 @@ if __name__ == '__main__':
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
 
-    # mongoDB - CI/CD
+    # DE_PostgresDB - CI/CD
     for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}'):
         for file in files:
             if root.find('__pycache__') != -1: continue
@@ -38,11 +34,12 @@ if __name__ == '__main__':
                 filePath=os.path.join(root, file),
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
-    for f_ in ['1_mongoCreateDB.py', '2_STCrawler.py']:
-        if f_ == '1_mongoCreateDB.py':continue
+    for f_ in ['1_postgresCreateDB.py', '2_postgresParseSTData.py']:
+        if f_ == '1_postgresCreateDB.py': continue
         mlflow.CD(
             containerName=CONTAINERNAME,
-            interpreter='python3.8',
+            interpreter='python3.9',
             targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
-            paramArgs=f'/Users/peiyuwu/MLOPS'
+            # paramArgs=f'/Users/peiyuwu/MLOPS st_all_data', # 正式環境
+            paramArgs = f'/Users/peiyuwu/MLOPS temptb', # 測試環境
         )

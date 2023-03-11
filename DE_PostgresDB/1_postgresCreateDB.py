@@ -1,7 +1,6 @@
 import os; import sys;
-if len(sys.argv) > 1:
-    os.chdir(sys.argv[1])
-    sys.path.append(os.getcwd())
+os.chdir(sys.argv[1])
+sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
 from package.controller.PostgresCtrl import PostgresCtrl
 from dotenv import load_dotenv, find_dotenv
@@ -9,6 +8,8 @@ from dotenv import load_dotenv, find_dotenv
 
 
 if __name__ == '__main__':
+    TABLE = sys.argv[2]
+
     # 連接儲存原始區DataBase
     load_dotenv(find_dotenv('env/.env'))
     db = MLFlow(PostgresCtrl(
@@ -26,11 +27,11 @@ if __name__ == '__main__':
     # db.execute('CREATE SCHEMA IF NOT EXISTS original;') # 建立Schema
 
     # 刪除儲存原始區資料表
-    db.execute('DROP TABLE IF EXISTS original.st_all_data;')
+    db.execute(f'DROP TABLE IF EXISTS original.{TABLE};')
 
     # 建立儲存原始區資料表
-    db.execute('''
-        CREATE TABLE IF NOT EXISTS original.st_all_data (\
+    db.execute(f'''
+        CREATE TABLE IF NOT EXISTS original.{TABLE} (\
         id serial PRIMARY KEY, dt timestamp, memo varchar(50)\
         , commondata1 varchar(50), commondata2 varchar(50), commondata3 varchar(50), commondata4 varchar(50), commondata5 varchar(50)\
         , commondata6 varchar(50), commondata7 varchar(50), commondata8 varchar(50), commondata9 varchar(50), commondata10 varchar(50)\
