@@ -17,21 +17,20 @@ if __name__ == '__main__':
         cookies={'ST': os.getenv('ST_TOKEN')}
     )
 
-    # 連接MongoDB與寫入資料
+    # 將爬蟲資料存入MongoDB
     COLLECTION = sys.argv[2]
-    mongodb = MLFlow(MongoDBCtrl(
-        user_name=os.getenv('MongoDB_USER'),
-        user_password=os.getenv('MongoDB_PASSWORD'),
-        host=os.getenv('MongoDB_HOST'),
-        port=int(os.getenv('MongoDB_PORT')),
-        database_name='originaldb'
-    ))
-    now = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
-    mongodb.insert_document(
-        COLLECTION, {
+    stCrawler.mongodb_insert_document(
+        mongoDBCtrl=MongoDBCtrl(
+            user_name=os.getenv('MongoDB_USER'),
+            user_password=os.getenv('MongoDB_PASSWORD'),
+            host=os.getenv('MongoDB_HOST'),
+            port=int(os.getenv('MongoDB_PORT')),
+            database_name='originaldb'
+        ),
+        collection=COLLECTION,
+        document={
             "URL": os.getenv('ST_ALLURL'),
-            "dt": time.strftime("%Y-%m-%d %H:%M:%S", now),
+            "dt": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + 8 * 60 * 60)),
             "crawlerResText": crawlerResText
         }
     )
-

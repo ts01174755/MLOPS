@@ -4,9 +4,6 @@ import sys;
 if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
-from package.controller.PostgresCtrl import PostgresCtrl
-from package.controller.MongoDBCtrl import MongoDBCtrl
-from dotenv import load_dotenv, find_dotenv
 
 
 class PostgresParseSTData():
@@ -14,23 +11,10 @@ class PostgresParseSTData():
     def __init__(self):
         pass
 
-    @classmethod
-    def parseSTData(cls, dt1=None, dt2=None):
-        # 連接儲存爬蟲DataBase
-        load_dotenv(find_dotenv('env/.env'))
-        mongodb = MongoDBCtrl(
-            user_name=os.getenv('MongoDB_USER'),
-            user_password=os.getenv('MongoDB_PASSWORD'),
-            # host=os.getenv('MongoDB_HOST'), # 這個是用來連接外部的MongoDB(外部連接)
-            host='mongodb',     # docker-compose.yml中的service name(在docker container中連接)
-            port=int(os.getenv('MongoDB_PORT')),
-            database_name='originaldb'
-        )
-
+    # 解析爬蟲資料
+    def parseSTData(self, mongoDBCtrl, collection, queryFilter):
         # mongodb查詢一段時間內的資料
-        rows = mongodb.find_document(
-            'st_all_data', {"dt": {"$gte": dt1, "$lt": dt2}},
-        )
+        rows = mongoDBCtrl.find_document(collection, queryFilter)
         crawlerResText = rows[-1]['crawlerResText']
 
         # 連接儲存解析後的DataBase
@@ -60,30 +44,25 @@ class PostgresParseSTData():
 
         return crawlerDataList
 
-    @classmethod
-    def insertSTData(cls, table, dataList, now):
+    # 將解析後的資料寫入Postgres
+    def insertSTData(self, postgresCtrl, table, dataList, dt):
         # 連接儲存解析後的DataBase
-        load_dotenv(find_dotenv('env/.env'))
-        db = PostgresCtrl(
-            host=os.getenv('POSTGRES_HOST'),
-            user=os.getenv('POSTGRES_USER'),
-            password=os.getenv('POSTGRES_PASSWORD'),
-            database='originaldb'
-        )
-        db.connect()
+        postgresCtrl.connect()
 
         # 資料寫入 original.st_all_data
         for data_ in dataList:
-            db.execute(f"\
+            postgresCtrl.execute(f"\
             INSERT INTO original.{table} (\
                 dt, memo, \
                 commondata1, \
                 uniquechar1, uniquechar2, uniquechar3, uniquechar4, uniquechar5, uniquechar6, uniquechar7, uniquechar8\
             ) \
             VALUES (\
-                '{now}', 'ST所有課程資料', \
+                '{dt}', 'ST所有課程資料', \
                 'AdminCourses', \
                 '{data_[0]}', '{data_[1]}', '{data_[2]}', '{data_[3]}', '{data_[4]}', '{data_[5]}', '{data_[6]}', '{data_[7]}'\
             );")  # 插入資料
-        db.close()
+        postgresCtrl.close()
+
+        return 'success'
 
