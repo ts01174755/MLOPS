@@ -5,6 +5,7 @@ if len(sys.argv) > 1:
     sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
 from DE_PostgresDB.package.PostgresParseSTData import PostgresParseSTData
+from datetime import datetime, timedelta
 import time
 
 if __name__ == '__main__':

@@ -3,10 +3,7 @@ import sys;
 if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
-from package.common.MLFlow import MLFlow
-from package.common.DockerCmd import DockerCmd
-from dotenv import load_dotenv, find_dotenv
-# load_dotenv(find_dotenv('env/.env'))
+from package.CICD.MLFlow import MLFlow
 
 
 
@@ -22,7 +19,7 @@ if __name__ == '__main__':
         envPATH='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env/.env'
     )
 
-    # package/common - CI
+    # package - CI
     for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package'):
         for file in files:
             if root.find('__pycache__') != -1: continue
@@ -32,7 +29,7 @@ if __name__ == '__main__':
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
 
-    # mongoDB - CI
+    # mongoDB - CI/CD
     for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}'):
         for file in files:
             if root.find('__pycache__') != -1: continue
@@ -41,8 +38,6 @@ if __name__ == '__main__':
                 filePath=os.path.join(root, file),
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
-
-    # mongoDB - CD
     for f_ in ['1_mongoCreateDB.py', '2_STCrawler.py']:
         if f_ == '1_mongoCreateDB.py':continue
         mlflow.CD(

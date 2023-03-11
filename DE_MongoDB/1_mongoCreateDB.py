@@ -2,9 +2,8 @@ import os; import sys;
 if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
-from package.common.MLFlow import MLFlow
-from package.common.DockerCmd import DockerCmd
-from package.common.DatabaseCtrl import MongoDBCtrl
+from package.CICD.MLFlow import MLFlow
+from package.controller.MongoDBCtrl import MongoDBCtrl
 from dotenv import load_dotenv, find_dotenv
 
 
@@ -21,6 +20,12 @@ if __name__ == '__main__':
         port=int(os.getenv('MongoDB_PORT')),
         database_name='originaldb'
     ))
+    # 刪除collection - 等價於刪除table
+    # print(mongodb.drop_collection('st_all_data'))
+
+    # 刪除collection - 等價於刪除table
+    # print(mongodb.drop_collection('tempdb'))
+
     print(mongodb.create_collection('st_all_data'))
     print(mongodb.create_collection('tempdb'))
 
