@@ -1,5 +1,5 @@
 import time
-from package.common.DockerCmd import DockerCmd
+from package.Environment.DockerCmd import DockerCmd
 
 class dataFlow(object):
     def __init__(self):
@@ -50,10 +50,8 @@ class MLFlow(object):
         self.dockerdeploy = True
 
         # 把gitHub上的程式碼clone到docker container中
-        dockerCmd = DockerCmd()
-
         # 移除container中的舊程式
-        dockerCmd.dockerExec(
+        DockerCmd.dockerExec(
             name=containerName,
             cmd=f'rm -rf {targetPath}',
             detach=False,
@@ -61,7 +59,7 @@ class MLFlow(object):
             TTY=False,
         )
         # 把gitHub上的程式碼clone到docker container中
-        dockerCmd.dockerExec(
+        DockerCmd.dockerExec(
             name=containerName,
             cmd=f'git clone {gitHubUrl} {targetPath}',
             detach=False,
@@ -69,7 +67,7 @@ class MLFlow(object):
             TTY=False,
         )
         # 建立一個env資料夾
-        dockerCmd.dockerExec(
+        DockerCmd.dockerExec(
             name=containerName,
             cmd=f'mkdir -p {targetPath}/env',
             detach=False,
@@ -78,25 +76,23 @@ class MLFlow(object):
         )
         # 複製.env檔案到container中
         # 並寫入一行"ROLE=containerName"的設定
-        dockerCmd.dockerCopy(
+        DockerCmd.dockerCopy(
             name=containerName,
             filePath = envPATH,
             targetPath = f'{targetPath}/env'
         )
 
     def CI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
-        dockerCmd = DockerCmd()
         # 把現在執行的程式更新到container中
-        dockerCmd.dockerCopy(
+        DockerCmd.dockerCopy(
             name=containerName,
             filePath = filePath,
             targetPath = targetPath
         )
 
     def CD(self, containerName, interpreter, targetPath, paramArgs):
-        dockerCmd = DockerCmd()
         # 執行container中的程式
-        dockerCmd.dockerExec(
+        DockerCmd.dockerExec(
             name=containerName,
             cmd=f'{interpreter} {targetPath} {paramArgs}',
             detach=False,
