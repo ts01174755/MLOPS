@@ -1,8 +1,8 @@
 import os; os.chdir('./File/MLOPS_w3')
 from dotenv import load_dotenv, find_dotenv
 import openai
-from package.common.MLFlow import MLFlow, dataFlow
-from package.common.FileSystem import FileSystem
+from package.CICD.MLFlow import MLFlow, dataFlow
+from package.CICD.FileSystem import FileSystem
 from OLD.Modeling.Application.translationByChatGPT import translationByChatGPT
 
 

@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from package.common.MLFlow import MLFlow
+from package.CICD.MLFlow import MLFlow
 
 # 用工廠模式派生的機器學習流程
 class NoteByFile(MLFlow):
