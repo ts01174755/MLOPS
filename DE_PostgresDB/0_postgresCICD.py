@@ -15,7 +15,6 @@ if __name__ == '__main__':
     PROJECTNAME = 'DE_PostgresDB'
 
     mlflow = MLFlow()
-    # 用dockerDeploy()把gitHub上的程式碼clone到docker container中
     mlflow.deploy(
         containerName=CONTAINERNAME,
         gitHubUrl='https://github.com/ts01174755/MLOPS.git',
@@ -23,32 +22,27 @@ if __name__ == '__main__':
         envPATH='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env/.env'
     )
 
-    # 用dockerCI()把現在執行的程式更新到container中
     # package/common - CI
-    for f_ in ['BS4Crawler.py', 'DatabaseCtrl.py', 'DockerCmd.py', 'MLFlow.py']:
-        mlflow.CI(
-            containerName=CONTAINERNAME,
-            filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package/common/{f_}',
-            targetPath=f'/Users/peiyuwu/MLOPS/package/common/{f_}',
-        )
+    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package'):
+        for file in files:
+            if root.find('__pycache__') != -1: continue
+            mlflow.CI(
+                containerName=CONTAINERNAME,
+                filePath=os.path.join(root, file),
+                targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
+            )
 
     # DE_PostgresDB - CI
-    for f_ in ['0_postgresCICD.py', '1_postgresCreateDB.py', '2_postgresParseSTData.py']:
-        mlflow.CI(
-            containerName=CONTAINERNAME,
-            filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/{f_}',
-            targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
-        )
+    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}'):
+        for file in files:
+            if root.find('__pycache__') != -1: continue
+            mlflow.CI(
+                containerName=CONTAINERNAME,
+                filePath=os.path.join(root, file),
+                targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
+            )
 
-    # DE_PostgresDB/package - CI
-    for f_ in ['PostgresParseSTData.py']:
-        mlflow.CI(
-            containerName=CONTAINERNAME,
-            filePath=f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}/package/{f_}',
-            targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/package/{f_}',
-        )
-
-    # # 用dockerCD()在container中執行程式
+    # DE_PostgresDB - CD
     for f_ in ['1_postgresCreateDB.py', '2_postgresParseSTData.py']:
         if f_ == '1_postgresCreateDB.py': continue
         mlflow.CD(

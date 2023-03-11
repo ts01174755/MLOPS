@@ -14,6 +14,7 @@ import time
 import re
 
 if __name__ == '__main__':
+    print('Start')
     postgresParseSTData = MLFlow(PostgresParseSTData())
 
     # 每日執行
