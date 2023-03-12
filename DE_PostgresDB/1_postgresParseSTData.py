@@ -1,11 +1,10 @@
-import os;
-import sys;
+import os;import sys;
 os.chdir(sys.argv[1])
 sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
-from DE_PostgresDB.package.PostgresParseSTData import PostgresParseSTData
-from package.controller.PostgresCtrl import PostgresCtrl
 from package.controller.MongoDBCtrl import MongoDBCtrl
+from package.controller.PostgresCtrl import PostgresCtrl
+from DE_PostgresDB.package.PostgresParseSTData import PostgresParseSTData
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime, timedelta
 import time
@@ -14,8 +13,8 @@ if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
     TODAY = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
     TOMORROW = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 時間校準
-    TABLE = 'temptb' # 這是測試用的table
-    # TABLE = 'st_all_data' # 這是正式用的table
+    # TABLE = 'temptb' # 這是測試用的table
+    TABLE = 'st_all_data' # 這是正式用的table
 
     # 每日執行 - 爬蟲
     postgresParseSTData = MLFlow(PostgresParseSTData())
