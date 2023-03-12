@@ -14,7 +14,7 @@ if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
     TODAY = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
     TOMORROW = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 時間校準
-    TABLE = 'tempdb' # 這是測試用的table
+    TABLE = 'temptb' # 這是測試用的table
     # TABLE = 'st_all_data' # 這是正式用的table
 
     # 每日執行 - 爬蟲
