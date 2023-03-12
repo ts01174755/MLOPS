@@ -9,6 +9,8 @@ import time
 
 if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
+    COLLECTION = 'tempdb'   # 這邊是為了測試，所以先存入 tempdb，之後再改成正式的資料庫
+    # COLLECTION = 'st_all_data'  # 這邊是正式的資料庫
 
     # 每日解析爬蟲資料
     stCrawler = MLFlow(STCrawler())
@@ -18,7 +20,6 @@ if __name__ == '__main__':
     )
 
     # 將爬蟲資料存入MongoDB
-    COLLECTION = sys.argv[2]
     stCrawler.mongodb_insert_document(
         mongoDBCtrl=MongoDBCtrl(
             user_name=os.getenv('MongoDB_USER'),

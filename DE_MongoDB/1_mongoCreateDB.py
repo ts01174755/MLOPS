@@ -19,7 +19,9 @@ if __name__ == '__main__':
         port=int(os.getenv('MongoDB_PORT')),
         database_name='originaldb'
     ))
-    COLLECTION = sys.argv[2]
+    COLLECTION = 'tempdb'
+    # COLLECTION = 'st_all_data'
+    # COLLECTION = 'google_form'
 
     # 刪除collection - 等價於刪除table
     # print(mongodb.drop_collection(COLLECTION))

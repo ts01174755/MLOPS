@@ -9,7 +9,8 @@ import time
 
 if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
-    COLLECTION = sys.argv[2]
+    COLLECTION = 'tempdb' # 這邊是為了測試，所以先存入 tempdb，之後再改成正式的資料庫
+    # COLLECTION = 'google_form' # 這邊是正式的資料庫
     FORMID = '1sqxcABwDaVFyGD1cTo0-O0BoJIGWJccioaXGkxKMZv8'
 
     # 取得 google service api
@@ -22,7 +23,10 @@ if __name__ == '__main__':
     )
 
     # 取得 google form list
-    result = googleFormApi.googleServiceFormList(service=service, FORMID=FORMID)
+    result = googleFormApi.googleServiceFormList(
+        service=service,
+        FORMID=FORMID
+    )
 
     # 將結果寫入 mongodb
     googleFormApi.mongodb_insert_document(

@@ -50,6 +50,5 @@ if __name__ == '__main__':
             containerName=CONTAINERNAME,
             interpreter='python3.8',
             targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
-            # paramArgs = f'/Users/peiyuwu/MLOPS st_all_data', # 正式環境
-            paramArgs=f'/Users/peiyuwu/MLOPS tempdb',           # 測試環境
+            paramArgs=f'/Users/peiyuwu/MLOPS',
         )

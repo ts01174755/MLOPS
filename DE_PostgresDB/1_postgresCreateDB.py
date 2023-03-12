@@ -8,7 +8,6 @@ from dotenv import load_dotenv, find_dotenv
 
 
 if __name__ == '__main__':
-    TABLE = sys.argv[2]
 
     # 連接儲存原始區DataBase
     load_dotenv(find_dotenv('env/.env'))
@@ -19,6 +18,9 @@ if __name__ == '__main__':
         database='originaldb'
     ))
     db.connect()
+
+    TABLE = 'tempdb' # 這是測試用的table
+    # TABLE = 'st_all_data' # 這是正式用的table
 
     # 刪除儲存原始區Schema
     # db.execute('DROP SCHEMA IF EXISTS original CASCADE;')

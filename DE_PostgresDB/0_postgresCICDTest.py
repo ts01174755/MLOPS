@@ -45,11 +45,10 @@ if __name__ == '__main__':
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
     for f_ in ['1_postgresCreateDB.py', '2_postgresParseSTData.py']:
-        if f_ == '1_postgresCreateDB.py': continue
+        if f_ in ['1_postgresCreateDB.py', '2_STCrawler.py']: continue
         mlflow.CD(
             containerName=CONTAINERNAME,
             interpreter='python3.9',
             targetPath=f'/Users/peiyuwu/MLOPS/{PROJECTNAME}/{f_}',
-            # paramArgs=f'/Users/peiyuwu/MLOPS st_all_data', # 正式環境
-            paramArgs = f'/Users/peiyuwu/MLOPS temptb', # 測試環境
+            paramArgs=f'/Users/peiyuwu/MLOPS',
         )
