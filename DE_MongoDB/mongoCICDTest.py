@@ -44,8 +44,8 @@ if __name__ == '__main__':
                 filePath=os.path.join(root, file),
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
-    for f_ in ['1_mongoCreateDB.py', '2_STCrawler.py', '3_GoogleFormApi.py']:
-        if f_ in ['1_mongoCreateDB.py', '2_STCrawler.py']: continue
+    for f_ in ['mongoCreateDB.py', '1_STCrawler.py', '2_GoogleFormApi.py']:
+        if f_ in ['mongoCreateDB.py', '1_STCrawler.py']: continue
         mlflow.CD(
             containerName=CONTAINERNAME,
             interpreter='python3.8',
