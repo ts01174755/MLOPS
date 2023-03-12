@@ -15,6 +15,16 @@ if __name__ == '__main__':
         envPATH='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env/.env'
     )
 
+    # env - CI
+    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env'):
+        for file in files:
+            if root.find('__pycache__') != -1: continue
+            mlflow.CI(
+                containerName=CONTAINERNAME,
+                filePath=os.path.join(root, file),
+                targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
+            )
+
     # package - CI
     for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package'):
         for file in files:
@@ -34,8 +44,8 @@ if __name__ == '__main__':
                 filePath=os.path.join(root, file),
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
-    for f_ in ['1_mongoCreateDB.py', '2_STCrawler.py']:
-        if f_ == '1_mongoCreateDB.py':continue
+    for f_ in ['1_mongoCreateDB.py', '2_STCrawler.py', '3_GoogleFormApi.py']:
+        if f_ in ['1_mongoCreateDB.py', '2_STCrawler.py']: continue
         mlflow.CD(
             containerName=CONTAINERNAME,
             interpreter='python3.8',
