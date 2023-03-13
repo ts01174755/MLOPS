@@ -188,4 +188,4 @@ if __name__ == '__main__':
     # file = googleDrive._get_service().files().create(body=file_metadata, fields='id').execute()
     # print(F"Folder ID: {file.get('id')}")
 
-    googleDrive.delete_file('1xjTpMnKfaNKxJkMvUi2A8ldWjpOT0cPa') # 刪除檔案
+    # googleDrive.delete_file('1xjTpMnKfaNKxJkMvUi2A8ldWjpOT0cPa') # 刪除檔案
