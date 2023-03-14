@@ -90,3 +90,4 @@ if __name__ == '__main__':
     DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install pymongo"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
     DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install requests"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
     DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install beautifulsoup4"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install pandas"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo

@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
     for f_ in ['postgresCreateDB.py', '1_postgresParseSTData.py']:
-        if f_ in ['postgresCreateDB.py', '1_postgresParseSTData.py']: continue
+        if f_ in ['postgresCreateDB.py']: continue
         mlflow.CD(
             containerName=CONTAINERNAME,
             interpreter='python3.9',
