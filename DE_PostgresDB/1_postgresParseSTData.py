@@ -57,7 +57,7 @@ if __name__ == '__main__':
             password=os.getenv('POSTGRES_PASSWORD'),
             database='originaldb'
         ),
-        tableName="st_all_data",
+        tableName=TABLE,
         schemaDict={
             'dt': '資料更新時間',
             'memo': 'ST所有課程資料',
