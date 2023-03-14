@@ -8,6 +8,7 @@ subprocess.run('pip install fastapi', shell=True)
 subprocess.run('pip install uvicorn', shell=True)
 subprocess.run('pip install requests', shell=True)
 subprocess.run('pip install beautifulsoup4', shell=True)
+subprocess.run('pip install pandas', shell=True)
 
 # 安裝 google form api 相關的套件
 subprocess.run('pip install google-api-python-client', shell=True)
