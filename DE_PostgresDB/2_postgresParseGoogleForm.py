@@ -85,10 +85,3 @@ if __name__ == '__main__':
             'uniquestring2', 'uniquestring3', 'uniquestring4', 'uniquestring5', 'uniquejason'
         ]
     )
-
-
-    # # 指定執行日期範圍
-    # today = datetime(2023, 3, 9, 0, 0, 0)
-    # while today < datetime(2023, 3, 11, 0, 0, 0):
-    #     ...
-    #     today = today + timedelta(days=1)
