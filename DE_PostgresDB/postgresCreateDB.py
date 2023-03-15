@@ -19,8 +19,9 @@ if __name__ == '__main__':
     ))
     db.connect()
 
-    TABLE = 'temptb' # 這是測試用的table
+    # TABLE = 'temptb' # 這是測試用的table
     # TABLE = 'st_all_data' # 這是正式用的table
+    TABLE = 'google_form' # 這是正式用的table
 
     # 刪除儲存原始區Schema
     # db.execute('DROP SCHEMA IF EXISTS original CASCADE;')
