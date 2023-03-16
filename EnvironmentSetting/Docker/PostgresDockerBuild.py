@@ -60,6 +60,7 @@ if __name__ == '__main__':
     # dockerCmd 把 postgres15.2 和 mongodb 加入網路
     DockerCmd.dockerNetworkConnect(name='mongo-postgres-net', container='postgres15.2')
     DockerCmd.dockerNetworkConnect(name='mongo-postgres-net', container='mongodb')
+    DockerCmd.dockerNetworkConnect(name='mongo-postgres-net', container='python:3.8.16')
 
 
     ####################################################################################################################

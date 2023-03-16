@@ -1,4 +1,4 @@
-
+from package.controller.LINECtrl import LineNotify
 class LineNotifyServer():
 
     def __init__(self):
@@ -13,6 +13,14 @@ class LineNotifyServer():
         postgresCtrl.close()
 
         return rows
+
+    def postLineNotify(self, token, message):
+        # 取得 token
+
+        lineNotify = LineNotify(token)
+        lineNotify.send(message)
+
+        return 'success'
 
 if __name__ == '__main__':
     pass
