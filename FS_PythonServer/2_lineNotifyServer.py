@@ -30,7 +30,7 @@ if __name__ == '__main__':
             SELECT \
                 uniquechar1,uniquechar2,uniquechar3,uniquechar4,uniquechar5,\
                 uniquechar6,uniquechar7,uniquechar8 \
-            FROM original.{TABLE} WHERE uniquechar1 < \'{time.strftime("%Y%m%d", TODAY)}\';'
+            FROM original.{TABLE} WHERE uniquechar1 >= \'{time.strftime("%Y%m%d", TODAY)}\';'
     )
     print(rows)
 
