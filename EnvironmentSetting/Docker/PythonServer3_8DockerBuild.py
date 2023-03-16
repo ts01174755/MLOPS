@@ -32,4 +32,11 @@ if __name__ == '__main__':
     # python 常用安裝包
     DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip install --upgrade pip"', detach=False, interactive=True, TTY=False)  # 更新pip
     DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
-
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install fastapi"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install uvicorn"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install psycopg2-binary"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install pymongo"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install requests"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install beautifulsoup4"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='python3.8.16', cmd='bash -c "pip3 install pandas"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo

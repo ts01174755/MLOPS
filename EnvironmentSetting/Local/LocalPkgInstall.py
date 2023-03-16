@@ -16,4 +16,5 @@ subprocess.run('pip install google-auth-httplib2', shell=True)
 subprocess.run('pip install google-auth-oauthlib', shell=True)
 subprocess.run('pip install oauth2client', shell=True)
 
-
+# 其他套件
+subprocess.run('brew install smartmontools', shell=True)
