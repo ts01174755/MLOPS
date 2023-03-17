@@ -50,8 +50,8 @@ if __name__ == '__main__':
                 filePath=os.path.join(root, file),
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
-    for f_ in ['1_projectExampleTest.py', '2_lineNotifyServer.py']:
-        if f_ in ['1_projectExampleTest.py']: continue
+    for f_ in ['1_pythonServerTest.py', '2_lineNotifyServer.py']:
+        if f_ in ['1_pythonServerTest.py']: continue
         mlflow.CD(
             containerName=CONTAINERNAME,
             interpreter='python3.8',
