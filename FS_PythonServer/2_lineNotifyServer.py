@@ -18,6 +18,7 @@ if __name__ == '__main__':
 
     TABLE = 'google_form' # 這是正式用的table
     YESTERDAY = time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60) # 時間校準
+    print(time.strftime("%Y%m%d", YESTERDAY))
     rows = lineNotifyServer.searchPostgres(
         postgresCtrl = PostgresCtrl(
             # host=os.getenv('POSTGRES_HOST'),
