@@ -36,7 +36,7 @@ if __name__ == '__main__':
         },
         TODAY = time.strftime("%Y-%m-%d", TODAY),
     )
-
+    print(googleFormDF)
     # 連接PostgresDB與寫入資料
     posgresParseGoogleForm.insertGoogleFromData(
         postgresCtrl = PostgresCtrl(
