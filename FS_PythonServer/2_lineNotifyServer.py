@@ -41,7 +41,7 @@ if __name__ == '__main__':
             token = lineNotifyToken['雲課堂 - AI助手'],
             message =
             f'\n您好，想在這裡跟您註冊新課程，供老師打卡使用，以下是註冊資訊：'
-            f'\n填表日:{row_[0]}\n申請人:{row_[1]}\n所屬單位:{row_[2]}\n上課地點:{row_[3]}\n'
-            f'年級:{row_[4]}\n課程:{row_[5]}\n老師:{row_[6]}\n學生:{row_[7]}'
+            f'\n- 填表日:{row_[0].replace("T"," ").split(".")[0]}\n- 申請人: {row_[1]}\n- 所屬單位:{row_[2]}\n- 上課地點:{row_[3]}\n'
+            f'- 年級:{row_[4]}\n- 課程:{row_[5]}\n- 老師:{row_[6]}\n- 學生:{row_[7]}'
         )
         time.sleep(1)
