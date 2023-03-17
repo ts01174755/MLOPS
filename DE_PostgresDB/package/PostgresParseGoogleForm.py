@@ -13,7 +13,7 @@ class PosgresParseGoogleForm():
         # mongodb查詢一段時間內的資料
         rows = mongoDBCtrl.find_document(collection, queryFilter)
         crawlerResText = rows[-1]['crawlerResText']
-
+        print(rows)
         # 解析爬蟲資料
         keyMappping = {
             '13e6b85a': '年級',
