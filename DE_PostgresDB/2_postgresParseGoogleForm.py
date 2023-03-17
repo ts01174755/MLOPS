@@ -13,6 +13,7 @@ if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
     YESTERDAY = time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60) # 時間校準
     TODAY = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
+    TOMORROW = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 時間校準
     # TABLE = 'temptb' # 這是測試用的table
     TABLE = 'google_form' # 這是正式用的table
 
@@ -30,11 +31,11 @@ if __name__ == '__main__':
         collection = 'google_form',
         queryFilter = {
             "dt": {
-                "$gte": time.strftime("%Y-%m-%d", YESTERDAY),
-                "$lt": time.strftime("%Y-%m-%d", TODAY)
+                "$gte": time.strftime("%Y-%m-%d", TODAY),
+                "$lt": time.strftime("%Y-%m-%d", TOMORROW)
             }
         },
-        STARTDAY = time.strftime("%Y-%m-%d", YESTERDAY),
+        DATADATE = time.strftime("%Y-%m-%d", YESTERDAY),
     )
     print(googleFormDF)
     # 連接PostgresDB與寫入資料
