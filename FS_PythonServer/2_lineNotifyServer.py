@@ -17,7 +17,7 @@ if __name__ == '__main__':
     lineNotifyServer = MLFlow(LineNotifyServer())
 
     TABLE = 'google_form' # 這是正式用的table
-    TODAY = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
+    YESTERDAY = time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60) # 時間校準
     rows = lineNotifyServer.searchPostgres(
         postgresCtrl = PostgresCtrl(
             # host=os.getenv('POSTGRES_HOST'),
@@ -30,14 +30,14 @@ if __name__ == '__main__':
             SELECT \
                 uniquechar1,uniquechar2,uniquechar3,uniquechar4,uniquechar5,\
                 uniquechar6,uniquechar7,uniquechar8 \
-            FROM original.{TABLE} WHERE uniquechar1 >= \'{time.strftime("%Y%m%d", TODAY)}\';'
+            FROM original.{TABLE} WHERE uniquechar1 >= \'{time.strftime("%Y%m%d", YESTERDAY)}\';'
     )
     print(rows)
 
     with open('env/LineNotify.json', 'r') as f: lineNotifyToken = json.load(f)
     for row_ in rows:
         lineNotifyServer.postLineNotify(
-            token = lineNotifyToken['私人Notify'],
+            token = lineNotifyToken['雲課堂 - AI助手'],
             message =
             f'\n您好，想在這裡跟您註冊新課程，供老師打卡使用，以下是註冊資訊：'
             f'\n填表日:{row_[0]}\n申請人:{row_[1]}\n所屬單位:{row_[2]}\n上課地點:{row_[3]}\n'
