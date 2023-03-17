@@ -7,7 +7,7 @@ class PosgresParseGoogleForm():
         pass
 
     # 解析爬蟲資料
-    def parseGoogleFromData(self, mongoDBCtrl, collection, queryFilter, TODAY):
+    def parseGoogleFromData(self, mongoDBCtrl, collection, queryFilter, STARTDAY):
         '''以後可以把googleForm封裝成一個工具'''
         import time
         # mongodb查詢一段時間內的資料
@@ -31,7 +31,7 @@ class PosgresParseGoogleForm():
             responsesDataDict['respondentEmail'] = d_['respondentEmail']
 
             dt = time.strptime(responsesDataDict['lastSubmittedTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
-            if time.strftime('%Y-%m-%d', dt) != TODAY:continue
+            if time.strftime('%Y-%m-%d', dt) != STARTDAY:continue
 
             # 依照順序將資料寫入
             for k_ in ['6c712e8f', '4234b124', '13e6b85a', '071de1fa', '0ba3adbd', '6bd1afcd']:
