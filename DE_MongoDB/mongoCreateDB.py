@@ -22,6 +22,7 @@ if __name__ == '__main__':
     COLLECTION = 'tempdb'
     # COLLECTION = 'st_all_data'
     # COLLECTION = 'google_form'
+    # COLLECTION = 'chat_server'
 
     # 刪除collection - 等價於刪除table
     # print(mongodb.drop_collection(COLLECTION))

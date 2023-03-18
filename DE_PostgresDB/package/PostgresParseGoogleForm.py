@@ -31,7 +31,7 @@ class PosgresParseGoogleForm():
             responsesDataDict['respondentEmail'] = d_['respondentEmail']
 
             dt = time.strptime(responsesDataDict['lastSubmittedTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
-            if time.strftime('%Y-%m-%d', dt) != DATADATE:continue
+            if dt <= DATADATE:continue
 
             # 依照順序將資料寫入
             for k_ in ['6c712e8f', '4234b124', '13e6b85a', '071de1fa', '0ba3adbd', '6bd1afcd']:
