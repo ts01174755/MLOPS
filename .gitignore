@@ -1,3 +1,2 @@
 /env/*
-/FS_pythonChatServer/
-/FS_pythonChatServer/*
+.gitignore
