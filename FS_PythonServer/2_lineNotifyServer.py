@@ -38,7 +38,7 @@ if __name__ == '__main__':
     with open('env/LineNotify.json', 'r') as f: lineNotifyToken = json.load(f)
     for row_ in rows:
         lineNotifyServer.postLineNotify(
-            token = lineNotifyToken['雲課堂 - AI助手'],
+            token = lineNotifyToken['私人Notify'],
             message =
             f'\n您好，想在這裡跟您註冊新課程，供老師打卡使用，以下是註冊資訊：'
             f'\n- 填表日:{row_[0].replace("T"," ").split(".")[0]}\n- 申請人: {row_[1]}\n- 所屬單位:{row_[2]}\n- 上課地點:{row_[3]}\n'
