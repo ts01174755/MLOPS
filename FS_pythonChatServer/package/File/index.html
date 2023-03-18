@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+</head>
+<body>
+    <ul id="messages"></ul>
+    <input id="input" autocomplete="off" autofocus>
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const socket = new WebSocket('ws://' + location.host + '/ws');
+
+        socket.addEventListener('message', (event) => {
+            const msg = event.data;
+            const messageElement = document.createElement('li');
+            messageElement.innerText = msg;
+            document.getElementById('messages').appendChild(messageElement);
+        });
+
+        function sendMessage() {
+            const msg = document.getElementById('input').value;
+            socket.send(msg);
+            document.getElementById('input').value = '';
+        }
+    </script>
+</body>
+</html>
