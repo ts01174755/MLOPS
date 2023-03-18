@@ -17,7 +17,7 @@ if __name__ == '__main__':
     lineNotifyServer = MLFlow(LineNotifyServer())
 
     TABLE = 'google_form' # 這是正式用的table
-    DATADATE = time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60) # 時間校準
+    DATADATE = time.localtime(time.time() - 24 * 60 * 60 - 60) # 資料日期
 
     rows = lineNotifyServer.searchPostgres(
         postgresCtrl = PostgresCtrl(
@@ -31,7 +31,7 @@ if __name__ == '__main__':
             SELECT \
                 uniquechar1,uniquechar2,uniquechar3,uniquechar4,uniquechar5,\
                 uniquechar6,uniquechar7,uniquechar8 \
-            FROM original.{TABLE} WHERE uniquechar1 >= \'{time.strftime("%Y%m%d", DATADATE)}\';'
+            FROM original.{TABLE} WHERE uniquechar1 >= \'{time.strftime("%Y-%m-%d %H:%M:%S", DATADATE)}\';'
     )
     print(rows)
 
