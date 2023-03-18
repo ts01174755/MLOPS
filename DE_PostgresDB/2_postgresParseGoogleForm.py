@@ -11,9 +11,9 @@ import time
 
 if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
-    TODAY = time.localtime(time.time() + 8 * 60 * 60) # 時間校準
-    TOMORROW = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 時間校準
-    DATADATE = time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60) # 時間校準
+    TODAY = time.localtime(time.time() + 8 * 60 * 60) # 撈取時間範圍
+    TOMORROW = time.localtime(time.time() + 8 * 60 * 60 + 24 * 60 * 60) # 撈取時間範圍
+    DATADATE = time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60) # 資料日期
     # TABLE = 'temptb' # 這是測試用的table
     TABLE = 'google_form' # 這是正式用的table
 

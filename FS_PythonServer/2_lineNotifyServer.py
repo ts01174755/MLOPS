@@ -3,7 +3,7 @@ os.chdir(sys.argv[1])
 sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
 from package.controller.PostgresCtrl import PostgresCtrl
-from FS_PythonServer.package.LineNotifyServer import LineNotifyServer
+from FS_PythonServer.LineNotifyServer.package.LineNotifyServer import LineNotifyServer
 from dotenv import load_dotenv, find_dotenv
 from datetime import datetime, timedelta
 import time
