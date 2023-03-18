@@ -14,9 +14,9 @@ if __name__ == '__main__':
 
     app = FastAPI()
 
-    app.mount("/pythonServerExample", StaticFiles(directory="MLOPS/FS_PythonServer/pythonServerExample"), name="pythonServerExample")
+    app.mount("/File", StaticFiles(directory="MLOPS/FS_PythonServer/File"), name="File")
 
-    templates = Jinja2Templates(directory="MLOPS/FS_PythonServer/pythonServerExample/templates")
+    templates = Jinja2Templates(directory="MLOPS/FS_PythonServer/File/templates")
 
     @app.get("/")
     async def root():
