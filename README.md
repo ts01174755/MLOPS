@@ -1,2 +1,2 @@
-# This is MLOps project created by NS R&D.
+# This is MLOps project created by NS R&Ds.
 
