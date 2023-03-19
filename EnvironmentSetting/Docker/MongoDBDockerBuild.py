@@ -1,4 +1,4 @@
-import os; os.chdir(os.path.dirname(os.path.abspath(__file__)).split('PostgresDB')[0])
+import os; 
 import sys; sys.path.append(os.getcwd())
 from package.Environment.DockerCmd import DockerCmd
 import time
@@ -10,37 +10,38 @@ import time
 # >> https://juejin.cn/post/7132086527340871693
 
 if __name__ == '__main__':
-    # dockerCmd pull Images
+    # Step 1: dockerCmd pull Images
     # DockerCmd.dockerPull(tag='mongo:5.0.15')
     # DockerCmd.dockerPull(tag='mongo-express:0.54.0')
 
     # # dockerCmd 建立網路
     # DockerCmd.dockerNetworkRemove(name='mongo-net')
     # DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
-    #
+    
+    # Step 2
     # # dockerCmd run mongodb
     # DockerCmd.dockerRun(
     #     tag='mongo:5.0.15',
     #     name='mongodb',
     #     port='27017:27017',
-    #     volume='/Users/peiyuwu/Development/docker/mongodb:/Users/peiyuwu',
+    #     volume='/Users/ethanwu/Desktop/WorkSpace_tmp/mlops_dev/docker/mongodb:/Users/ethanwu',
     #     envDict={'MONGO_INITDB_ROOT_USERNAME': 'mongodb', 'MONGO_INITDB_ROOT_PASSWORD': 'mongodb'},
     #     network='mongo-net',
     #     detach=True, interactive=False, TTY=False
     # )
-    #
+    
     # # dockerCmd run dpage/pgadmin4:6.20
     # DockerCmd.dockerRun(
     #     tag='mongo-express:0.54.0',
     #     name='mongo_express',
     #     port='8081:8081',
-    #     volume='/Users/peiyuwu/Development/docker/mongo_express:/Users/peiyuwu',
+    #     volume='/Users/ethanwu/Desktop/WorkSpace_tmp/mlops_dev/docker/mongo_express:/Users/ethanwu',
     #     envDict={
     #         'ME_CONFIG_MONGODB_SERVER': 'mongodb',
     #         'ME_CONFIG_MONGODB_ADMINUSERNAME': 'mongodb',
     #         'ME_CONFIG_MONGODB_ADMINPASSWORD': 'mongodb',
-    #         'ME_CONFIG_BASICAUTH_USERNAME': 'mongoUser',
-    #         'ME_CONFIG_BASICAUTH_PASSWORD': 'mongoUserPassword'
+    #         'ME_CONFIG_BASICAUTH_USERNAME': 'mongoUser', # Ui Account
+    #         'ME_CONFIG_BASICAUTH_PASSWORD': 'mongoUserPassword' # Ui Pwd
     #     },
     #     network='mongo-net',
     #     detach=True, interactive=False, TTY=False
@@ -51,10 +52,12 @@ if __name__ == '__main__':
     # # MongoDB - 建立資料庫
     # # >> 用mongo_express建Database
     # # >> 或用mongodb Shell建Database
+    # # $ docker exec -it mongodb bash
     # # $ mongo -u mongodb -p mongodb --authenticationDatabase admin
-    # # > use originaldb
+    # # > use originaldb # 建立mongodb 的db
     #
     # # ####################################################################################################################
+    # Step 3
     # # dockerCmd mongodb - 基礎安裝
     # DockerCmd.dockerExec(name='mongodb', cmd='apt-get update', detach=False, interactive=True, TTY=False)  # 更新 apt-get
     # DockerCmd.dockerExec(name='mongodb', cmd='apt-get install -y git', detach=False, interactive=True, TTY=False)  # 安裝 git
@@ -65,15 +68,15 @@ if __name__ == '__main__':
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python"', detach=False, interactive=True, TTY=False) # 安裝python
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3"', detach=False, interactive=True, TTY=False) # 安裝python
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3-pip"', detach=False, interactive=True, TTY=False)  # 安裝 pip3
-    #
+    # #
     # ####################################################################################################################
     # # # python 常用安裝包
-    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
-    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install psycopg2"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2
-    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install psycopg2-binary"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
-    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install pymongo"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
-    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install requests"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
-    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install beautifulsoup4"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install python-dotenv"', detach=False, interactive=True, TTY=False)  # 安裝 python-dotenv
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install psycopg2"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install psycopg2-binary"', detach=False, interactive=True, TTY=False)  # 安裝 psycopg2-binary
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install pymongo"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install requests"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install beautifulsoup4"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
 
     # 安裝 google form 相關的套件
     DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-api-python-client"', detach=False, interactive=True, TTY=False)  # 安裝 google-api-python-client

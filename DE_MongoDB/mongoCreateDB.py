@@ -19,13 +19,13 @@ if __name__ == '__main__':
         port=int(os.getenv('MongoDB_PORT')),
         database_name='originaldb'
     ))
-    COLLECTION = 'tempdb'
+    # COLLECTION = 'tempdb'
     # COLLECTION = 'st_all_data'
-    # COLLECTION = 'google_form'
+    COLLECTION = 'google_form'
     # COLLECTION = 'chat_server'
 
     # 刪除collection - 等價於刪除table
-    # print(mongodb.drop_collection(COLLECTION))
+    print(mongodb.drop_collection(COLLECTION))
 
     # 新增collection - 等價於建立table
     print(mongodb.create_collection(COLLECTION))
