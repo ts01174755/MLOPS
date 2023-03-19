@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # COLLECTION = 'chat_server'
 
     # 刪除collection - 等價於刪除table
-    # print(mongodb.drop_collection(COLLECTION))
+    print(mongodb.drop_collection(COLLECTION))
 
     # 新增collection - 等價於建立table
     print(mongodb.create_collection(COLLECTION))

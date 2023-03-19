@@ -11,42 +11,42 @@ import time
 
 if __name__ == '__main__':
     # dockerCmd pull Images
-    # DockerCmd.dockerPull(tag='mongo:5.0.15')
-    # DockerCmd.dockerPull(tag='mongo-express:0.54.0')
+    DockerCmd.dockerPull(tag='mongo:5.0.15')
+    DockerCmd.dockerPull(tag='mongo-express:0.54.0')
 
     # # dockerCmd 建立網路
-    # DockerCmd.dockerNetworkRemove(name='mongo-net')
-    # DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
-    #
-    # # dockerCmd run mongodb
-    # DockerCmd.dockerRun(
-    #     tag='mongo:5.0.15',
-    #     name='mongodb',
-    #     port='27017:27017',
-    #     volume='/Users/peiyuwu/Development/docker/mongodb:/Users/peiyuwu',
-    #     envDict={'MONGO_INITDB_ROOT_USERNAME': 'mongodb', 'MONGO_INITDB_ROOT_PASSWORD': 'mongodb'},
-    #     network='mongo-net',
-    #     detach=True, interactive=False, TTY=False
-    # )
-    #
-    # # dockerCmd run dpage/pgadmin4:6.20
-    # DockerCmd.dockerRun(
-    #     tag='mongo-express:0.54.0',
-    #     name='mongo_express',
-    #     port='8081:8081',
-    #     volume='/Users/peiyuwu/Development/docker/mongo_express:/Users/peiyuwu',
-    #     envDict={
-    #         'ME_CONFIG_MONGODB_SERVER': 'mongodb',
-    #         'ME_CONFIG_MONGODB_ADMINUSERNAME': 'mongodb',
-    #         'ME_CONFIG_MONGODB_ADMINPASSWORD': 'mongodb',
-    #         'ME_CONFIG_BASICAUTH_USERNAME': 'mongoUser',
-    #         'ME_CONFIG_BASICAUTH_PASSWORD': 'mongoUserPassword'
-    #     },
-    #     network='mongo-net',
-    #     detach=True, interactive=False, TTY=False
-    # )
-    # time.sleep(3)
-    # os.system('open http://localhost:8081/')
+    DockerCmd.dockerNetworkRemove(name='mongo-net')
+    DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
+
+    # dockerCmd run mongodb
+    DockerCmd.dockerRun(
+        tag='mongo:5.0.15',
+        name='mongodb',
+        port='27017:27017',
+        volume='/Users/peiyuwu/Development/docker/mongodb:/Users/peiyuwu',
+        envDict={'MONGO_INITDB_ROOT_USERNAME': 'mongodb', 'MONGO_INITDB_ROOT_PASSWORD': 'mongodb'},
+        network='mongo-net',
+        detach=True, interactive=False, TTY=False
+    )
+
+    # dockerCmd run dpage/pgadmin4:6.20
+    DockerCmd.dockerRun(
+        tag='mongo-express:0.54.0',
+        name='mongo_express',
+        port='8081:8081',
+        volume='/Users/peiyuwu/Development/docker/mongo_express:/Users/peiyuwu',
+        envDict={
+            'ME_CONFIG_MONGODB_SERVER': 'mongodb',
+            'ME_CONFIG_MONGODB_ADMINUSERNAME': 'mongodb',
+            'ME_CONFIG_MONGODB_ADMINPASSWORD': 'mongodb',
+            'ME_CONFIG_BASICAUTH_USERNAME': 'mongoUser',
+            'ME_CONFIG_BASICAUTH_PASSWORD': 'mongoUserPassword'
+        },
+        network='mongo-net',
+        detach=True, interactive=False, TTY=False
+    )
+    time.sleep(3)
+    os.system('open http://localhost:8081/')
     # ####################################################################################################################
     # # MongoDB - 建立資料庫
     # # >> 用mongo_express建Database
