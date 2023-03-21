@@ -2,3 +2,5 @@
 .gitignore
 /EnvironmentSetting/Docker/__pycache__
 /package/__pycache__
+/package/Environment/__pycache__
+/package/CICD/__pycache__

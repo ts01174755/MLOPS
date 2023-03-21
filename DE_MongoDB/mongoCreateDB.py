@@ -30,6 +30,9 @@ if __name__ == '__main__':
     # 新增collection - 等價於建立table
     print(mongodb.create_collection(COLLECTION))
 
+
+
+
     # # 新增collection - 等價於建立table
     # print(mongodb.create_collection('test'))
     #

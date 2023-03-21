@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
         if STEP == 'pull_image':
             DockerCmd.dockerPull(tag = MongoDB.tag)
-            # DockerCmd.dockerNetworkRemove(name='mongo-net')
+            DockerCmd.dockerNetworkRemove(name='mongo-net')
             DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
 
         # Step 2: dockerCmd run mongodb
