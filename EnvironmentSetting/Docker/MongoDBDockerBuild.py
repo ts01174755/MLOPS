@@ -10,43 +10,47 @@ import time
 # >> https://juejin.cn/post/7132086527340871693
 
 if __name__ == '__main__':
-    # dockerCmd pull Images
-    DockerCmd.dockerPull(tag='mongo:5.0.15')
-    DockerCmd.dockerPull(tag='mongo-express:0.54.0')
+    # # dockerCmd pull Images
+    # DockerCmd.dockerPull(tag='mongo:5.0.15')
+    # DockerCmd.dockerPull(tag='mongo-express:0.54.0')
+    #
+    # # # dockerCmd 建立網路
+    # DockerCmd.dockerNetworkRemove(name='mongo-net')
+    # DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
+    #
+    # # dockerCmd run mongodb
+    # DockerCmd.dockerRun(
+    #     tag='mongo:5.0.15',
+    #     name='mongodb',
+    #     port='27017:27017',
+    #     volume='/Users/peiyuwu/Development/docker/mongodb:/Users/peiyuwu',
+    #     envDict={'MONGO_INITDB_ROOT_USERNAME': 'mongodb', 'MONGO_INITDB_ROOT_PASSWORD': 'mongodb'},
+    #     network='mongo-net',
+    #     detach=True, interactive=False, TTY=False
+    # )
+    #
+    # # dockerCmd run dpage/pgadmin4:6.20
+    # DockerCmd.dockerRun(
+    #     tag='mongo-express:0.54.0',
+    #     name='mongo_express',
+    #     port='8081:8081',
+    #     volume='/Users/peiyuwu/Development/docker/mongo_express:/Users/peiyuwu',
+    #     envDict={
+    #         'ME_CONFIG_MONGODB_SERVER': 'mongodb',
+    #         'ME_CONFIG_MONGODB_ADMINUSERNAME': 'mongodb',
+    #         'ME_CONFIG_MONGODB_ADMINPASSWORD': 'mongodb',
+    #         'ME_CONFIG_BASICAUTH_USERNAME': 'mongoUser',
+    #         'ME_CONFIG_BASICAUTH_PASSWORD': 'mongoUserPassword'
+    #     },
+    #     network='mongo-net',
+    #     detach=True, interactive=False, TTY=False
+    # )
+    # time.sleep(3)
+    # os.system('open http://localhost:8081/')
+    #
+    # # 建立基礎Folder
+    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "mkdir -p /Users/peiyuwu/Downloads"', detach=False, interactive=True, TTY=False)
 
-    # # dockerCmd 建立網路
-    DockerCmd.dockerNetworkRemove(name='mongo-net')
-    DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
-
-    # dockerCmd run mongodb
-    DockerCmd.dockerRun(
-        tag='mongo:5.0.15',
-        name='mongodb',
-        port='27017:27017',
-        volume='/Users/peiyuwu/Development/docker/mongodb:/Users/peiyuwu',
-        envDict={'MONGO_INITDB_ROOT_USERNAME': 'mongodb', 'MONGO_INITDB_ROOT_PASSWORD': 'mongodb'},
-        network='mongo-net',
-        detach=True, interactive=False, TTY=False
-    )
-
-    # dockerCmd run dpage/pgadmin4:6.20
-    DockerCmd.dockerRun(
-        tag='mongo-express:0.54.0',
-        name='mongo_express',
-        port='8081:8081',
-        volume='/Users/peiyuwu/Development/docker/mongo_express:/Users/peiyuwu',
-        envDict={
-            'ME_CONFIG_MONGODB_SERVER': 'mongodb',
-            'ME_CONFIG_MONGODB_ADMINUSERNAME': 'mongodb',
-            'ME_CONFIG_MONGODB_ADMINPASSWORD': 'mongodb',
-            'ME_CONFIG_BASICAUTH_USERNAME': 'mongoUser',
-            'ME_CONFIG_BASICAUTH_PASSWORD': 'mongoUserPassword'
-        },
-        network='mongo-net',
-        detach=True, interactive=False, TTY=False
-    )
-    time.sleep(3)
-    os.system('open http://localhost:8081/')
     # ####################################################################################################################
     # # MongoDB - 建立資料庫
     # # >> 用mongo_express建Database
@@ -65,6 +69,7 @@ if __name__ == '__main__':
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python"', detach=False, interactive=True, TTY=False) # 安裝python
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3"', detach=False, interactive=True, TTY=False) # 安裝python
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3-pip"', detach=False, interactive=True, TTY=False)  # 安裝 pip3
+    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y unzip"', detach=False, interactive=True, TTY=False)  # 安裝 unzip
     #
     # ####################################################################################################################
     # # # python 常用安裝包
@@ -75,9 +80,9 @@ if __name__ == '__main__':
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install requests"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install beautifulsoup4"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
 
-    # 安裝 google form 相關的套件
-    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-api-python-client"', detach=False, interactive=True, TTY=False)  # 安裝 google-api-python-client
-    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-auth-httplib2"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-httplib2
-    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-auth-oauthlib"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-oauthlib
-    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install oauth2client"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth
+    # # 安裝 google form 相關的套件
+    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-api-python-client"', detach=False, interactive=True, TTY=False)  # 安裝 google-api-python-client
+    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-auth-httplib2"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-httplib2
+    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-auth-oauthlib"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-oauthlib
+    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install oauth2client"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth
 

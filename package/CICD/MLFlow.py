@@ -66,22 +66,15 @@ class MLFlow(object):
             interactive=True,
             TTY=False,
         )
-        # 建立一個env資料夾
+
+    def CI_mkdir(self, containerName, targetPath): # 建立一個資料夾
         DockerCmd.dockerExec(
             name=containerName,
-            cmd=f'mkdir -p {targetPath}/env',
+            cmd=f'mkdir -p {targetPath}',
             detach=False,
             interactive=True,
             TTY=False,
         )
-        # 複製.env檔案到container中
-        # 並寫入一行"ROLE=containerName"的設定
-        DockerCmd.dockerCopy(
-            name=containerName,
-            filePath = envPATH,
-            targetPath = f'{targetPath}/env'
-        )
-
     def CI(self, containerName, filePath, targetPath): # 把現在執行的程式更新到container中
         # 把現在執行的程式更新到container中
         DockerCmd.dockerCopy(
