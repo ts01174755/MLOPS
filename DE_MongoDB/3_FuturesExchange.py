@@ -11,11 +11,12 @@ import json
 if __name__ == '__main__':
     load_dotenv(find_dotenv('env/.env'))
     load_dotenv(find_dotenv('env/.config'))
-    with open('env/futuresExchange.json', 'r') as f: futuresExchangeDict = json.load(f)
-    FILENAME = 'Daily_[:DATE_WITH_BOTTOMLINE].zip'
     TODAY = time.strftime("%Y_%m_%d", time.localtime(time.time() + 8 * 60 * 60 - 24 * 60 * 60))
-    URL = futuresExchangeDict['Futures_Dailydownload'].replace('[:DATE_WITH_BOTTOMLINE]', TODAY)
-    MONGODB_DOWNLOADS_PATH = os.getenv('MONGODB_DOWNLOADS_PATH') + '/' + FILENAME.replace('[:DATE_WITH_BOTTOMLINE]', TODAY)
+
+    with open('env/futuresExchange.json', 'r') as f: futuresExchangeDict = json.load(f)
+    FILENAME = f'Daily_{TODAY}.zip'
+    URL = futuresExchangeDict['Futures_Dailydownload'].replace('[:FILENAME]', FILENAME)
+    MONGODB_DOWNLOADS_PATH = os.getenv('MONGODB_DOWNLOADS_PATH') + '/' + FILENAME.split('.')[0]
 
     # 每日解析爬蟲資料
     futuresExchange = MLFlow(FuturesExchange())
