@@ -18,38 +18,26 @@ if __name__ == '__main__':
         containerName=CONTAINERNAME,
         gitHubUrl='https://github.com/ts01174755/MLOPS.git',
         targetPath='/Users/peiyuwu/MLOPS',
-        envPATH='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env/.env'
     )
 
-    # env - CI
-    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env'):
+    # CONTAINERNAME - CI
+    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS'):
+        rootCheck = False
+        for r_ in ['__pycache__', '.git', '.idea', 'venv', 'OLD']:
+            if root.find(r_) != -1: rootCheck = True
+        if rootCheck: continue
+
+        mlflow.CI_mkdir(
+            containerName=CONTAINERNAME,
+            targetPath=root.replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS'),
+        )
         for file in files:
-            if root.find('__pycache__') != -1: continue
             mlflow.CI(
                 containerName=CONTAINERNAME,
                 filePath=os.path.join(root, file),
                 targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
             )
 
-    # package - CI
-    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/package'):
-        for file in files:
-            if root.find('__pycache__') != -1: continue
-            mlflow.CI(
-                containerName=CONTAINERNAME,
-                filePath=os.path.join(root, file),
-                targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
-            )
-
-    # FS_PythonServer - CI/CD
-    for root, dirs, files in os.walk(f'/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/{PROJECTNAME}'):
-        for file in files:
-            if root.find('__pycache__') != -1: continue
-            mlflow.CI(
-                containerName=CONTAINERNAME,
-                filePath=os.path.join(root, file),
-                targetPath=os.path.join(root, file).replace('/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS', '/Users/peiyuwu/MLOPS')
-            )
     for f_ in ['', '2_lineNotifyServer.py']:
         if f_ in ['']: continue
         mlflow.CD(
