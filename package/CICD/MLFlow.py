@@ -46,7 +46,7 @@ class MLFlow(object):
     def __getattribute__(self, item):
         return object.__getattribute__(self, item)
 
-    def deploy(self, containerName, gitHubUrl, targetPath, envPATH): # 把gitHub上的程式碼clone到docker container中
+    def deploy(self, containerName, gitHubUrl, targetPath): # 把gitHub上的程式碼clone到docker container中
         self.dockerdeploy = True
 
         # 把gitHub上的程式碼clone到docker container中

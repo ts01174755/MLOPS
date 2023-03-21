@@ -12,7 +12,6 @@ if __name__ == '__main__':
         containerName=CONTAINERNAME,
         gitHubUrl='https://github.com/ts01174755/MLOPS.git',
         targetPath='/Users/peiyuwu/MLOPS',
-        envPATH='/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/env/.env'
     )
 
     # CONTAINERNAME - CI
