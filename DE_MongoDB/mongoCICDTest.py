@@ -15,8 +15,8 @@ if __name__ == '__main__':
     mlflow.deploy(
         containerName=CONTAINERNAME,
         gitHubUrl='https://github.com/ts01174755/MLOPS.git',
-        targetPath='/Users/ethanwu/MLOPS_NS_RD', 
-        envPATH='/Users/ethanwu/Documents/GitHub/MLOps_NS_RD/env/.env'
+        targetPath='/Users/ethanwu/MLOps_NS_RD', 
+        envPATH='/Users/ethanwu/Documents/GitHub/MLOps_NS_RD/env/.env' 
     )
 
     # env - CI
@@ -53,6 +53,6 @@ if __name__ == '__main__':
         mlflow.CD(
             containerName=CONTAINERNAME,
             interpreter='python3.8',
-            targetPath=f'/Users/ethanwu/MLOPS_NS_RD/{PROJECTNAME}/{f_}',
-            paramArgs=f'/Users/ethanwu/MLOPS_NS_RD', # 根目錄
+            targetPath=f'/Users/ethanwu/MLOps_NS_RD/{PROJECTNAME}/{f_}',
+            paramArgs=f'/Users/ethanwu/MLOps_NS_RD', # 根目錄
         )

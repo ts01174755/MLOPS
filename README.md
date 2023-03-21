@@ -1,3 +1,3 @@
 # This is MLOps project created by NS R&Ds.
-- by 台灣梯度下降第一品牌
-
+### 編修紀錄:
+    * 0321: 將EnvironmentSetting編修為config檔
