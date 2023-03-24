@@ -9,11 +9,7 @@ STEP = 'docker_run'
 
 # Run MongoDBDockerBuild.py
 if __name__ == '__main__':  
-    if BUILD_ENV == 'MongoDB':  
-        cmd = f"python3 ./EnvironmentSetting/Docker/MongoDBDockerBuild.py {BUILD_ENV} {STEP}"
-        os.system(cmd)
-
-    if BUILD_ENV == 'MongoExpress':  
+    if BUILD_ENV in ['MongoDB', 'MongoExpress'] :  
         cmd = f"python3 ./EnvironmentSetting/Docker/MongoDBDockerBuild.py {BUILD_ENV} {STEP}"
         os.system(cmd)
 
@@ -21,11 +17,7 @@ if __name__ == '__main__':
         cmd = f"python3 ./EnvironmentSetting/Docker/MongoDBDockerBuild.py {BUILD_ENV} {STEP}"
         os.system(cmd)
 
-    if BUILD_ENV == 'PostgresSQL':  
-        cmd = f"python3 ./EnvironmentSetting/Docker/PostgresDockerBuild.py {BUILD_ENV} {STEP}"
-        os.system(cmd)
-
-    if BUILD_ENV == 'PostgresSQLadmin':  
+    if BUILD_ENV in ['PostgresSQL', 'PostgresSQLadmin']:  
         cmd = f"python3 ./EnvironmentSetting/Docker/PostgresDockerBuild.py {BUILD_ENV} {STEP}"
         os.system(cmd)
 
