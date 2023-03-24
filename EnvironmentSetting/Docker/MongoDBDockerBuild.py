@@ -2,7 +2,11 @@ import os;
 import sys; sys.path.append(os.getcwd())
 from package.Environment.DockerCmd import DockerCmd
 import time
-from config import BUILD_ENV, STEP, MongoDB, MongoExpress
+from config import MongoDB, MongoExpress
+
+BUILD_ENV = sys.argv[1]
+STEP = sys.argv[2]
+
 
 if __name__ == '__main__':    
     # Step 1: dockerCmd pull Image
@@ -63,7 +67,7 @@ if __name__ == '__main__':
     # # > use originaldb # 建立mongodb 的db
     #
     # # ####################################################################################################################
-    if BUILD_ENV == 'PythonEnv':
+    if BUILD_ENV == 'Mongo_PythonEnv':
         # Step 3: dockerCmd mongodb - 基礎安裝
         DockerCmd.dockerExec(name='mongodb', cmd='apt-get update', detach=False, interactive=True, TTY=False)  # 更新 apt-get
         DockerCmd.dockerExec(name='mongodb', cmd='apt-get install -y git', detach=False, interactive=True, TTY=False)  # 安裝 git

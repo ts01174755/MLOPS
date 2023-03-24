@@ -1,6 +1,5 @@
 import os; import sys;
-os.chdir(sys.argv[1])
-sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()) # 把根目錄的路徑貼到import套件的路徑
 from package.CICD.MLFlow import MLFlow
 from package.controller.MongoDBCtrl import MongoDBCtrl
 from DE_MongoDB.package.GoogleFormApi import GoogleFormApi

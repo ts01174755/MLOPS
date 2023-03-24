@@ -1,5 +1,4 @@
 import os; import sys;
-os.chdir(sys.argv[1])
 sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
 from package.controller.PostgresCtrl import PostgresCtrl

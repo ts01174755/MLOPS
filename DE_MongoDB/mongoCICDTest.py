@@ -10,7 +10,7 @@ if __name__ == '__main__':
     mlflow = MLFlow()
     mlflow.deploy(
         containerName=CONTAINERNAME,
-        gitHubUrl='https://github.com/CubatLin/MLOps_sideproject.git',
+        gitHubUrl='https://github.com/ts01174755/MLOPS.git',
         targetPath='/Users/ethanwu/MLOps_NS_RD', # docker路徑
         envPATH='/Users/ethanwu/Documents/GitHub/MLOps_NS_RD/env/.env' #  本機路徑
     )
@@ -48,14 +48,14 @@ if __name__ == '__main__':
     #         )
 
     # CD
-    for f_ in ['mongoCreateDB.py', '1_STCrawler.py', '2_GoogleFormApi.py']:
-        if f_ in ['mongoCreateDB.py', '1_STCrawler.py']: continue
-        mlflow.CD(
-            containerName=CONTAINERNAME,
-            interpreter='python3.8',
-            targetPath=f'/Users/ethanwu/MLOps_NS_RD/{PROJECTNAME}/{f_}',
-            paramArgs=f'/Users/ethanwu/MLOps_NS_RD', # 根目錄
-        )
+    # for f_ in ['mongoCreateDB.py', '1_STCrawler.py', '2_GoogleFormApi.py']:
+    #     if f_ in ['mongoCreateDB.py', '1_STCrawler.py']: continue
+    #     mlflow.CD(
+    #         containerName=CONTAINERNAME,
+    #         interpreter='python3.8',
+    #         targetPath=f'/Users/ethanwu/MLOps_NS_RD/{PROJECTNAME}/{f_}',
+    #         paramArgs=f'/Users/ethanwu/MLOps_NS_RD', # 根目錄
+    #     )
 
 
 # # Step 1:
@@ -68,11 +68,11 @@ if __name__ == '__main__':
 # )
 
 
-# # Step 2:
-# f_ = '2_GoogleFormApi.py'
-# mlflow.CD(
-#     containerName=CONTAINERNAME,
-#     interpreter='python3.8',
-#     targetPath=f'/Users/ethanwu/MLOps_NS_RD/{PROJECTNAME}/{f_}',
-#     paramArgs=f'/Users/ethanwu/MLOps_NS_RD', # 根目錄
-# )
+    # # Step 2:
+    f_ = '2_GoogleFormApi.py'
+    mlflow.CD(
+        containerName=CONTAINERNAME,
+        interpreter='python3.8',
+        targetPath=f'/Users/ethanwu/MLOps_NS_RD/{PROJECTNAME}/{f_}',
+        paramArgs=f'/Users/ethanwu/MLOps_NS_RD', # 根目錄
+    )

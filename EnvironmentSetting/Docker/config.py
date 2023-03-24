@@ -1,11 +1,3 @@
-#-----------------------------------------------------------------------
-# BUILD_ENV: MongoDB, MongoExpress, PythonEnv
-BUILD_ENV = 'PythonEnv'
-# STEP: pull_image, docker_run
-STEP = 'docker_run'
-#-----------------------------------------------------------------------
-
-
 class MongoDB:
     def __init__(self):
         self.tag = 'mongo:5.0.15'
@@ -31,3 +23,26 @@ class MongoExpress:
         self.network = 'mongo-net'
 
 
+class PostgresSQL:
+    def __init__(self):
+        self.tag = 'postgres:15.2'
+        self.name = 'postgres15.2'
+        self.port = '5432:5432'
+        self.volume = '/Users/ethanwu/Desktop/WorkSpace_tmp/mlops_dev/docker/postgres15.2:/Users/ethanwu'
+        self.envDict = {'POSTGRES_USER': 'postgres', 'POSTGRES_PASSWORD': 'postgres', 'POSTGRES_DB': 'postgres'}
+
+
+class PostgresSQLadmin:
+    def __init__(self):
+        self.tag = 'dpage/pgadmin4:6.20'
+        self.name = 'pgadmin4'
+        self.port = '5050:80'
+        self.volume = '/Users/ethanwu/Desktop/WorkSpace_tmp/mlops_dev/docker/pgadmin4:/Users/ethanwu'
+        self.envDict = {'PGADMIN_DEFAULT_EMAIL': 'pgadmin4@gmail.com', 'PGADMIN_DEFAULT_PASSWORD': 'pgadmin4'}
+
+# PostgresSQLadmin 執行:
+# docker run -p 5050:80 \
+#     -e "PGADMIN_DEFAULT_EMAIL=pgadmin4@gmail.com" \
+#     -e "PGADMIN_DEFAULT_PASSWORD=pgadmin4" \
+#     -d dpage/pgadmin4:6.20
+#     -n pgadmin4
