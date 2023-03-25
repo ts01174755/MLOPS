@@ -92,3 +92,10 @@ if __name__ == '__main__':
     DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install requests"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
     DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install beautifulsoup4"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
     DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install pandas"', detach=False, interactive=True, TTY=False)  # 安裝 pymongo
+
+    # 安裝 google form api 相關的套件
+    DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install google-api-python-client"', detach=False, interactive=True, TTY=False)  # 安裝 google-api-python-client
+    DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install google-auth-httplib2"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-httplib2
+    DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install google-auth-oauthlib"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-oauthlib
+    DockerCmd.dockerExec(name='postgres15.2', cmd='bash -c "pip3 install oauth2client"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth
+
