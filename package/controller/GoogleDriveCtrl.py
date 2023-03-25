@@ -99,7 +99,7 @@ class GoogleDriveBase():
             done = False
             while done is False:
                 status, done = downloader.next_chunk()
-                print(F"Download {int(status.progress() * 100)}%.")
+                if print_file: print(F"Download {int(status.progress() * 100)}%.")
             with open(file_name, 'wb') as f:
                 f.write(fh.getvalue())
         except HttpError as error:
@@ -620,7 +620,6 @@ class GoogleDrive(GoogleDriveBase):
 
         return 'success'
 
-
     # 模擬Shell指令
     def execute_shell_command(self, command, print_file=True):
         cmdList = self._parse_command(command)
@@ -724,14 +723,17 @@ class GoogleDrive(GoogleDriveBase):
 
 
 if __name__ == '__main__':
+    # token 教學
+    # https://xenby.com/b/180-%E6%95%99%E5%AD%B8-%E5%A6%82%E4%BD%95%E7%94%B3%E8%AB%8B%E4%B8%A6%E4%BD%BF%E7%94%A8token%E5%AD%98%E5%8F%96google-drive-rest-api-%E4%B8%8D%E9%9C%80%E4%BD%BF%E7%94%A8%E8%80%85%E4%BB%8B%E9%9D%A2
+
     import pprint
     import time
-    # googleDrive = GoogleDrive(
-    #     TOKEN = 'MLOPS/env/googleDriveToken.json',
-    #     CLIENT_SECRET_FILE='MLOPS/env/client_secret.json',
-    #     SCOPES=['https://www.googleapis.com/auth/drive'], # 讀寫權限，刪除client_secret.json後，重新執行程式，會要求重新授權
-    #     # SCOPES=['https://www.googleapis.com/auth/drive.metadata.readonly'] # 只有讀取權限，刪除client_secret.json後，重新執行程式，會要求重新授權
-    # )
+    googleDrive = GoogleDrive(
+        TOKEN = 'MLOPS/env/googleDriveToken_stpeteamshare.json',
+        CLIENT_SECRET_FILE='MLOPS/env/client_secret_stpeteamshare.json',
+        SCOPES=['https://www.googleapis.com/auth/drive'], # 讀寫權限，刪除client_secret.json後，重新執行程式，會要求重新授權
+        # SCOPES=['https://www.googleapis.com/auth/drive.metadata.readonly'] # 只有讀取權限，刪除client_secret.json後，重新執行程式，會要求重新授權
+    )
     # # 查詢根目錄下所有檔案
     # files = googleDrive.list_files(query='root in parents')
     # files = googleDrive.list_files(query="mimeType='image/jpeg'") # 查詢jpg
@@ -741,9 +743,13 @@ if __name__ == '__main__':
     # files = googleDrive.list_files(query="mimeType='application/vnd.google-apps.folder' and 'root' in parents") # 查詢根目錄下所有資料夾
     # files = googleDrive.list_files(query="mimeType='application/vnd.google-apps.folder' and name='newFolder'") # 查詢特定名字的資料夾
 
+    # 路徑建議使用絕對路徑，相對路徑會有問題
     # # ls 測試－只能查詢資料夾
     # # files = googleDrive.execute_shell_command(f'ls /', print_file=False) # 查詢根目錄下所有檔案
-    # files = googleDrive.execute_shell_command(f'ls /testFolder', print_file=False) # 查詢根目錄下所有檔案
+    # files = googleDrive.execute_shell_command(f'ls /testFolder/newFolder', print_file=False) # 查詢根目錄下所有檔案
+    #
+    # # cd 測試－只能取得資料夾ＩＤ
+    # files = googleDrive.execute_shell_command(f'cd /testFolder/newFolder', print_file=True) # 切換資料夾
     #
     # # mkdir 測試
     # timeStr = time.strftime("%Y%m%d_%H%M%S", time.localtime())
@@ -766,4 +772,4 @@ if __name__ == '__main__':
     # # rm 測試
     # files = googleDrive.execute_shell_command(f'rm /testFolder/newFolder{timeStr}_2/testFile_copy2.txt', print_file=False) # 刪除檔案
     # files = googleDrive.execute_shell_command(f'rm -r /testFolder/newFolder{timeStr}_2', print_file=False) # 刪除資料夾
-
+    #
