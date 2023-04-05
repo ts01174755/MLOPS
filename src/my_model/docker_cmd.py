@@ -17,7 +17,7 @@ class DockerFileSystem:
 class DockerContainer:
 
     @classmethod
-    def dockerRun(cls, tag, name, volume, port="", envDict = {}, detach=True, interactive=True, TTY=False, network=""):  # 建立docker container
+    def dockerRun(cls, tag, name, volume, port=[], envDict = {}, detach=True, interactive=True, TTY=False, network=""):  # 建立docker container
         env = ""
         for key, value in envDict.items(): env += f"-e {key}={value} "
         par = "-" if interactive | detach | TTY else ""
@@ -25,7 +25,7 @@ class DockerContainer:
         par += "d" if detach else ""
         par += "t" if TTY else ""
 
-        if port != "": port = f"-p {port}"
+        port = " ".join([f"-p {p}" for p in port])
         if network != "": network = f"--network {network}"
         print(f"docker run {par} {port} {env} {network} --name {name} -v {volume} {tag}")
         subprocess.run(f"docker run {par} {port} {env} {network} --name {name} -v {volume} {tag}", shell=True)
@@ -39,6 +39,12 @@ class DockerContainer:
     def dockerRemove(cls, name):  # 刪除docker container
         print(f"docker rm {name}")
         subprocess.run(f"docker rm {name}", shell=True)
+
+    # 重啟docker container
+    @classmethod
+    def dockerRestart(cls, name):
+        print(f"docker restart {name}")
+        subprocess.run(f"docker restart {name}", shell=True)
 
     @classmethod
     def dockerStart(cls, name):  # 啟動docker container
@@ -118,11 +124,9 @@ class DockerImage:
 class dockerNetwork:
 
     @classmethod
-    def dockerNetworkCreate(cls, name, detach=True): # 建立docker network
-        par = "-" if detach else ""
-        par += "d" if detach else ""
-        print(f"docker network create {par} {name}")
-        subprocess.run(f"docker network create {par} {name}", shell=True)
+    def dockerNetworkCreate(cls, name): # 建立docker network
+        print(f"docker network create {name}")
+        subprocess.run(f"docker network create {name}", shell=True)
 
     @classmethod
     def dockerNetworkRemove(cls, name): # 刪除docker network
