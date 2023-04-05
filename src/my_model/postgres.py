@@ -1,6 +1,6 @@
 import psycopg2
 
-class PostgresCtrl:
+class PostgresDB:
     def __init__(self, host, database, user, password):
         self.host = host
         self.database = database
@@ -61,20 +61,22 @@ class PostgresCtrl:
 
 
 if __name__ == '__main__':
+    import os
+    from dotenv import load_dotenv, find_dotenv
 
     # 連接儲存原始區DataBase
     load_dotenv(find_dotenv('env/.env'))
-    db = MLFlow(PostgresCtrl(
+    db = PostgresDB(
         host=os.getenv('POSTGRES_HOST'),
         user=os.getenv('POSTGRES_USER'),
         password=os.getenv('POSTGRES_PASSWORD'),
         database='originaldb'
-    ))
+    )
     db.connect()
 
-    # TABLE = 'temptb' # 這是測試用的table
+    TABLE = 'temptb' # 這是測試用的table
     # TABLE = 'st_all_data' # 這是正式用的table
-    TABLE = 'google_form' # 這是正式用的table
+    # TABLE = 'google_form' # 這是正式用的table
 
     # 刪除儲存原始區Schema
     # db.execute('DROP SCHEMA IF EXISTS original CASCADE;')

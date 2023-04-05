@@ -7,6 +7,7 @@ from controller.mongodb_googleform_data import GoogleFormData
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
+import mongodb_config as config
 
 app = FastAPI()
 
@@ -106,4 +107,4 @@ def google_form_data_post(params: GoogleFormDataRequestBody = GoogleFormDataRequ
 
 # Main entry point
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=config.MONGODB_PYSERVER_PORT)
