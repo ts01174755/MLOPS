@@ -1,6 +1,7 @@
-from package.controller.LINECtrl import LineNotify
-class LineNotifyServer():
+from src.controller.LINECtrl import LineNotify
 
+
+class LineNotifyServer:
     def __init__(self):
         pass
 
@@ -20,7 +21,8 @@ class LineNotifyServer():
         lineNotify = LineNotify(token)
         lineNotify.send(message)
 
-        return 'success'
+        return "success"
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pass

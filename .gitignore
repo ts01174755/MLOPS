@@ -32,3 +32,9 @@
 /FS_PythonSTServer/pythonSTServerCICDTest.py
 /FS_PythonSTServer/package/STGoogleDrive.py
 /EnvironmentSetting/CICD/JenkinsFileSetting.txt
+/src/my_package.egg-info/dependency_links.txt
+/dist/my_package-0.0.3.tar.gz
+/dist/my_package-0.0.3-py3-none-any.whl
+/src/my_package.egg-info/PKG-INFO
+/src/my_package.egg-info/SOURCES.txt
+/src/my_package.egg-info/top_level.txt

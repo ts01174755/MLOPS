@@ -1,4 +1,6 @@
-import os; import sys;
+import os
+import sys
+
 os.chdir(sys.argv[1])
 sys.path.append(os.getcwd())
 from package.CICD.MLFlow import MLFlow
@@ -6,22 +8,22 @@ from package.controller.PostgresCtrl import PostgresCtrl
 from dotenv import load_dotenv, find_dotenv
 
 
-
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     # 連接儲存原始區DataBase
-    load_dotenv(find_dotenv('env/.env'))
-    db = MLFlow(PostgresCtrl(
-        host=os.getenv('POSTGRES_HOST'),
-        user=os.getenv('POSTGRES_USER'),
-        password=os.getenv('POSTGRES_PASSWORD'),
-        database='originaldb'
-    ))
+    load_dotenv(find_dotenv("env/.env"))
+    db = MLFlow(
+        PostgresCtrl(
+            host=os.getenv("POSTGRES_HOST"),
+            user=os.getenv("POSTGRES_USER"),
+            password=os.getenv("POSTGRES_PASSWORD"),
+            database="originaldb",
+        )
+    )
     db.connect()
 
     # TABLE = 'temptb' # 這是測試用的table
     # TABLE = 'st_all_data' # 這是正式用的table
-    TABLE = 'google_form' # 這是正式用的table
+    TABLE = "google_form"  # 這是正式用的table
 
     # 刪除儲存原始區Schema
     # db.execute('DROP SCHEMA IF EXISTS original CASCADE;')
@@ -30,10 +32,11 @@ if __name__ == '__main__':
     # db.execute('CREATE SCHEMA IF NOT EXISTS original;') # 建立Schema
 
     # 刪除儲存原始區資料表
-    db.execute(f'DROP TABLE IF EXISTS original.{TABLE};')
+    db.execute(f"DROP TABLE IF EXISTS original.{TABLE};")
 
     # 建立儲存原始區資料表
-    db.execute(f'''
+    db.execute(
+        f"""
         CREATE TABLE IF NOT EXISTS original.{TABLE} (\
         id serial PRIMARY KEY, dt timestamp, memo varchar(50)\
         , commondata1 varchar(50), commondata2 varchar(50), commondata3 varchar(50), commondata4 varchar(50), commondata5 varchar(50)\
@@ -48,7 +51,8 @@ if __name__ == '__main__':
         , uniquestring1 text, uniquestring2 text, uniquestring3 text, uniquestring4 text, uniquestring5 text\
         , uniquejason json\
         );
-    ''') # 建立資料表
+    """
+    )  # 建立資料表
 
     # # 插入測試資料
     # db.execute("INSERT INTO original.st_all_data (dt, memo, commondata, uniqueint, uniquefloat, uniquestring, uniquejason) VALUES (now(), 'test', 'test', 1, 1.1, 'test', '{\"test\":1}');")  # 插入資料
