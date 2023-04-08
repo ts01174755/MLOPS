@@ -11,8 +11,9 @@ from src.my_model.docker_cmd import DockerCmd
 import subprocess
 import json
 import pandas as pd
+
 # 顯示pandas所有欄位
-pd.set_option('display.max_columns', None)
+pd.set_option("display.max_columns", None)
 
 load_dotenv(find_dotenv("env/.env"))
 
@@ -30,6 +31,7 @@ PROGRESDB_HOST = os.getenv("POSTGRES_HOST")
 PROGRESDB_USER = os.getenv("POSTGRES_USER")
 PROGRESDB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 PROGRESDB_DATABASE = "originaldb"
+PROGRESDB_SCHEMA = "original"
 PROGRESDB_TABLE_ST_CRAWLER = "st_all_data"
 PROGRESDB_TABLE_TEMP = "temptb"
 PROGRESDB_TABLE_GOOGLE_FORM = "google_form"
@@ -103,7 +105,6 @@ if __name__ == "__main__":
         ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
         ROUTE_PATH = f"{ROOT_PATH_DOCKER}/PostgresDB/route.py"
 
-
         # CONTAINERNAME - CD
         DockerCmd.dockerExec(
             name=CONTAINERNAME,
@@ -121,11 +122,11 @@ if __name__ == "__main__":
 
     elif RUN == "postgres_parse_mongodb_data":
         # ---------------------- route: postgresParseMongodb -----------------------
-        PROGRESDB_TABLE = PROGRESDB_TABLE_GOOGLE_FORM
-        # PROGRESDB_TABLE = PROGRESDB_TABLE_TEMP
+        # PROGRESDB_TABLE = PROGRESDB_TABLE_GOOGLE_FORM
+        PROGRESDB_TABLE = PROGRESDB_TABLE_TEMP
         POST_INFO = {
-            'DATA_TIME': DATA_TIME,
-            'MONGODB_INFO': {
+            "DATA_TIME": DATA_TIME,
+            "MONGODB_INFO": {
                 "MONGODB_USER": MONGODB_USER,
                 "MONGODB_PASSWORD": MONGODB_PASSWORD,
                 "MONGODB_HOST": "mongodb",  # route 在 Docker 部署的Host
@@ -133,42 +134,44 @@ if __name__ == "__main__":
                 "MONGODB_PORT": MONGODB_PORT,
                 "MONGODB_DATABASE": MONGODB_DATABASE,
                 "MONGODB_COLLECTION": COLLECTION_GOOGLE_FORM,
-                'MONGODB_QUERY': {
+                "MONGODB_QUERY": {
                     "dt": {
-                        "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time())),
-                        "$lt": time.strftime("%Y-%m-%d", time.localtime(time.time() + 86400))
+                        "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time() - 86400*22)),
+                        "$lt": time.strftime(
+                            "%Y-%m-%d", time.localtime(time.time() + 86400 - 86400*21)
+                        ),
                     }
-                }
+                },
             },
-            'PROGRESDB_INFO': {
-                'POSTGRES_USER': PROGRESDB_USER,
-                'POSTGRES_PASSWORD': PROGRESDB_PASSWORD,
-                'POSTGRES_HOST': 'postgres15.2', # route 在 Docker 部署的Host
+            "PROGRESDB_INFO": {
+                "POSTGRES_USER": PROGRESDB_USER,
+                "POSTGRES_PASSWORD": PROGRESDB_PASSWORD,
+                "POSTGRES_HOST": "postgres15.2",  # route 在 Docker 部署的Host
                 # 'POSTGRES_HOST': PROGRESDB_HOST, # route 在 Local 部署的Host
-                'POSTGRES_PORT': PROGRESDB_PORT,
-                'POSTGRES_DATABASE': PROGRESDB_DATABASE,
-                'PROGRESDB_TABLE': PROGRESDB_TABLE,
-                'PROGRESDB_SCHEMA_FILE_PATH': f"/Users/peiyuwu/Files/GoogleFormDataSchema_{PROGRESDB_TABLE}.csv",
-                'PROGRESDB_SCHEMA_DICT': {
-                    'dt': '資料更新時間',
-                    'memo': '新申請課程',
-                    'commondata1': '"GoogleForm表單"',
-                    'uniquechar1': '填表日',
-                    'uniquechar2': '申請人(Email)',
-                    'uniquechar3': '所屬單位',
-                    'uniquechar4': '上課地點',
-                    'uniquechar5': '年級',
-                    'uniquechar6': '課程',
-                    'uniquechar7': '老師',
-                    'uniquechar8': '學生'
-                }
+                "POSTGRES_PORT": PROGRESDB_PORT,
+                "POSTGRES_DATABASE": PROGRESDB_DATABASE,
+                "PROGRESDB_SCHEMA": PROGRESDB_SCHEMA,
+                "PROGRESDB_TABLE": PROGRESDB_TABLE,
+                "PROGRESDB_SCHEMA_FILE_PATH": f"/Users/peiyuwu/Files/GoogleFormDataSchema_{PROGRESDB_TABLE}.csv",
+                "PROGRESDB_SCHEMA_DICT": {
+                    "dt": "資料更新時間",
+                    "memo": "新申請課程",
+                    "commondata1": '"GoogleForm表單"',
+                    "uniquechar1": "填表日",
+                    "uniquechar2": "申請人(Email)",
+                    "uniquechar3": "所屬單位",
+                    "uniquechar4": "上課地點",
+                    "uniquechar5": "年級",
+                    "uniquechar6": "課程",
+                    "uniquechar7": "老師",
+                    "uniquechar8": "學生",
+                },
             },
         }
         print(
-            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres"
+            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres/stCreateCourseForm"
         )
         subprocess.run(
-            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres",
+            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres/stCreateCourseForm",
             shell=True,
         )
-
