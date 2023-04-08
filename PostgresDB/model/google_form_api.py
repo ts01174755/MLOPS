@@ -1,5 +1,4 @@
-
-class GoogleFormApi():
+class GoogleFormApi:
     def __init__(self):
         pass
 
@@ -15,11 +14,11 @@ class GoogleFormApi():
             creds = tools.run_flow(flow, store)
 
         service = discovery.build(
-            'forms',
-            'v1',
+            "forms",
+            "v1",
             http=creds.authorize(Http()),
             discoveryServiceUrl=DISCOVERY_DOC,
-            static_discovery=False
+            static_discovery=False,
         )
         return service
 
@@ -32,4 +31,4 @@ class GoogleFormApi():
         # 將結果寫入 mongodb
         mongoDBCtrl.insert_document(collection, document)
 
-        return 'success'
+        return "success"

@@ -1,9 +1,11 @@
 import psycopg2
+from sqlalchemy import create_engine
 
 
 class PostgresDB:
-    def __init__(self, host, database, user, password):
+    def __init__(self, host, port, database, user, password):
         self.host = host
+        self.port = port
         self.database = database
         self.user = user
         self.password = password
@@ -13,9 +15,20 @@ class PostgresDB:
         if self.conn is None:
             self.conn = psycopg2.connect(
                 host=self.host,
+                port=self.port,
                 database=self.database,
                 user=self.user,
                 password=self.password,
+            )
+        return self.conn  # 這裡要回傳conn, 不然會出現NoneType has no attribute 'cursor'的錯誤
+
+    def getPostgresURL(self):
+        return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
+
+    def connectSQLAlchemy(self):
+        if self.conn is None:
+            self.conn = create_engine(
+                f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
             )
         return self.conn  # 這裡要回傳conn, 不然會出現NoneType has no attribute 'cursor'的錯誤
 

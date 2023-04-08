@@ -43,7 +43,7 @@ PROGRESDB_PYSERVER_PORT = 8002
 
 if __name__ == "__main__":
     # 執行環境
-    RUN = "postgres_parse_mongodb_data" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "st_admin_course" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "docker_project_build":
         # ---------------------- Deploy: Docker -----------------------
         CONTAINERNAME = "python3.8.16"
@@ -109,7 +109,7 @@ if __name__ == "__main__":
         DockerCmd.dockerExec(
             name=CONTAINERNAME,
             cmd=f"{INTERPRETER} {ROUTE_PATH} {ROOT_PATH_DOCKER}",
-            detach=True,
+            detach=False,
             interactive=True,
             TTY=False,
         )
@@ -120,10 +120,10 @@ if __name__ == "__main__":
         ROUTE_PATH = f"{ROOT_PATH_LOCAL}/PostgresDB/route.py"
         subprocess.run(f"python3 {ROUTE_PATH} {ROOT_PATH_LOCAL}", shell=True)
 
-    elif RUN == "postgres_parse_mongodb_data":
+    elif RUN == "st_create_course_form":
         # ---------------------- route: postgresParseMongodb -----------------------
-        # PROGRESDB_TABLE = PROGRESDB_TABLE_GOOGLE_FORM
-        PROGRESDB_TABLE = PROGRESDB_TABLE_TEMP
+        PROGRESDB_TABLE = PROGRESDB_TABLE_GOOGLE_FORM
+        # PROGRESDB_TABLE = PROGRESDB_TABLE_TEMP
         POST_INFO = {
             "DATA_TIME": DATA_TIME,
             "MONGODB_INFO": {
@@ -136,9 +136,9 @@ if __name__ == "__main__":
                 "MONGODB_COLLECTION": COLLECTION_GOOGLE_FORM,
                 "MONGODB_QUERY": {
                     "dt": {
-                        "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time() - 86400*22)),
+                        "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time())),
                         "$lt": time.strftime(
-                            "%Y-%m-%d", time.localtime(time.time() + 86400 - 86400*21)
+                            "%Y-%m-%d", time.localtime(time.time() + 86400)
                         ),
                     }
                 },
@@ -173,5 +173,62 @@ if __name__ == "__main__":
         )
         subprocess.run(
             f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres/stCreateCourseForm",
+            shell=True,
+        )
+
+    elif RUN == "st_admin_course":
+        # ---------------------- route: postgresParseMongodb -----------------------
+        PROGRESDB_TABLE = PROGRESDB_TABLE_ST_CRAWLER
+        # PROGRESDB_TABLE = PROGRESDB_TABLE_TEMP
+        POST_INFO = {
+            "DATA_TIME": DATA_TIME,
+            "MONGODB_INFO": {
+                "MONGODB_USER": MONGODB_USER,
+                "MONGODB_PASSWORD": MONGODB_PASSWORD,
+                "MONGODB_HOST": "mongodb",  # route 在 Docker 部署的Host
+                # "MONGODB_HOST": MONGODB_HOST, # route 在 Local 部署的Host
+                "MONGODB_PORT": MONGODB_PORT,
+                "MONGODB_DATABASE": MONGODB_DATABASE,
+                "MONGODB_COLLECTION": COLLECTION_ST_CRAWLER,
+                "MONGODB_QUERY": {
+                    "dt": {
+                        "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time())),
+                        "$lt": time.strftime(
+                            "%Y-%m-%d", time.localtime(time.time() + 86400)
+                        ),
+                    }
+                },
+            },
+            "PROGRESDB_INFO": {
+                "POSTGRES_USER": PROGRESDB_USER,
+                "POSTGRES_PASSWORD": PROGRESDB_PASSWORD,
+                "POSTGRES_HOST": "postgres15.2",  # route 在 Docker 部署的Host
+                # 'POSTGRES_HOST': PROGRESDB_HOST, # route 在 Local 部署的Host
+                "POSTGRES_PORT": PROGRESDB_PORT,
+                "POSTGRES_DATABASE": PROGRESDB_DATABASE,
+                "PROGRESDB_SCHEMA": PROGRESDB_SCHEMA,
+                "PROGRESDB_TABLE": PROGRESDB_TABLE,
+                "PROGRESDB_SCHEMA_FILE_PATH": f"/Users/peiyuwu/Files/GoogleFormDataSchema_{PROGRESDB_TABLE}.csv",
+                "PROGRESDB_SCHEMA_DICT": {
+                    "dt": "資料更新時間",
+                    "memo": "ST所有課程資料",
+                    "commondata1": '"AdminCourses"',
+                    "uniquechar1": "開始時間",
+                    "uniquechar2": "結束時間",
+                    "uniquechar3": "所屬單位",
+                    "uniquechar4": "上課地點",
+                    "uniquechar5": "年級",
+                    "uniquechar6": "課程",
+                    "uniquechar7": "老師",
+                    "uniquechar8": "學生",
+                    "uniquechar9": "課程",
+                },
+            },
+        }
+        print(
+            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres/stAdminCourses"
+        )
+        subprocess.run(
+            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:{PROGRESDB_PYSERVER_PORT}/PostgresDB/mongodbToProgres/stAdminCourses",
             shell=True,
         )
