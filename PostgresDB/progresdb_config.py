@@ -109,7 +109,7 @@ if __name__ == "__main__":
         DockerCmd.dockerExec(
             name=CONTAINERNAME,
             cmd=f"{INTERPRETER} {ROUTE_PATH} {ROOT_PATH_DOCKER}",
-            detach=False,
+            detach=True,
             interactive=True,
             TTY=False,
         )

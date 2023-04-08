@@ -87,7 +87,6 @@ def st_create_course_form(params: STCrawlerRequestBody = STCrawlerRequestBody())
         MONGODB_INFO=params.MONGODB_INFO,
         PROGRESDB_INFO=params.PROGRESDB_INFO,
         DATA_TIME=params.DATA_TIME,
-        columnList=COLUMNS_LIST
     )
 
     # 連接PostgresDB與寫入資料
