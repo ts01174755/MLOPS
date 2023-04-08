@@ -1,6 +1,10 @@
-import os; os.chdir(os.path.dirname(os.path.abspath(__file__)).split('PostgresDB')[0])
-import sys; sys.path.append(os.getcwd())
-from package.Environment.DockerCmd import DockerCmd
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)).split("PostgresDB")[0])
+import sys
+
+sys.path.append(os.getcwd())
+from src.Environment.DockerCmd import DockerCmd
 import time
 
 # 安裝postgres
@@ -9,7 +13,7 @@ import time
 # >> https://jimmyswebnote.com/postgresql-tutorial/
 # >> https://juejin.cn/post/7132086527340871693
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # # dockerCmd pull Images
     # DockerCmd.dockerPull(tag='mongo:5.0.15')
     # DockerCmd.dockerPull(tag='mongo-express:0.54.0')
@@ -17,6 +21,7 @@ if __name__ == '__main__':
     # # # dockerCmd 建立網路
     # DockerCmd.dockerNetworkRemove(name='mongo-net')
     # DockerCmd.dockerNetworkCreate(name='bridge mongo-net')
+    DockerCmd.dockerNetworkConnect(name="mongo-postgres-net", container="mongodb")
     #
     # # dockerCmd run mongodb
     # DockerCmd.dockerRun(
@@ -69,7 +74,7 @@ if __name__ == '__main__':
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python"', detach=False, interactive=True, TTY=False) # 安裝python
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3"', detach=False, interactive=True, TTY=False) # 安裝python
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y python3-pip"', detach=False, interactive=True, TTY=False)  # 安裝 pip3
-    DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y unzip"', detach=False, interactive=True, TTY=False)  # 安裝 unzip
+    # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "apt-get install -y unzip"', detach=False, interactive=True, TTY=False)  # 安裝 unzip
     #
     # ####################################################################################################################
     # # # python 常用安裝包
@@ -85,4 +90,3 @@ if __name__ == '__main__':
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-auth-httplib2"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-httplib2
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install google-auth-oauthlib"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth-oauthlib
     # DockerCmd.dockerExec(name='mongodb', cmd='bash -c "pip3 install oauth2client"', detach=False, interactive=True, TTY=False)  # 安裝 google-auth
-

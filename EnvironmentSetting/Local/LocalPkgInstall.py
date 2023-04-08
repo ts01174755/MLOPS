@@ -3,6 +3,7 @@ import subprocess
 subprocess.run("pip install --upgrade pip", shell=True)
 subprocess.run("pip install python-dotenv", shell=True)
 subprocess.run("pip install psycopg2-binary", shell=True)
+subprocess.run("pip install sqlalchemy", shell=True)
 subprocess.run("pip install pymongo", shell=True)
 subprocess.run("pip install fastapi", shell=True)
 subprocess.run("pip install Jinja2==3.1.2", shell=True)

@@ -6,4 +6,3 @@ import subprocess
 # 2. brew services stop jenkins-lts # 停止
 # 3. brew services restart jenkins-lts # 重啟
 subprocess.run("brew services start jenkins-lts", shell=True)
-
