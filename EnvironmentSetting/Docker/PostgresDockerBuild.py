@@ -40,10 +40,10 @@ if __name__ == "__main__":
     # time.sleep(3)
     #
     # # 查看 postgres:15.2 的 container 的資訊
-    # cmdStr = DockerCmd.dockerInspect(name='postgres15.2') # 查看 container 資訊，找出Networks.bridge.IPAddress
+    cmdStr = DockerCmd.dockerInspect(name='postgres15.2') # 查看 container 資訊，找出Networks.bridge.IPAddress
     #
     # # 把cmdStr的資料寫進docker裡
-    # DockerCmd.dockerWrite(name='postgres15.2', path='/Users/peiyuwu/dockerInspect.txt', data=cmdStr) # 查看 container 資訊，找出Networks.bridge.IPAddress
+    DockerCmd.dockerWrite(name='postgres15.2', path='/Users/peiyuwu/dockerInspect.txt', data=cmdStr) # 查看 container 資訊，找出Networks.bridge.IPAddress
     # os.system('open http://localhost:5050/') # 開啟 pgadmin4
     # # >> 點擊 "Add Server"
     # # >> Name: postgresdb
@@ -58,10 +58,10 @@ if __name__ == "__main__":
     # dockerCmd 建立網路
 
     # 查看 docker 所有網路
-    DockerCmd.dockerNetworkLs()
+    # DockerCmd.dockerNetworkLs()
 
     # dockerCmd 把 postgres15.2 和 mongodb 加入網路
-    DockerCmd.dockerNetworkConnect(name="mongo-postgres-net", container="postgres15.2")
+    # DockerCmd.dockerNetworkConnect(name="mongo-postgres-net", container="postgres15.2")
 
     #
     # ####################################################################################################################
