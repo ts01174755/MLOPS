@@ -1,5 +1,6 @@
 import os
 import sys
+
 os.chdir(sys.argv[1])
 sys.path.append(os.getcwd())
 from controller.mongodb_crawler_data import CrawlerData
@@ -10,6 +11,7 @@ import uvicorn
 import mongodb_config as config
 
 app = FastAPI()
+
 
 class STCrawlerRequestBody(BaseModel):
     DATA_TIME: str = None
@@ -83,7 +85,9 @@ def crawler_zip_file_post(params: CrawlerFileRequestBody = CrawlerFileRequestBod
 
 
 @app.post("/MongoDB/googleFormDataPost")
-def google_form_data_post(params: GoogleFormDataRequestBody = GoogleFormDataRequestBody()):
+def google_form_data_post(
+    params: GoogleFormDataRequestBody = GoogleFormDataRequestBody(),
+):
     google_form_data = GoogleFormData()
 
     google_form_data.get_googleformdata_to_mongodb(

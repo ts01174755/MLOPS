@@ -92,7 +92,6 @@ if __name__ == "__main__":
         ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
         ROUTE_PATH = f"{ROOT_PATH_DOCKER}/MongoDB/route.py"
 
-
         # CONTAINERNAME - CD
         DockerCmd.dockerExec(
             name=CONTAINERNAME,
@@ -124,7 +123,7 @@ if __name__ == "__main__":
             # "COLLECTION": COLLECTION_TEMPDB,
         }
         print(
-            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(ST_CRAWLER_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/crawlerDataPost"
+            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(ST_CRAWLER_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/crawlerDataPost"
         )
         subprocess.run(
             f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(ST_CRAWLER_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/crawlerDataPost",
@@ -151,7 +150,7 @@ if __name__ == "__main__":
         }
 
         print(
-            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(GOOGLEFORM_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/googleFormDataPost"
+            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(GOOGLEFORM_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/googleFormDataPost"
         )
         subprocess.run(
             f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(GOOGLEFORM_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/googleFormDataPost",
@@ -167,7 +166,7 @@ if __name__ == "__main__":
         }
 
         print(
-            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(FUTURES_EXCHANGE_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/crawlerZipFilePost"
+            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(FUTURES_EXCHANGE_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/crawlerZipFilePost"
         )
         subprocess.run(
             f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(FUTURES_EXCHANGE_DATA)}' http://localhost:{MONGODB_PYSERVER_PORT}/MongoDB/crawlerZipFilePost",
