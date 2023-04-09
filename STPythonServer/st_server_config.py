@@ -42,15 +42,18 @@ COLLECTION_TEMPDB = "tempdb"
 COLLECTION_GOOGLE_FORM = "google_form"
 ST_PYSERVER_PORT = 8003
 
+CONTAINERNAME = "python3.8.16"
+ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
+ROOT_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
+ROUTE_DOCKER_PATH = f"{ROOT_PATH_DOCKER}/STPythonServer/route.py"
+ROUTE_LOCKER_PATH = f"{ROOT_PATH_LOCAL}/STPythonServer/route.py"
+
 
 if __name__ == "__main__":
     # 執行環境
-    RUN = "st_google_drive" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "None" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "docker_project_build":
         # ---------------------- Deploy: Docker -----------------------
-        CONTAINERNAME = "python3.8.16"
-        ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
-        ROOT_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
         GITHUB_URL = "https://github.com/ts01174755/MLOPS.git"
         # 重啟docker container
         DockerCmd.dockerRestart(CONTAINERNAME)
@@ -100,29 +103,28 @@ if __name__ == "__main__":
                     ),
                 )
 
-    elif RUN == "docker_deploy":
+    RUN = "docker_deploy" if len(sys.argv) == 1 else sys.argv[1]
+    if RUN == "docker_deploy":
         # ---------------------- Deploy: Docker -----------------------
         CONTAINERNAME = "python3.8.16"
         INTERPRETER = "python3.8"
-        ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
-        ROUTE_PATH = f"{ROOT_PATH_DOCKER}/STPythonServer/route.py"
 
         # CONTAINERNAME - CD
         DockerCmd.dockerExec(
             name=CONTAINERNAME,
-            cmd=f"{INTERPRETER} {ROUTE_PATH} {ROOT_PATH_DOCKER}",
-            detach=True,
+            cmd=f"{INTERPRETER} {ROUTE_DOCKER_PATH} {ROOT_PATH_DOCKER}",
+            detach=False,
             interactive=True,
             TTY=False,
         )
-
     elif RUN == "local_deploy":
         # ---------------------- route: Local 執行，輕鬆就好 -----------------------
-        ROOT_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
-        ROUTE_PATH = f"{ROOT_PATH_LOCAL}/STPythonServer/route.py"
-        subprocess.run(f"python3 {ROUTE_PATH} {ROOT_PATH_LOCAL}", shell=True)
+        # 重啟docker container
+        DockerCmd.dockerStop(CONTAINERNAME)
+        subprocess.run(f"python3 {ROUTE_LOCKER_PATH} {ROOT_PATH_LOCAL}", shell=True)
 
-    elif RUN == "st_google_drive":
+    RUN = "None" if len(sys.argv) == 1 else sys.argv[1]
+    if RUN == "st_google_drive":
         # ---------------------- route: postgresParseMongodb -----------------------
         PROGRESDB_TABLE = PROGRESDB_TABLE_ST_CRAWLER
         # PROGRESDB_TABLE = PROGRESDB_TABLE_TEMP

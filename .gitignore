@@ -26,11 +26,11 @@
 /OLD/Programming/translationByFile.py
 /OLD/TestProgramming/工廠模式測試.py
 /OLD/TestProgramming/測試_args_kwargs.py
-/FS_PythonSTServer/
-/FS_PythonSTServer/*
-/FS_PythonSTServer/1_STGoogleDrive.py
-/FS_PythonSTServer/pythonSTServerCICDTest.py
-/FS_PythonSTServer/package/STGoogleDrive.py
+/OLD/FS_PythonSTServer/
+/OLD/FS_PythonSTServer/*
+/OLD/FS_PythonSTServer/1_STGoogleDrive.py
+/OLD/FS_PythonSTServer/pythonSTServerCICDTest.py
+/OLD/FS_PythonSTServer/package/STGoogleDrive.py
 /EnvironmentSetting/CICD/JenkinsFileSetting.txt
 /src/my_package.egg-info/dependency_links.txt
 /dist/my_package-0.0.3.tar.gz
