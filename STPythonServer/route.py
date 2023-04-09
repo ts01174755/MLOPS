@@ -39,6 +39,8 @@ def st_google_drive(params: STCrawlerRequestBody = STCrawlerRequestBody()):
         GOOGLE_DRIVE_INFO=params.DEFAULT_DICT['GOOGLE_DRIVE_INFO'],
         df = df
     )
+    if len(notifyInfo) == 0:
+        return notifyInfo
 
     line_message = st_google_drive.line_notify_message(notifyInfo)
 
@@ -51,7 +53,7 @@ def st_google_drive(params: STCrawlerRequestBody = STCrawlerRequestBody()):
         message = line_message
     )
 
-    return {"message": 'success'}
+    return notifyInfo
 
 
 
