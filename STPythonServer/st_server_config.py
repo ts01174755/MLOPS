@@ -105,7 +105,7 @@ if __name__ == "__main__":
         CONTAINERNAME = "python3.8.16"
         INTERPRETER = "python3.8"
         ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
-        ROUTE_PATH = f"{ROOT_PATH_DOCKER}/PostgresDB/route.py"
+        ROUTE_PATH = f"{ROOT_PATH_DOCKER}/STPythonServer/route.py"
 
         # CONTAINERNAME - CD
         DockerCmd.dockerExec(
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     elif RUN == "local_deploy":
         # ---------------------- route: Local 執行，輕鬆就好 -----------------------
         ROOT_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
-        ROUTE_PATH = f"{ROOT_PATH_LOCAL}/PostgresDB/route.py"
+        ROUTE_PATH = f"{ROOT_PATH_LOCAL}/STPythonServer/route.py"
         subprocess.run(f"python3 {ROUTE_PATH} {ROOT_PATH_LOCAL}", shell=True)
 
     elif RUN == "st_google_drive":

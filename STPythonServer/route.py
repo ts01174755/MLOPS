@@ -1,8 +1,7 @@
 import os
 import sys
-if len(sys.argv) > 1:
-    os.chdir(sys.argv[1])
-    sys.path.append(os.getcwd())
+os.chdir(sys.argv[1])
+sys.path.append(os.getcwd())
 from controller.st_google_drive import STGoogleDrive
 from controller.st_line_notify import STLineNotify
 from fastapi import FastAPI
