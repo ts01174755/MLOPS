@@ -36,7 +36,7 @@ ROUTE_LOCKER_PATH = f"{ROOT_PATH_LOCAL}/MongoDB/route.py"
 
 if __name__ == "__main__":
     # 執行環境
-    RUN = "docker_project_build" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "None" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "docker_project_build":
         # ---------------------- Deploy: Docker -----------------------
         GITHUB_URL = "https://github.com/ts01174755/MLOPS.git"
@@ -88,7 +88,7 @@ if __name__ == "__main__":
                     ),
                 )
 
-    RUN = "docker_deploy" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "None" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "docker_deploy":
         # ---------------------- Deploy: Docker -----------------------
         CONTAINERNAME = "python3.8.16"
@@ -98,7 +98,7 @@ if __name__ == "__main__":
         DockerCmd.dockerExec(
             name=CONTAINERNAME,
             cmd=f"{INTERPRETER} {ROUTE_DOCKER_PATH} {ROOT_PATH_DOCKER}",
-            detach=False,
+            detach=True,
             interactive=True,
             TTY=False,
         )
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         DockerCmd.dockerStop(CONTAINERNAME)
         subprocess.run(f"python3 {ROUTE_LOCKER_PATH} {ROOT_PATH_LOCAL}", shell=True)
 
-    RUN = "None" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "google_form" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "st_crawler":
         # ---------------------- route: st_crawler -----------------------
         ST_CRAWLER_DATA = {
@@ -161,6 +161,7 @@ if __name__ == "__main__":
 
     elif RUN == "futuresExchange":
         # ---------------------- route: FuturesExchangeData -----------------------
+        DATA_DAY = time.strftime("%Y_%m_%d", time.localtime())
         FILE_NAME = f"Daily_{DATA_DAY}.zip"
         FUTURES_EXCHANGE_DATA = {
             "URL": f"https://www.taifex.com.tw/file/taifex/Dailydownload/DailydownloadCSV/{FILE_NAME}",  # 下載檔案的網址
