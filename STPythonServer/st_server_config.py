@@ -103,7 +103,7 @@ if __name__ == "__main__":
                     ),
                 )
 
-    RUN = "docker_deploy" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "None" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "docker_deploy":
         # ---------------------- Deploy: Docker -----------------------
         CONTAINERNAME = "python3.8.16"
