@@ -40,7 +40,7 @@ PROGRESDB_TABLE_GOOGLE_FORM = "google_form"
 COLLECTION_ST_CRAWLER = "st_all_data"
 COLLECTION_TEMPDB = "tempdb"
 COLLECTION_GOOGLE_FORM = "google_form"
-ST_PYSERVER_PORT = 8010
+ST_PYSERVER_PORT = 8003
 
 
 if __name__ == "__main__":
@@ -133,17 +133,25 @@ if __name__ == "__main__":
             FROM {PROGRESDB_SCHEMA}.{PROGRESDB_TABLE} \
             WHERE 1=1 \
                 AND dt >= "{DATA_DAY}" AND dt < "{DATA_TOMORROW}" \
-                AND uniquechar4 = "網課" \
+                AND uniquechar3 = "雲課堂" \
                 AND uniquechar7 = "羅苡心 Xinn"\
             ORDER BY uniquechar1 DESC;'
         POST_INFO = {
             "DEFAULT_DICT": {
                 "DATA_DAY": DATA_DAY,
+                "GOOGLE_DRIVE_INFO": {
+                    "TOKEN": 'env/googleDriveToken_stpeteamshare.json',
+                    "CLIENT_SECRET_FILE": 'env/client_secret_stpeteamshare.json',
+                    "SCOPES": ['https://www.googleapis.com/auth/drive'],
+                },
+                "NOTIFY_TOKEN_FILE": 'env/LineNotify.json',
+                "NOTIFY_TOKEN_TYPE": '雲課堂 - Hana',
+                # "NOTIFY_TOKEN_TYPE": '私人Notify',
                 "PROGRESDB_INFO": {
                     "POSTGRES_USER": PROGRESDB_USER,
                     "POSTGRES_PASSWORD": PROGRESDB_PASSWORD,
-                    # "POSTGRES_HOST": "postgres15.2",  # route 在 Docker 部署的Host
-                    'POSTGRES_HOST': PROGRESDB_HOST, # route 在 Local 部署的Host
+                    "POSTGRES_HOST": "postgres15.2",  # route 在 Docker 部署的Host
+                    # 'POSTGRES_HOST': PROGRESDB_HOST, # route 在 Local 部署的Host
                     "POSTGRES_PORT": PROGRESDB_PORT,
                     "POSTGRES_DATABASE": PROGRESDB_DATABASE,
                     "PROGRESDB_SCHEMA": PROGRESDB_SCHEMA,

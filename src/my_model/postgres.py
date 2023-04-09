@@ -1,5 +1,5 @@
 import psycopg2
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 
 class PostgresDB:
@@ -31,6 +31,9 @@ class PostgresDB:
                 f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
             )
         return self.conn  # 這裡要回傳conn, 不然會出現NoneType has no attribute 'cursor'的錯誤
+
+    def getSQLText(self, query):
+        return text(query)
 
     def close(self):
         if self.conn is not None:

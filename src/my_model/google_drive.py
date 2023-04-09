@@ -468,7 +468,7 @@ class GoogleDrive(GoogleDriveBase):
                 folderId = self.folderIdTree[folderId][folder]
             else:
                 print(f"找不到資料夾 {'/' + '/'.join(sourceFile[:folder_ind_+1])}")
-                return None
+                return '找不到資料夾'
 
         # 取得檔案ID
         fileName = sourceFile[-1]
@@ -482,7 +482,7 @@ class GoogleDrive(GoogleDriveBase):
                 break
         if sourceFileId is None:
             print(f"找不到檔案 {'/' + '/'.join(sourceFile)}")
-            return None
+            return '找不到檔案'
 
         # 取得資料夾ID
         folderId = "root"
@@ -521,8 +521,8 @@ class GoogleDrive(GoogleDriveBase):
                 fileId = file.get("id")
                 break
         if fileId is not None:
-            print(f"檔案 {'/' + '/'.join(targetFolder)} 已存在")
-            return None
+            print(f"檔案已存在 {'/' + '/'.join(targetFolder)}")
+            return "檔案已存在"
 
         # 移動檔案
         self.move_file(
@@ -632,7 +632,7 @@ class GoogleDrive(GoogleDriveBase):
                 folderId = self.folderIdTree[folderId][folder]
             else:
                 print(f"找不到資料夾 {'/' + '/'.join(sourceFile[:folder_ind_+1])}")
-                return None
+                return "找不到資料夾"
         # 取得檔案ID
         fileName = sourceFile[-1]
         sourceFileId = None
@@ -645,7 +645,7 @@ class GoogleDrive(GoogleDriveBase):
                 break
         if sourceFileId is None:
             print(f"找不到檔案 {'/' + '/'.join(sourceFile)}")
-            return None
+            return "找不到檔案"
 
         # 取得資料夾ID
         folderId = "root"
@@ -667,7 +667,7 @@ class GoogleDrive(GoogleDriveBase):
                 folderId = self.folderIdTree[folderId][folder]
             else:
                 print(f"找不到資料夾 {'/' + '/'.join(targetFile[:folder_ind_+1])}")
-                return None
+                return "找不到資料夾"
         # 取得檔案ID
         fileName = targetFile[-1]
         fileId = None
@@ -680,7 +680,7 @@ class GoogleDrive(GoogleDriveBase):
                 break
         if fileId is not None:
             print(f"檔案已存在 {'/' + '/'.join(targetFile)}")
-            return None
+            return "檔案已存在"
 
         # 複製檔案
         self.copy_file(

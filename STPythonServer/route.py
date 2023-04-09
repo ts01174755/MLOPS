@@ -4,11 +4,12 @@ if len(sys.argv) > 1:
     os.chdir(sys.argv[1])
     sys.path.append(os.getcwd())
 from controller.st_google_drive import STGoogleDrive
+from controller.st_line_notify import STLineNotify
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
 import st_server_config as config
-
+import json
 app = FastAPI()
 
 
@@ -29,30 +30,29 @@ def st_google_drive_get():
 def st_google_drive(params: STCrawlerRequestBody = STCrawlerRequestBody()):
     # 每日執行 - 爬蟲
     st_google_drive = STGoogleDrive()
-    rows = st_google_drive.searchPostgres(
+    df = st_google_drive.searchPostgres(
         # MONGODB_INFO=params.DEFAULT_DICT['MONGODB_INFO'],
         PROGRESDB_INFO=params.DEFAULT_DICT['PROGRESDB_INFO'],
     )
-    return rows
-    # # 撰寫 googleDrive 模擬cd, rm, mkdir, 等shell操作
-    # notifyInfo = stGoogleDrive.fileMoveAndCopy(
-    #     googleDrive = GoogleDrive(
-    #         TOKEN='env/googleDriveToken_stpeteamshare.json',
-    #         CLIENT_SECRET_FILE='env/client_secret_stpeteamshare.json',
-    #         SCOPES=['https://www.googleapis.com/auth/drive'],  # 讀寫權限，刪除client_secret.json後，重新執行程式，會要求重新授權
-    #         # SCOPES=['https://www.googleapis.com/auth/drive.metadata.readonly'] # 只有讀取權限，刪除client_secret.json後，重新執行程式，會要求重新授權
-    #     ),
-    #     data = rows
-    # )
-    #
-    #
-    # with open('env/LineNotify.json', 'r') as f: lineNotifyToken = json.load(f)
-    # for info_ in notifyInfo:
-    #     stGoogleDrive.postLineNotify(
-    #         token = lineNotifyToken['雲課堂 - 網課群'],
-    #         message =f'\n {info_[1]}老師，您的課程「{info_[0]}」影片已經備份，上課辛苦了。'
-    #     )
-    #     time.sleep(1)
+
+    # 撰寫 googleDrive 模擬cd, rm, mkdir, 等shell操作
+    notifyInfo = st_google_drive.fileMoveAndCopy(
+        GOOGLE_DRIVE_INFO=params.DEFAULT_DICT['GOOGLE_DRIVE_INFO'],
+        df = df
+    )
+
+    line_message = st_google_drive.line_notify_message(notifyInfo)
+
+    with open(params.DEFAULT_DICT['NOTIFY_TOKEN_FILE'], 'r') as f:
+        lineNotifyToken = json.load(f)
+
+    st_line_notify = STLineNotify()
+    st_line_notify.postLineNotify(
+        token = lineNotifyToken[params.DEFAULT_DICT['NOTIFY_TOKEN_TYPE']],
+        message = line_message
+    )
+
+    return {"message": 'success'}
 
 
 
