@@ -108,7 +108,7 @@ if __name__ == "__main__":
         DockerCmd.dockerStop(CONTAINERNAME)
         subprocess.run(f"python3 {ROUTE_LOCKER_PATH} {ROOT_PATH_LOCAL}", shell=True)
 
-    RUN = "google_form" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "futuresExchange" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "st_crawler":
         # ---------------------- route: st_crawler -----------------------
         ST_CRAWLER_DATA = {
@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
     elif RUN == "futuresExchange":
         # ---------------------- route: FuturesExchangeData -----------------------
-        DATA_DAY = time.strftime("%Y_%m_%d", time.localtime())
+        DATA_DAY = time.strftime("%Y_%m_%d", time.localtime(time.time()))
         FILE_NAME = f"Daily_{DATA_DAY}.zip"
         FUTURES_EXCHANGE_DATA = {
             "URL": f"https://www.taifex.com.tw/file/taifex/Dailydownload/DailydownloadCSV/{FILE_NAME}",  # 下載檔案的網址

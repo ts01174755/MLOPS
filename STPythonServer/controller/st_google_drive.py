@@ -116,28 +116,29 @@ class STGoogleDrive():
             google_drive.execute_shell_command(f"mkdir /Meet\ Recordings/原始檔案/{folderName1}/{folderName2}", print_file=False)
             google_drive.execute_shell_command(f"mkdir /Meet\ Recordings/暫存檔案/{folderName1}/{folderName2}", print_file=False)
 
-            # 複製檔案
-            file_n = 0
-            file_name_source = classroom_Info[code_][0]['錄製檔案'].replace(' ', '\ ')
-            while True:
-                if file_n == 0:
-                    file_name_target = f"{folderName1}_{folderName2}_{course_start}"
-                else:
-                    file_name_target = f"{folderName1}_{folderName2}_{course_start}_({file_n})"
-                response = google_drive.execute_shell_command(f"cp /Meet\ Recordings/{file_name_source} /Meet\ Recordings/暫存檔案/{folderName1}/{folderName2}/{file_name_target}", print_file=False)
-                if response == '檔案已存在': file_n += 1
-                else: break
+            for i_ in range(len(classroom_Info[code_])):
+                file_n = 0
+                file_name_source = classroom_Info[code_][i_]['錄製檔案'].replace(' ', '\ ')
+                # 複製檔案
+                while True:
+                    if file_n == 0:
+                        file_name_target = f"{folderName1}_{folderName2}_{course_start}"
+                    else:
+                        file_name_target = f"{folderName1}_{folderName2}_{course_start}_({file_n})"
+                    response = google_drive.execute_shell_command(f"cp /Meet\ Recordings/{file_name_source} /Meet\ Recordings/暫存檔案/{folderName1}/{folderName2}/{file_name_target}", print_file=False)
+                    if response == '檔案已存在': file_n += 1
+                    else: break
 
-            # 搬移檔案
-            file_n = 0
-            while True:
-                if file_n == 0:
-                    file_name_target = f"{folderName1}_{folderName2}_{course_start}"
-                else:
-                    file_name_target = f"{folderName1}_{folderName2}_{course_start}_({file_n})"
-                response = google_drive.execute_shell_command(f"mv /Meet\ Recordings/{file_name_source} /Meet\ Recordings/原始檔案/{folderName1}/{folderName2}/{file_name_target}", print_file=False)
-                if response == '檔案已存在': file_n += 1
-                else: break
+                # 搬移檔案
+                file_n = 0
+                while True:
+                    if file_n == 0:
+                        file_name_target = f"{folderName1}_{folderName2}_{course_start}"
+                    else:
+                        file_name_target = f"{folderName1}_{folderName2}_{course_start}_({file_n})"
+                    response = google_drive.execute_shell_command(f"mv /Meet\ Recordings/{file_name_source} /Meet\ Recordings/原始檔案/{folderName1}/{folderName2}/{file_name_target}", print_file=False)
+                    if response == '檔案已存在': file_n += 1
+                    else: break
 
         for key_ in notify_info.keys():
             notify_info[key_] = set(notify_info[key_])
