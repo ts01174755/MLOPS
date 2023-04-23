@@ -7,7 +7,7 @@ import json
 load_dotenv(find_dotenv("env/.env"))
 
 if __name__ == "__main__":
-    RUN = "st_create_course_form" if len(sys.argv) == 1 else sys.argv[1]
+    RUN = "st_admin_course" if len(sys.argv) == 1 else sys.argv[1]
     if RUN == "st_create_course_form":
         DATA_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         DATA_DAY = time.strftime("%Y-%m-%d", time.localtime())
@@ -132,10 +132,10 @@ if __name__ == "__main__":
             },
         }
         print(
-            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:8002/PostgresDB/mongodbToProgres/stAdminCourses"
+            f"\ncurl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:8002/PostgresDB/mongodbToProgres/makeSchemaFile"
         )
         subprocess.run(
-            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:8002/PostgresDB/mongodbToProgres/stAdminCourses",
+            f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(POST_INFO)}' http://localhost:8002/PostgresDB/mongodbToProgres/makeSchemaFile",
             shell=True,
         )
 

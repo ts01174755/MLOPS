@@ -50,7 +50,7 @@ class STCrawlerRequestBody(BaseModel):
     MONGODB_COLLECTION: str = None
     MONGODB_QUERY: dict = None
     PROGRESDB_TABLE: str = None
-    PROGRESDB_SCHEMA: dict = None
+    PROGRESDB_SCHEMA: str = None
     PROGRESDB_SCHEMA_DICT: dict = None
     KWARGS: dict = None
 
