@@ -23,7 +23,7 @@ POSTGRESDB = env_config.POSTGRESDB_DOCKER # postgres連線資訊
 # POSTGRESDB = env_config.POSTGRESDB_LOCAL # postgres連線資訊
 MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
 # MONGODB = env_config.MONGODB_LOCAL    # mongodb連線資訊
-DEPLOY_DETACH = False
+DEPLOY_DETACH = True
 
 # ------------------------- ROUTE ----------------------------
 app = FastAPI()

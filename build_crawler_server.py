@@ -7,7 +7,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
 from src.model.docker_cmd import DockerCmd
-
 # ---------------------- STEP - params -----------------------
 DEPLOY_PORT = 8001
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
@@ -21,7 +20,7 @@ INTERPRETER = env_config.CONTAINER_INTERPRETER      # 執行的python解釋器
 ROUTE_NAME = f"{ROOT_PATH_DOCKER}/build_crawler_server.py"    # 執行的程式
 MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
 # MONGODB = env_config.MONGODB_LOCAL    # mongodb連線資訊
-DEPLOY_DETACH = False
+DEPLOY_DETACH = True
 
 # ------------------------- ROUTE ----------------------------
 app = FastAPI()
