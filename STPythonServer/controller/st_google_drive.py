@@ -1,11 +1,7 @@
-import numpy as np
 import re
 import pandas as pd
-from src.model.mongodb import MongoDB
-from src.model.postgres import PostgresDB
 from src.model.google_drive import GoogleDrive
 from datetime import datetime, timedelta
-import time
 
 def extract_datetime(text):
     """Extract datetime from text"""

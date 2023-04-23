@@ -21,7 +21,7 @@ INTERPRETER = env_config.CONTAINER_INTERPRETER      # 執行的python解釋器
 ROUTE_NAME = f"{ROOT_PATH_DOCKER}/build_crawler_server.py"    # 執行的程式
 MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
 # MONGODB = env_config.MONGODB_LOCAL    # mongodb連線資訊
-DEPLOY_DETACH = True
+DEPLOY_DETACH = False
 
 # ------------------------- ROUTE ----------------------------
 app = FastAPI()

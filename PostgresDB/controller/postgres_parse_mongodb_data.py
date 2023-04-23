@@ -1,8 +1,6 @@
 import numpy as np
 import re
 import pandas as pd
-from src.model.mongodb import MongoDB
-from src.model.postgres import PostgresDB
 import time
 
 

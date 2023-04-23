@@ -1,5 +1,4 @@
 import requests
-from src.model.mongodb import MongoDB
 import subprocess
 
 

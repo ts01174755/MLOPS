@@ -1,6 +1,4 @@
 from MongoDB.model.google_form_api import GoogleFormApi
-from src.model.mongodb import MongoDB
-
 
 class GoogleFormData:
     def __init__(self):
