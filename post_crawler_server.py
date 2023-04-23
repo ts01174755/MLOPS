@@ -49,6 +49,7 @@ if __name__ == "__main__":
             f"curl -X POST -H \"Content-Type: application/json\" -d '{json.dumps(GOOGLEFORM_DATA)}' http://localhost:8001/MongoDB/googleFormDataPost",
             shell=True,
         )
+        time.sleep(5)
 
     elif RUN == "futuresExchange":
         # 從五天前的日期開始執行
