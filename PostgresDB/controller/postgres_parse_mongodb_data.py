@@ -1,8 +1,8 @@
 import numpy as np
 import re
 import pandas as pd
-from src.my_model.mongodb import MongoDB
-from src.my_model.postgres import PostgresDB
+from src.model.mongodb import MongoDB
+from src.model.postgres import PostgresDB
 import time
 
 
@@ -10,19 +10,10 @@ class PosgresParseMongodbData:
 
 
     # 解析爬蟲資料
-    def parseSTData(self, MONGODB_INFO, PROGRESDB_INFO, DATA_TIME):
-        mongodb = MongoDB(
-            user_name=MONGODB_INFO["MONGODB_USER"],
-            user_password=MONGODB_INFO["MONGODB_PASSWORD"],
-            host=MONGODB_INFO["MONGODB_HOST"],  # 這個是用來連接內部的MongoDB(內部連接)
-            port=MONGODB_INFO["MONGODB_PORT"],
-            database_name=MONGODB_INFO["MONGODB_DATABASE"],
-        )
+    def parseSTData(self, MONGODB, MONGODB_COLLECTION, MONGODB_QUERY, PROGRESDB_SCHEMA_DICT, DATA_TIME):
+
         # mongodb查詢一段時間內的資料
-        # mongodb查詢一段時間內的資料
-        rows = mongodb.find_document(
-            MONGODB_INFO["MONGODB_COLLECTION"], MONGODB_INFO["MONGODB_QUERY"]
-        )
+        rows = MONGODB.find_document(MONGODB_COLLECTION, MONGODB_QUERY)
         crawlerResText = rows[-1]["crawlerResText"]
 
         # 連接儲存解析後的DataBase
@@ -63,23 +54,15 @@ class PosgresParseMongodbData:
                      'uniquechar5', 'uniquechar6', 'uniquechar7', 'uniquechar8']
         )
         responses_df["dt"] = DATA_TIME
-        responses_df["memo"] = PROGRESDB_INFO['PROGRESDB_SCHEMA_DICT']["memo"]
-        responses_df["commondata1"] = PROGRESDB_INFO['PROGRESDB_SCHEMA_DICT']["commondata1"]
+        responses_df["memo"] = PROGRESDB_SCHEMA_DICT["memo"]
+        responses_df["commondata1"] = PROGRESDB_SCHEMA_DICT["commondata1"]
 
         return responses_df
 
-    def parseGoogleSTFromData(self, MONGODB_INFO, PROGRESDB_INFO, DATA_TIME):
-        mongodb = MongoDB(
-            user_name=MONGODB_INFO["MONGODB_USER"],
-            user_password=MONGODB_INFO["MONGODB_PASSWORD"],
-            host=MONGODB_INFO["MONGODB_HOST"],  # 這個是用來連接內部的MongoDB(內部連接)
-            port=MONGODB_INFO["MONGODB_PORT"],
-            database_name=MONGODB_INFO["MONGODB_DATABASE"],
-        )
-
+    def parseGoogleSTFromData(self, MONGODB, DATA_TIME, MONGODB_COLLECTION, MONGODB_QUERY, PROGRESDB_SCHEMA_DICT):
         # mongodb查詢一段時間內的資料
-        rows = mongodb.find_document(
-            MONGODB_INFO["MONGODB_COLLECTION"], MONGODB_INFO["MONGODB_QUERY"]
+        rows = MONGODB.find_document(
+            MONGODB_COLLECTION, MONGODB_QUERY
         )
         crawlerResText = rows[-1]["crawlerResText"]
 
@@ -104,11 +87,11 @@ class PosgresParseMongodbData:
             dt = time.localtime(time.mktime(dt) + 8 * 60 * 60)
 
             # truncate_time_start 往前一天
-            truncate_time_start = time.strptime(MONGODB_INFO['MONGODB_QUERY']['dt']['$gte'], '%Y-%m-%d')
+            truncate_time_start = time.strptime(MONGODB_QUERY['dt']['$gte'], '%Y-%m-%d')
             truncate_time_start = time.localtime(time.mktime(truncate_time_start) - 1 * 60 * 60 * 24)
 
             # truncate_time_end 往前一天
-            truncate_time_end = time.strptime(MONGODB_INFO['MONGODB_QUERY']['dt']['$lt'], '%Y-%m-%d')
+            truncate_time_end = time.strptime(MONGODB_QUERY['dt']['$lt'], '%Y-%m-%d')
             truncate_time_end = time.localtime(time.mktime(truncate_time_end) - 1 * 60 * 60 * 24)
 
             if dt >= truncate_time_end or dt < truncate_time_start:
@@ -136,57 +119,39 @@ class PosgresParseMongodbData:
                 "上課學生（中文姓名／英文姓名）": "uniquechar8",
             })
             responses_df["dt"] = DATA_TIME
-            responses_df["memo"] = PROGRESDB_INFO['PROGRESDB_SCHEMA_DICT']["memo"]
-            responses_df["commondata1"] = PROGRESDB_INFO['PROGRESDB_SCHEMA_DICT']["commondata1"]
+            responses_df["memo"] = PROGRESDB_SCHEMA_DICT["memo"]
+            responses_df["commondata1"] = PROGRESDB_SCHEMA_DICT["commondata1"]
             return responses_df
 
     # 將解析後的資料寫入Postgres
-    def insertPostgresData(self, PROGRESDB_INFO, dataFrame):
+    def insertPostgresData(self, PROGRESDB, PROGRESDB_TABLE, PROGRESDB_SCHEMA, dataFrame):
         if dataFrame.shape[0] == 0:
             return "no data"
 
-        # 連接postgres
-        postgres = PostgresDB(
-            user=PROGRESDB_INFO["POSTGRES_USER"],
-            password=PROGRESDB_INFO["POSTGRES_PASSWORD"],
-            host=PROGRESDB_INFO["POSTGRES_HOST"],
-            port=PROGRESDB_INFO["POSTGRES_PORT"],
-            database=PROGRESDB_INFO["POSTGRES_DATABASE"],
-        )
-
         # 連接儲存解析後的DataBase
-        conn = postgres.connectSQLAlchemy()
+        conn = PROGRESDB.connectSQLAlchemy()
         dataFrame.to_sql(
-            PROGRESDB_INFO['PROGRESDB_TABLE'],
+            PROGRESDB_TABLE,
             conn,
-            schema=PROGRESDB_INFO['PROGRESDB_SCHEMA'],
+            schema=PROGRESDB_SCHEMA,
             if_exists="append",
             index=False
         )
         return "success"
 
-    def makeInsertGoogleFromDataSchema(
-        self, PROGRESDB_INFO, tableName, schemaDict, schemaFilePath, columnList=None
+    def makeDataSchema(
+        self, PROGRESDB, tableName, schemaDict, schemaFilePath, columnList=None
     ):
         """以後可以把製作Table 的Schema封裝成一個工具"""
-        # 連接postgres
-        postgres = PostgresDB(
-            user=PROGRESDB_INFO["POSTGRES_USER"],
-            password=PROGRESDB_INFO["POSTGRES_PASSWORD"],
-            host=PROGRESDB_INFO["POSTGRES_HOST"],
-            port=PROGRESDB_INFO["POSTGRES_PORT"],
-            database=PROGRESDB_INFO["POSTGRES_DATABASE"],
-        )
-        postgres.connect()
+        PROGRESDB.connect()
 
         # 更新資料表的欄位含義
-        df = postgres.queryTableSchemaDataFrame(tableName)
+        df = PROGRESDB.queryTableSchemaDataFrame(tableName)
         df["memo"] = ""
         dfColumnNameMemo = df[["column_name", "memo"]].reset_index(drop=True)
         dfColumnNameMemo.set_index("column_name", inplace=True)
         dfColumnNameMemo = dfColumnNameMemo.T
         dfColumnNameMemoDict = dfColumnNameMemo.to_dict("records")[0]
-
         for k_ in schemaDict.keys():
             dfColumnNameMemoDict[k_] = schemaDict[k_]
 

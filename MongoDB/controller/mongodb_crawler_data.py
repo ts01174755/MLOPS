@@ -1,5 +1,5 @@
 import requests
-from src.my_model.mongodb import MongoDB
+from src.model.mongodb import MongoDB
 import subprocess
 
 
@@ -8,22 +8,13 @@ class CrawlerData:
         pass
 
     def get_crawlerdata_to_mongodb(
-        self, URL, COOKIES, MONGODB_INFO, COLLECTION, DATATIME
+        self, URL, COOKIES, Mongodb, COLLECTION, DATATIME
     ):
         # 獲取網頁回應
         crawlerRes = requests.get(URL, cookies=COOKIES)
 
-        # 獲取 mongodb 資訊
-        mongoDB = MongoDB(
-            user_name=MONGODB_INFO["MONGODB_USER"],
-            user_password=MONGODB_INFO["MONGODB_PASSWORD"],
-            host=MONGODB_INFO["MONGODB_HOST"],
-            port=MONGODB_INFO["MONGODB_PORT"],
-            database_name=MONGODB_INFO["MONGODB_DATABASE"],
-        )
-
         # 獲取 mongodb 資料
-        mongoDB.insert_document(
+        Mongodb.insert_document(
             COLLECTION,
             document={
                 "URL": URL,

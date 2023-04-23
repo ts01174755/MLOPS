@@ -4,9 +4,9 @@ from pymongo.errors import DuplicateKeyError, PyMongoError
 
 class MongoDB:
     def __init__(self, user_name, user_password, host, port, database_name):
-        print(
-            f"mongodb://{user_name}:{user_password}@{host}:{port}/{database_name}?authSource=admin&retryWrites=true&w=majority"
-        )
+        # print(
+        #     f"mongodb://{user_name}:{user_password}@{host}:{port}/{database_name}?authSource=admin&retryWrites=true&w=majority"
+        # )
         self.client = MongoClient(
             f"mongodb://{user_name}:{user_password}@{host}:{port}/{database_name}?authSource=admin&retryWrites=true&w=majority"
         )

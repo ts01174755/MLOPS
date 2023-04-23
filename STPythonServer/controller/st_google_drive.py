@@ -1,9 +1,9 @@
 import numpy as np
 import re
 import pandas as pd
-from src.my_model.mongodb import MongoDB
-from src.my_model.postgres import PostgresDB
-from src.my_model.google_drive import GoogleDrive
+from src.model.mongodb import MongoDB
+from src.model.postgres import PostgresDB
+from src.model.google_drive import GoogleDrive
 from datetime import datetime, timedelta
 import time
 
@@ -29,20 +29,13 @@ class STGoogleDrive():
     def __init__(self):
         pass
 
-    def searchPostgres(self, PROGRESDB_INFO):
-        postgres = PostgresDB(
-            user=PROGRESDB_INFO["POSTGRES_USER"],
-            password=PROGRESDB_INFO["POSTGRES_PASSWORD"],
-            host=PROGRESDB_INFO["POSTGRES_HOST"],
-            port=PROGRESDB_INFO["POSTGRES_PORT"],
-            database=PROGRESDB_INFO["POSTGRES_DATABASE"],
-        )
+    def searchPostgres(self, POSTGRESDB, QUERY_SQL):
         # 連接儲存解析後的DataBase
-        conn = postgres.connectSQLAlchemy().connect()
-        query = PROGRESDB_INFO["QUERY_SQL"].replace('"', "'")
+        conn = POSTGRESDB.connectSQLAlchemy().connect()
+        query = QUERY_SQL.replace('"', "'")
 
         # 撈取資料
-        df = pd.read_sql(postgres.getSQLText(query), conn)
+        df = pd.read_sql(POSTGRESDB.getSQLText(query), conn)
         return df
 
     def fileMoveAndCopy(self, GOOGLE_DRIVE_INFO, df):

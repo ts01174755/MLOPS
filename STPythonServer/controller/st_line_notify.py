@@ -1,5 +1,5 @@
 
-from src.my_model.line import LineNotify
+from src.model.line import LineNotify
 
 class STLineNotify():
 

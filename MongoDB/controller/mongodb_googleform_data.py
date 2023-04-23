@@ -1,5 +1,5 @@
 from MongoDB.model.google_form_api import GoogleFormApi
-from src.my_model.mongodb import MongoDB
+from src.model.mongodb import MongoDB
 
 
 class GoogleFormData:
@@ -12,7 +12,7 @@ class GoogleFormData:
         CLIENT_SECRET_FILE,
         SCOPES,
         DISCOVERY_DOC,
-        MONGODB_INFO,
+        Mongodb,
         COLLECTION,
         FORMID,
         DATATIME,
@@ -32,13 +32,7 @@ class GoogleFormData:
 
         # 將結果寫入 mongodb
         google_form_api.mongodb_insert_document(
-            mongoDBCtrl=MongoDB(
-                user_name=MONGODB_INFO["MONGODB_USER"],
-                user_password=MONGODB_INFO["MONGODB_PASSWORD"],
-                host=MONGODB_INFO["MONGODB_HOST"],
-                port=MONGODB_INFO["MONGODB_PORT"],
-                database_name=MONGODB_INFO["MONGODB_DATABASE"],
-            ),
+            mongoDBCtrl=Mongodb,
             collection=COLLECTION,
             document={"FORMID": FORMID, "dt": DATATIME, "crawlerResText": result},
         )

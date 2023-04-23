@@ -4,7 +4,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)).split("PostgresDB")[0])
 import sys
 
 sys.path.append(os.getcwd())
-from src.my_model.docker_cmd import DockerCmd
+from src.model.docker_cmd import DockerCmd
 
 # 安裝postgres
 # >> https://medium.com/alberthg-docker-notes/docker%E7%AD%86%E8%A8%98-%E9%80%B2%E5%85%A5container-%E5%BB%BA%E7%AB%8B%E4%B8%A6%E6%93%8D%E4%BD%9C-postgresql-container-d221ba39aaec

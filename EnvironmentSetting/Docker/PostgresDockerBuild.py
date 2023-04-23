@@ -4,7 +4,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)).split("PostgresDB")[0])
 import sys
 
 sys.path.append(os.getcwd())
-from src.my_model.docker_cmd import DockerCmd
+from src.model.docker_cmd import DockerCmd
 import time
 
 # 安裝postgres
@@ -28,11 +28,11 @@ if __name__ == "__main__":
     #     detach=True, interactive=False, TTY=False
     # )
     #
-    # # dockerCmd run dpage/pgadmin4:6.20
+    # dockerCmd run dpage/pgadmin4:6.20
     # DockerCmd.dockerRun(
     #     tag='dpage/pgadmin4:6.20',
     #     name='pgadmin4',
-    #     port='5050:80',
+    #     port=['5050:80'],
     #     volume='/Users/peiyuwu/Development/docker/pgadmin4:/Users/peiyuwu',
     #     envDict={'PGADMIN_DEFAULT_EMAIL': 'pgadmin4@gmail.com', 'PGADMIN_DEFAULT_PASSWORD': 'pgadmin4'},
     #     detach=True, interactive=False, TTY=False
@@ -62,6 +62,7 @@ if __name__ == "__main__":
 
     # dockerCmd 把 postgres15.2 和 mongodb 加入網路
     # DockerCmd.dockerNetworkConnect(name="mongo-postgres-net", container="postgres15.2")
+    # DockerCmd.dockerNetworkConnect(name="mongo-postgres-net", container="pgadmin4")
 
     #
     # ####################################################################################################################

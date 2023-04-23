@@ -12,24 +12,22 @@ class PostgresDB:
         self.conn = None
 
     def connect(self):
-        if self.conn is None:
-            self.conn = psycopg2.connect(
-                host=self.host,
-                port=self.port,
-                database=self.database,
-                user=self.user,
-                password=self.password,
-            )
+        self.conn = psycopg2.connect(
+            host=self.host,
+            port=self.port,
+            database=self.database,
+            user=self.user,
+            password=self.password,
+        )
         return self.conn  # 這裡要回傳conn, 不然會出現NoneType has no attribute 'cursor'的錯誤
 
     def getPostgresURL(self):
         return f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
 
     def connectSQLAlchemy(self):
-        if self.conn is None:
-            self.conn = create_engine(
-                f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
-            )
+        self.conn = create_engine(
+            f"postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}"
+        )
         return self.conn  # 這裡要回傳conn, 不然會出現NoneType has no attribute 'cursor'的錯誤
 
     def getSQLText(self, query):

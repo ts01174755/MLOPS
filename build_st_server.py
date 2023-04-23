@@ -1,0 +1,137 @@
+import os
+import sys
+import env_config
+from STPythonServer.controller.st_google_drive import STGoogleDrive
+from STPythonServer.controller.st_line_notify import STLineNotify
+from fastapi import FastAPI
+from pydantic import BaseModel
+import uvicorn
+import json
+from src.model.docker_cmd import DockerCmd
+
+# ---------------------- STEP - params -----------------------
+DEPLOY_PORT = 8003
+RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
+# RUN = "local"
+
+# ------------------------ env_params ------------------------
+CONTAINER_NAME = env_config.CONTAINERNAME_PYTHON_3_8_18     # 執行環境
+FILE_PATH_DOCKER = env_config.CONTAINERNAME_FILE_PATH      # 存放資料的位置
+ROOT_PATH_DOCKER = env_config.CONTAINERNAME_ROOT_PATH_DOCKER    # DOCKER 執行路徑
+ROOT_PATH_LOCAL = env_config.CONTAINERNAME_ROOT_PATH_LOCAL      # LOCAL 執行路徑
+INTERPRETER = env_config.CONTAINER_INTERPRETER      # 執行的python解釋器
+ROUTE_NAME = f"{ROOT_PATH_DOCKER}/build_st_server.py"    # 執行的程式
+POSTGRESDB = env_config.POSTGRESDB_DOCKER # postgres連線資訊
+# POSTGRESDB = env_config.POSTGRESDB_LOCAL # postgres連線資訊
+MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
+# MONGODB = env_config.MONGODB_LOCAL    # mongodb連線資訊
+DEPLOY_DETACH = False
+
+# ------------------------- ROUTE ----------------------------
+app = FastAPI()
+
+class STCrawlerRequestBody(BaseModel):
+    DEFAULT_DICT: dict = {}
+
+
+# 部署測試服務
+@app.get("/")
+def get_hello_message():
+    return {"message": "Hello World"}
+
+@app.get("/stPythonServer/stGoogleDrive")
+def st_google_drive_get():
+    return {"message": "here is stPythonServer/stGoogleDrive"}
+
+@app.post("/stPythonServer/stGoogleDrive")
+def st_google_drive(params: STCrawlerRequestBody = STCrawlerRequestBody()):
+    # 每日執行 - 爬蟲
+    st_google_drive = STGoogleDrive()
+    df = st_google_drive.searchPostgres(
+        # MONGODB_INFO=params.DEFAULT_DICT['MONGODB_INFO'],
+        POSTGRESDB=POSTGRESDB,
+        QUERY_SQL=params.DEFAULT_DICT['QUERY_SQL'],
+    )
+
+    # 撰寫 googleDrive 模擬cd, rm, mkdir, 等shell操作
+    notifyInfo = st_google_drive.fileMoveAndCopy(
+        GOOGLE_DRIVE_INFO=params.DEFAULT_DICT['GOOGLE_DRIVE_INFO'],
+        df=df
+    )
+    if len(notifyInfo) == 0:
+        return notifyInfo
+
+    line_message = st_google_drive.line_notify_message(notifyInfo)
+
+    with open(params.DEFAULT_DICT['NOTIFY_TOKEN_FILE'], 'r') as f:
+        lineNotifyToken = json.load(f)
+
+    st_line_notify = STLineNotify()
+    st_line_notify.postLineNotify(
+        token=lineNotifyToken[params.DEFAULT_DICT['NOTIFY_TOKEN_TYPE']],
+        message=line_message
+    )
+
+    return notifyInfo
+
+
+if __name__ == "__main__":
+    # 執行環境 - 基本上不需要動
+    if RUN == "docker":
+        # 移除container中的舊程式
+        DockerCmd.dockerExec(
+            name=CONTAINER_NAME,
+            cmd=f"rm -rf {ROOT_PATH_DOCKER}",
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
+
+        # 把gitHub上的程式碼clone到docker container中
+        GITHUB_URL = env_config.GITHUB_URL
+        DockerCmd.dockerExec(
+            name=CONTAINER_NAME,
+            cmd=f"git clone {GITHUB_URL} {ROOT_PATH_DOCKER}",
+            detach=False,
+            interactive=True,
+            TTY=False,
+        )
+
+        # CONTAINERNAME - CI
+        for root, dirs, files in os.walk(ROOT_PATH_LOCAL):
+            rootCheck = False
+            for r_ in ["__pycache__", ".git", ".idea", "venv", "OLD"]:
+                if root.find(r_) != -1:
+                    rootCheck = True
+            if rootCheck:
+                continue
+
+            DockerCmd.dockerExec(
+                name=CONTAINER_NAME,
+                cmd=f"mkdir -p {root.replace(ROOT_PATH_LOCAL, ROOT_PATH_DOCKER)}",
+                detach=False,
+                interactive=True,
+                TTY=False,
+            )
+
+            for file in files:
+                # 把現在執行的程式更新到container中
+                DockerCmd.dockerCopy(
+                    name=CONTAINER_NAME,
+                    filePath=os.path.join(root, file),
+                    targetPath=os.path.join(root, file).replace(
+                        ROOT_PATH_LOCAL, ROOT_PATH_DOCKER
+                    ),
+                )
+
+        DockerCmd.dockerExec(
+            name=CONTAINER_NAME,
+            cmd=f'/bin/bash -c "cd {ROOT_PATH_DOCKER} && {INTERPRETER} {ROUTE_NAME} local"',
+            detach=DEPLOY_DETACH,
+            interactive=True,
+            TTY=False,
+        )
+    elif RUN == "local":
+        uvicorn.run(app, host="0.0.0.0", port=DEPLOY_PORT)
+
+
