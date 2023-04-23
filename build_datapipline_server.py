@@ -5,6 +5,7 @@ from PostgresDB.controller.postgres_parse_mongodb_data import PosgresParseMongod
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
+import logging
 from src.model.docker_cmd import DockerCmd
 
 # ---------------------- STEP - params -----------------------
@@ -19,6 +20,8 @@ ROOT_PATH_DOCKER = env_config.CONTAINERNAME_ROOT_PATH_DOCKER    # DOCKER 執行�
 ROOT_PATH_LOCAL = env_config.CONTAINERNAME_ROOT_PATH_LOCAL      # LOCAL 執行路徑
 INTERPRETER = env_config.CONTAINER_INTERPRETER      # 執行的python解釋器
 ROUTE_NAME = f"{ROOT_PATH_DOCKER}/build_datapipline_server.py"    # 執行的程式
+LOG_PATH = f"{ROOT_PATH_DOCKER}/log_datapipline_server.log"    # 執行的程式
+# LOG_PATH = f"{ROOT_PATH_LOCAL}/log_datapipline_server.log"    # 執行的程式
 POSTGRESDB = env_config.POSTGRESDB_DOCKER # postgres連線資訊
 # POSTGRESDB = env_config.POSTGRESDB_LOCAL # postgres連線資訊
 MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
@@ -27,6 +30,16 @@ DEPLOY_DETACH = True
 
 # ------------------------- ROUTE ----------------------------
 app = FastAPI()
+
+if RUN == "local":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler(LOG_PATH),
+            logging.StreamHandler()
+        ]
+    )
 
 
 class STCrawlerRequestBody(BaseModel):
