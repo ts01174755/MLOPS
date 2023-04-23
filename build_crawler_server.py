@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
 import logging
+from src.controller.logger import LoggingMiddleware
 from src.model.docker_cmd import DockerCmd
 # ---------------------- STEP - params -----------------------
 DEPLOY_PORT = 8001
@@ -26,7 +27,6 @@ MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
 DEPLOY_DETACH = True
 
 # ------------------------- ROUTE ----------------------------
-app = FastAPI()
 
 if RUN == "local":
     logging.basicConfig(
@@ -37,6 +37,10 @@ if RUN == "local":
             logging.StreamHandler()
         ]
     )
+
+app = FastAPI()
+app.add_middleware(LoggingMiddleware)
+
 
 class STCrawlerRequestBody(BaseModel):
     DATA_TIME: str = None
