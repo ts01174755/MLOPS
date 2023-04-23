@@ -20,6 +20,7 @@ ROOT_PATH_LOCAL = env_config.CONTAINERNAME_ROOT_PATH_LOCAL      # LOCAL 執行�
 INTERPRETER = env_config.CONTAINER_INTERPRETER      # 執行的python解釋器
 ROUTE_NAME = f"{ROOT_PATH_DOCKER}/build_crawler_server.py"    # 執行的程式
 LOG_PATH = f"{ROOT_PATH_DOCKER}/log_crawler_server.log"    # 執行的程式
+# LOG_PATH = f"{ROOT_PATH_LOCAL}/log_crawler_server.log"    # 執行的程式
 MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
 # MONGODB = env_config.MONGODB_LOCAL    # mongodb連線資訊
 DEPLOY_DETACH = True
@@ -123,52 +124,6 @@ def google_form_data_post(params: GoogleFormDataRequestBody = GoogleFormDataRequ
 if __name__ == "__main__":
     # 執行環境 - 基本上不需要動
     if RUN == "docker":
-        # 移除container中的舊程式
-        DockerCmd.dockerExec(
-            name=CONTAINER_NAME,
-            cmd=f"rm -rf {ROOT_PATH_DOCKER}",
-            detach=False,
-            interactive=True,
-            TTY=False,
-        )
-
-        # 把gitHub上的程式碼clone到docker container中
-        GITHUB_URL = env_config.GITHUB_URL
-        DockerCmd.dockerExec(
-            name=CONTAINER_NAME,
-            cmd=f"git clone {GITHUB_URL} {ROOT_PATH_DOCKER}",
-            detach=False,
-            interactive=True,
-            TTY=False,
-        )
-
-        # CONTAINERNAME - CI
-        for root, dirs, files in os.walk(ROOT_PATH_LOCAL):
-            rootCheck = False
-            for r_ in ["__pycache__", ".git", ".idea", "venv", "OLD"]:
-                if root.find(r_) != -1:
-                    rootCheck = True
-            if rootCheck:
-                continue
-
-            DockerCmd.dockerExec(
-                name=CONTAINER_NAME,
-                cmd=f"mkdir -p {root.replace(ROOT_PATH_LOCAL, ROOT_PATH_DOCKER)}",
-                detach=False,
-                interactive=True,
-                TTY=False,
-            )
-
-            for file in files:
-                # 把現在執行的程式更新到container中
-                DockerCmd.dockerCopy(
-                    name=CONTAINER_NAME,
-                    filePath=os.path.join(root, file),
-                    targetPath=os.path.join(root, file).replace(
-                        ROOT_PATH_LOCAL, ROOT_PATH_DOCKER
-                    ),
-                )
-
         DockerCmd.dockerExec(
             name=CONTAINER_NAME,
             cmd=f'/bin/bash -c "cd {ROOT_PATH_DOCKER} && {INTERPRETER} {ROUTE_NAME} local"',
