@@ -111,7 +111,7 @@ def make_schema_file(params: STCrawlerRequestBody = STCrawlerRequestBody()):
         tableName=params.PROGRESDB_TABLE,
         schemaDict=params.KWARGS['PROGRESDB_SCHEMA_DICT'],
         columnList=params.KWARGS['COLUMNS_LIST'],
-        schemaFilePath=f'{FILE_PATH_DOCKER}/{params.KWARGS["PROGRESDB_SCHEMA_FILE"]}.csv',
+        schemaFilePath=f'/{FILE_PATH_DOCKER}/{params.KWARGS["PROGRESDB_SCHEMA_FILE"]}',
     )
     return {"message": "insert success"}
 
