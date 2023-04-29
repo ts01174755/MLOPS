@@ -59,7 +59,7 @@ if __name__ == "__main__":
             FILE_NAME = f"Daily_{DATA_DAY}.zip"
             FUTURES_EXCHANGE_DATA = {
                 "URL": f"https://www.taifex.com.tw/file/taifex/Dailydownload/DailydownloadCSV/{FILE_NAME}",  # 下載檔案的網址
-                "FILEPATH": f"/Users/peiyuwu/Downloads/{FILE_NAME.split('.')[0]}",  # 下載檔案的路徑
+                "FILENAME": f"{FILE_NAME.split('.')[0]}",  # 下載檔案的路徑
             }
 
             print(
