@@ -39,7 +39,7 @@ if __name__ == "__main__":
                     "SCOPES": ['https://www.googleapis.com/auth/drive'],
                 },
                 "NOTIFY_TOKEN_FILE": 'env/LineNotify.json',
-                "NOTIFY_TOKEN_TYPE": ['私人Notify', '雲課堂 - Hana'][0],
+                "NOTIFY_TOKEN_TYPE": ['私人Notify', '雲課堂 - Hana'][1],
                 "PROGRESDB_SCHEMA": PROGRESDB_SCHEMA,
                 "PROGRESDB_TABLE": PROGRESDB_TABLE,
                 "PROGRESDB_SCHEMA_DICT": {
