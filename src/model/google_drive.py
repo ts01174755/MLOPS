@@ -16,7 +16,7 @@ class GoogleDriveBase:
     # 取得google drive api服務
     def _get_service(self):
         if self.service is None:
-            self.service = build("drive", "v3", credentials=self.creds)
+            self.service = build("drive", "v3", credentials=self.creds, cache_discovery=False)
         return self.service
 
     # 建立資料夾
