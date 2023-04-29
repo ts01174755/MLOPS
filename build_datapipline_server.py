@@ -15,18 +15,19 @@ RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
 # RUN = "local"
 
 # ------------------------ env_params ------------------------
-CONTAINER_NAME = env_config.CONTAINERNAME_PYTHON_3_8_18     # 執行環境
-FILE_PATH_DOCKER  = env_config.CONTAINERNAME_FILE_PATH      # 存放資料的位置
-ROOT_PATH_DOCKER = env_config.CONTAINERNAME_ROOT_PATH_DOCKER    # DOCKER 執行路徑
-ROOT_PATH_LOCAL = env_config.CONTAINERNAME_ROOT_PATH_LOCAL      # LOCAL 執行路徑
-INTERPRETER = env_config.CONTAINER_INTERPRETER      # 執行的python解釋器
+CONTAINER_NAME = env_config.CONTAINER_PYTHON_3_8_18_NAME     # 執行環境
+FILE_PATH_DOCKER = env_config.CONTAINER_PYTHON_3_8_18_FILE_PATH      # 存放資料的位置
+DOWNLOAD_PATH_DOCEKR = env_config.CONTAINER_PYTHON_3_8_18_DOWNLOAD_PATH   # 存放資料的位置
+ROOT_PATH_DOCKER = env_config.MLOPS_ROOT_PATH_DOCKER    # DOCKER 執行路徑
+ROOT_PATH_LOCAL = env_config.MLOPS_ROOP_PATH_LOCAL      # LOCAL 執行路徑
+INTERPRETER = env_config.CONTAINER_PYTHON_3_8_18_INTERPRETER      # 執行的python解釋器
 ROUTE_NAME = f"{ROOT_PATH_DOCKER}/build_datapipline_server.py"    # 執行的程式
 LOG_PATH = f"{ROOT_PATH_DOCKER}/log_datapipline_server.log"    # 執行的程式
 # LOG_PATH = f"{ROOT_PATH_LOCAL}/log_datapipline_server.log"    # 執行的程式
-POSTGRESDB = env_config.POSTGRESDB_DOCKER # postgres連線資訊
-# POSTGRESDB = env_config.POSTGRESDB_LOCAL # postgres連線資訊
 MONGODB = env_config.MONGODB_DOCKER     # mongodb連線資訊
 # MONGODB = env_config.MONGODB_LOCAL    # mongodb連線資訊
+POSTGRESDB = env_config.POSTGRESDB_DOCKER # postgres連線資訊
+# POSTGRESDB = env_config.POSTGRESDB_LOCAL # postgres連線資訊
 DEPLOY_DETACH = True
 
 # ------------------------- ROUTE ----------------------------
