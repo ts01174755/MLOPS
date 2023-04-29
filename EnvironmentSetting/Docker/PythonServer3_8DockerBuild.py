@@ -55,8 +55,8 @@ if __name__ == "__main__":
     )  # 更新pip
     python_install_package = [
         'python-dotenv', 'fastapi', 'uvicorn', 'psycopg2', 'pymongo', 'setuptools', 'requests', 'beautifulsoup4',
-        'pandas', 'black', 'build', 'tree', 'google-api-python-client', 'google-auth-httplib2', 'google-auth-oauthlib',
-        'oauth2client', 'aiofiles', 'Jinja2==3.1.2', 'sqlalchemy'
+        'pandas', 'black', 'build', 'tree', 'google-api-python-client', 'google-auth', 'google-auth-oauthlib',
+        'google-auth-httplib2', 'oauth2client', 'aiofiles', 'Jinja2==3.1.2', 'sqlalchemy'
     ]
     for package in python_install_package:
         DockerCmd.dockerExec(
@@ -75,3 +75,21 @@ if __name__ == "__main__":
         interactive=True,
         TTY=False,
     )  # 修改時區
+
+    # # 顯示已安裝的python套件
+    # DockerCmd.dockerExec(
+    #     name="python3.8.16",
+    #     cmd='bash -c "pip list"',
+    #     detach=False,
+    #     interactive=True,
+    #     TTY=False,
+    # )  # 顯示已安裝的python套件
+    #
+    # # 卸載python oauth2client
+    # DockerCmd.dockerExec(
+    #     name="python3.8.16",
+    #     cmd='bash -c "pip uninstall -y oauth2client"',
+    #     detach=False,
+    #     interactive=True,
+    #     TTY=False,
+    # )  # 卸載python oauth2client
