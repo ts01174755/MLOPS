@@ -19,6 +19,7 @@ subprocess.run("brew install tree", shell=True)
 
 # 安裝 google form api 相關的套件
 subprocess.run("pip install google-api-python-client", shell=True)
+subprocess.run("pip install google-auth", shell=True)
 subprocess.run("pip install google-auth-httplib2", shell=True)
 subprocess.run("pip install google-auth-oauthlib", shell=True)
 subprocess.run("pip install oauth2client", shell=True)
