@@ -38,3 +38,4 @@
 /src/my_package.egg-info/PKG-INFO
 /src/my_package.egg-info/SOURCES.txt
 /src/my_package.egg-info/top_level.txt
+*.log
