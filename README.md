@@ -1,6 +1,30 @@
 # This is MLOps project created by NS R&Ds.
 - by 台灣梯度下降第一品牌
 
+# 環境安裝
+## 版本控制
+- 下載 pyenv, pyenv-virtualenv:
+
+```brew install pyenv pyenv-virtualenv```
+
+- 使用 python 3.8.16
+
+```pyenv install 3.8.16```
+
+- 為專案建立虛擬環境
+
+```pyenv virtualenv 3.8.16 MLOPS```
+
+- Clone 專案並指定虛擬環境
+
+```git clone https://github.com/ts01174755/MLOPS.git MLOPS```
+
+```cd MLOPS```
+    
+```pyenv local MLOPS```
+    
+    
+
 env和 EnvironmentSetting不知道有什麼差異
 名稱：不要用駝峰式的方式
 1. config不是拿來執行用的，他是拿來放「環境參數」
