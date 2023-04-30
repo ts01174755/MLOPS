@@ -1,8 +1,11 @@
+import sys
 import subprocess
+## params
+# RUN = ['init', 'base', 'google', 'OTHER']
+RUN = 'init' if len(sys.argv) == 1 else sys.argv[1]
 
 
 if __name__ == "__main__":
-    RUN = ['init', 'base', 'google', 'OTHER'][0]
     if RUN == 'init':
         subprocess.run("pip install --upgrade pip", shell=True)
         subprocess.run("brew install tree", shell=True)

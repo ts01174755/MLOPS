@@ -4,14 +4,11 @@ import sys
 from src.model.docker_cmd import DockerCmd
 import time
 
-# 安裝postgres
-# >> https://medium.com/alberthg-docker-notes/docker%E7%AD%86%E8%A8%98-%E9%80%B2%E5%85%A5container-%E5%BB%BA%E7%AB%8B%E4%B8%A6%E6%93%8D%E4%BD%9C-postgresql-container-d221ba39aaec
-# >> https://docs.aws.amazon.com/zh_tw/AmazonRDS/latest/AuroraUserGuide/babelfish-connect-PostgreSQL.html
-# >> https://jimmyswebnote.com/postgresql-tutorial/
-# >> https://juejin.cn/post/7132086527340871693
+## params
+# RUN = ['images', 'build', 'update', 'gpt_base', 'python_package', 'OTHER']
+RUN = 'images' if len(sys.argv) == 1 else sys.argv[1]
 
 if __name__ == "__main__":
-    RUN = ['images', 'build', 'update', 'gpt_base', 'python_package', 'OTHER'][1]
     if RUN == 'images':
         # dockerCmd pull Images
         DockerCmd.dockerPull(tag=env_config.IMAGE_MONGODB_TAG)
@@ -19,7 +16,8 @@ if __name__ == "__main__":
 
     elif RUN == 'build':
         # dockerCmd 建立網路
-        DockerCmd.dockerNetworkCreate(name=f'bridge {env_config.CONTAINER_MONGO_POSTGRES_NET}')
+        DockerCmd.dockerNetworkRemove(name=f'{env_config.CONTAINER_MONGO_POSTGRES_NET}')
+        DockerCmd.dockerNetworkCreate(name=f'{env_config.CONTAINER_MONGO_POSTGRES_NET}')
 
         # dockerCmd run mongodb
         DockerCmd.dockerRun(
@@ -28,7 +26,7 @@ if __name__ == "__main__":
             port=env_config.CONTAINER_MONGODB_PORT_LIST,
             volume=f'{env_config.CONTAINER_MONGODB_ROOT_MAP}:{env_config.CONTAINER_MONGODB_ROOT}',
             envDict=env_config.CONTAINER_MONGO_ENV_DICT,
-            # network='mongo-net',
+            network=env_config.CONTAINER_MONGO_POSTGRES_NET,
             detach=True, interactive=False, TTY=False
         )
 
@@ -39,12 +37,12 @@ if __name__ == "__main__":
             port=env_config.CONTAINER_MONGODB_EXPRESS_PORT_LIST,
             volume=f'{env_config.CONTAINER_MONGODB_EXPRESS_ROOT_MAP}:{env_config.CONTAINER_MONGODB_EXPRESS_ROOT}',
             envDict=env_config.CONTAINER_MONGO_EXPRESS_ENV_DICT,
-            # network='mongo-net',
+            network=env_config.CONTAINER_MONGO_POSTGRES_NET,
             detach=True, interactive=False, TTY=False
         )
 
-        DockerCmd.dockerNetworkConnect(name=env_config.CONTAINER_MONGO_POSTGRES_NET, container=env_config.CONTAINER_MONGODB_NAME)
-        DockerCmd.dockerNetworkConnect(name=env_config.CONTAINER_MONGO_POSTGRES_NET, container=env_config.CONTAINER_MONGODB_EXPRESS_NAME)
+        # DockerCmd.dockerNetworkConnect(name=env_config.CONTAINER_MONGO_POSTGRES_NET, container=env_config.CONTAINER_MONGODB_NAME)
+        # DockerCmd.dockerNetworkConnect(name=env_config.CONTAINER_MONGO_POSTGRES_NET, container=env_config.CONTAINER_MONGODB_EXPRESS_NAME)
 
         time.sleep(5)
         os.system(f'open http://localhost:{env_config.CONTAINER_MONGODB_EXPRESS_PORT_LIST[0].split(":")[0]}')
