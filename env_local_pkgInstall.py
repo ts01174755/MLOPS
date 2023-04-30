@@ -1,5 +1,4 @@
 import subprocess
-import env_config
 
 
 if __name__ == "__main__":
