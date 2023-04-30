@@ -2,21 +2,21 @@ import os
 import env_config
 import sys
 from src.model.docker_cmd import DockerCmd
+import subprocess
 
-# 安裝postgres
-# >> https://medium.com/alberthg-docker-notes/docker%E7%AD%86%E8%A8%98-%E9%80%B2%E5%85%A5container-%E5%BB%BA%E7%AB%8B%E4%B8%A6%E6%93%8D%E4%BD%9C-postgresql-container-d221ba39aaec
-# >> https://docs.aws.amazon.com/zh_tw/AmazonRDS/latest/AuroraUserGuide/babelfish-connect-PostgreSQL.html
-# >> https://jimmyswebnote.com/postgresql-tutorial/
-# >> https://juejin.cn/post/7132086527340871693
+## params
+RUN = ['images', 'build', 'init', 'gpt_base', 'python_package', 'OTHER', 'all']
+RUN = 'images' if len(sys.argv) == 1 else sys.argv[1]
 
 if __name__ == "__main__":
-    RUN = ['images', 'build', 'update', 'gpt_base', 'python_package', 'OTHER'][1]
-    if RUN == 'images':
+    if RUN == 'images' or RUN == 'all':
         # 建構Python3.8的Docker Image
         # dockerCmd pull Images
         DockerCmd.dockerPull(tag=env_config.IMAGE_PYTHON_3_8_18_TAG)
 
-    elif RUN == 'build':
+    elif RUN == 'build' or RUN == 'all':
+        subprocess.run(f"mkdir -p {env_config.CONTAINER_PYTHON_3_8_18_ROOT_MAP}", shell=True)
+
         DockerCmd.dockerRun(
             tag=env_config.IMAGE_PYTHON_3_8_18_TAG,
             name=env_config.CONTAINER_PYTHON_3_8_18_NAME,
@@ -43,7 +43,7 @@ if __name__ == "__main__":
             TTY=False
         )
 
-    elif RUN == 'update':
+    elif RUN == 'init' or RUN == 'all':
         # 更新apt-get
         DockerCmd.dockerExec(
             name=env_config.CONTAINER_PYTHON_3_8_18_NAME,
@@ -61,7 +61,7 @@ if __name__ == "__main__":
             TTY=False,
         )
 
-    elif RUN == 'gpt_base':
+    elif RUN == 'gpt_base' or RUN == 'all':
         # dockerCmd postgres:15.2 - 基礎安裝
         apt_install_package = ['tzdata', 'git', 'make', 'gcc', 'vim', 'wget', 'zlib1g-dev', '']
         for package in apt_install_package:
@@ -72,8 +72,7 @@ if __name__ == "__main__":
                 interactive=True,
                 TTY=False,
             )
-
-    elif RUN == 'python_package':
+    elif RUN == 'python_package' or RUN == 'all':
         # 更新pip
         python_install_package = [
             'python-dotenv', 'fastapi', 'uvicorn', 'psycopg2', 'pymongo', 'setuptools', 'requests', 'beautifulsoup4',
@@ -89,7 +88,7 @@ if __name__ == "__main__":
                 TTY=False,
             )
 
-    elif RUN == 'OTHER':
+    elif RUN == 'OTHER' or RUN == 'all':
         # docker 修改時區
         DockerCmd.dockerExec(
             name=env_config.CONTAINER_PYTHON_3_8_18_NAME,

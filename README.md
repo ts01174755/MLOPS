@@ -19,7 +19,6 @@
 
 ```source ~/.zshrc```
 
-
 ## 版本控制
 - 使用 python 3.8.16
 
@@ -33,19 +32,44 @@
     
 ```pyenv local mlops_nsrd```
     
-#見環境的時候，自動建資料夾
+## 建立環境(建議用pyenv)
 
-env和 EnvironmentSetting不知道有什麼差異
-名稱：不要用駝峰式的方式
-1. config不是拿來執行用的，他是拿來放「環境參數」
-2. 設置一個run.py的執行ㄎ檔案，可以透過名稱快速豊皆要執行的過程，run裡面放的是「執行參數」
-3. 「執行參數」與「環境參數」：
-   1. 環境參數：放在config裡，決定run.py檔案的背景參數 
-   2. 執行參數：放在run.py裡，決定直寄執行所必要的參數
+- 進入env_config修改參數，有五個CONTAINER參數要做修改
 
-透過run獲取env_config，把步驟參數與環境參數打進controller裏面，讓controller可以在不同的環境下執行不同的不走參數
-run.py要放在跟目錄下
-controller下import的model請用src.model.package或是[project].model.package
+```vim env_config.py```
 
-目標是我拿到一哥可執行的資料夾，我直接copy paste到指定的contorller or model之後，稍微改依蝦參數？（還境或者是不揍餐數）
-env_config也放在最外面
+    IMAGE_MONGODB_TAG = [YOUR MONGODB IMAGE TAG]
+    CONTAINER_MONGODB_NAME = [YOUR MONGODB CONTAINER NAME]
+    CONTAINER_MONGODB_PORT_LIST = [YOUR MONGODB PORT LIST]
+    CONTAINER_MONGODB_ROOT = [YOUR MONGODB ROOT]
+    CONTAINER_MONGODB_ROOT_MAP = [YOUR MONGODB ROOT MAP]
+    CONTAINER_MONGO_POSTGRES_NET = [YOUR MONGODB POSTGRES NET]
+    CONTAINER_MONGO_ENV_DICT = [CONTAINER_MONGO_ENV_DICT]
+
+```python3 env_local_pkgInstall.py all```
+
+```python3 env_docker_mongodb.py all```
+
+```python3 env_docker_postgres.py all```
+
+# MongoDB
+
+### MongoDB - 建立資料庫
+
+> $ mongo -u mongodb -p mongodb --authenticationDatabase admin
+>
+> ~ use originaldb
+ 
+# Postgres
+
+## Postgres - 建立資料庫
+```$ docker inspect [YOUR POSTGRESDB NAME]```
+
+1. 查看 container 資訊，找出Networks.bridge.IPAddress
+2. 點擊 "Add Server"
+3. Name: [YOUR POSTGRES NAME]
+4. Host name/address: [Networks.bridge.IPAddress]
+5. Port: [YOUR POSTGRES PORT]
+6. Maintenance database: [YOUR POSTGRES DATABASE NAME]
+7. Username: [YOUR POSTGRES USERNAME]
+8. Password: [YOUR POSTGRES USERPASSWORD]

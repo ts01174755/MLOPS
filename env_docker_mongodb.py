@@ -3,21 +3,25 @@ import env_config
 import sys
 from src.model.docker_cmd import DockerCmd
 import time
+import subprocess
 
 ## params
-# RUN = ['images', 'build', 'update', 'gpt_base', 'python_package', 'OTHER']
+# RUN = ['images', 'build', 'pkg_init', 'gpt_base', 'python_package', 'OTHER', 'all']
 RUN = 'images' if len(sys.argv) == 1 else sys.argv[1]
 
 if __name__ == "__main__":
-    if RUN == 'images':
+    if RUN == 'images' or RUN == 'all':
         # dockerCmd pull Images
         DockerCmd.dockerPull(tag=env_config.IMAGE_MONGODB_TAG)
         DockerCmd.dockerPull(tag=env_config.IMAGE_MONGODB_EXPRESS_TAG)
 
-    elif RUN == 'build':
+    if RUN == 'build' or RUN == 'all':
         # dockerCmd 建立網路
         DockerCmd.dockerNetworkRemove(name=f'{env_config.CONTAINER_MONGO_POSTGRES_NET}')
         DockerCmd.dockerNetworkCreate(name=f'{env_config.CONTAINER_MONGO_POSTGRES_NET}')
+
+        subprocess.run(f"mkdir -p {env_config.CONTAINER_MONGODB_ROOT_MAP}", shell=True)
+        subprocess.run(f"mkdir -p {env_config.CONTAINER_MONGODB_EXPRESS_ROOT_MAP}", shell=True)
 
         # dockerCmd run mongodb
         DockerCmd.dockerRun(
@@ -41,52 +45,33 @@ if __name__ == "__main__":
             detach=True, interactive=False, TTY=False
         )
 
-        # DockerCmd.dockerNetworkConnect(name=env_config.CONTAINER_MONGO_POSTGRES_NET, container=env_config.CONTAINER_MONGODB_NAME)
-        # DockerCmd.dockerNetworkConnect(name=env_config.CONTAINER_MONGO_POSTGRES_NET, container=env_config.CONTAINER_MONGODB_EXPRESS_NAME)
-
         time.sleep(5)
         os.system(f'open http://localhost:{env_config.CONTAINER_MONGODB_EXPRESS_PORT_LIST[0].split(":")[0]}')
 
-    elif RUN == '手動':
-        pass
-        # MongoDB - 建立資料庫
-        # >> 用mongo_express建Database
-        # >> 或用mongodb Shell建Database
-        # $ mongo -u mongodb -p mongodb --authenticationDatabase admin
-        # > use originaldb
-
-    elif RUN == 'update':
+    if RUN == 'pkg_init' or RUN == 'all':
         # 更新apt-get
         DockerCmd.dockerExec(
-            name=env_config.CONTAINER_MONGO_POSTGRES_NET,
+            name=env_config.CONTAINER_MONGODB_NAME,
             cmd="apt-get update",
             detach=False,
             interactive=True,
             TTY=False,
         )
-        # 更新pip
-        DockerCmd.dockerExec(
-            name=env_config.CONTAINER_MONGO_POSTGRES_NET,
-            cmd='bash -c "pip install --upgrade pip"',
-            detach=False,
-            interactive=True,
-            TTY=False,
-        )
 
-    elif RUN == 'gpt_base':
-        # dockerCmd postgres:15.2 - 基礎安裝
+    if RUN == 'gpt_base' or RUN == 'all':
         apt_install_package = [
             'git', 'make', 'vim', 'libpq-dev', 'gcc', 'python', 'python3', 'python3-pip', 'unzip'
         ]
         for package in apt_install_package:
             DockerCmd.dockerExec(
-                name=env_config.CONTAINER_MONGO_POSTGRES_NET,
-                cmd=f'apt-get install -y {package}',
+                name=env_config.CONTAINER_MONGODB_NAME,
+                cmd=f'bash -c "apt-get install -y {package}"',
                 detach=False,
                 interactive=True,
                 TTY=False,
             )
-    elif RUN == 'python_package':
+
+    if RUN == 'python_package' or RUN == 'all':
         # 更新pip
         python_install_package = [
             'psycopg2', 'psycopg2-binary', 'pymongo', 'requests', 'python-dotenv', 'beautifulsoup4',
@@ -94,11 +79,11 @@ if __name__ == "__main__":
         ]
         for package in python_install_package:
             DockerCmd.dockerExec(
-                name=env_config.CONTAINER_MONGO_POSTGRES_NET,
+                name=env_config.CONTAINER_MONGODB_NAME,
                 cmd=f'bash -c "pip install {package}"',
                 detach=False,
                 interactive=True,
                 TTY=False,
             )
-    elif RUN == 'OTHER':
+    if RUN == 'OTHER':
         pass
