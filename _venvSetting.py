@@ -5,9 +5,9 @@ import os
 # >> https://stackoverflow.com/questions/41129504/pycharm-with-pyenv
 
 ############################################################################################
-# os.system("brew install pyenv pyenv-virtualenv")
-# os.system("pyenv install 3.8.2")
-os.system("pyenv virtualenv 3.8.2 chatgpt")
+os.system ("brew install pyenv pyenv-virtualenv")
+os.system("pyenv install 3.8.16")
+os.system("pyenv virtualenv 3.8.16 YoutProjectName")
 os.system("pyenv local chatgpt")
 ### >> 然後去 pycharm 控制台設定 Interpreter
 
