@@ -2,8 +2,8 @@ import subprocess
 
 
 if __name__ == "__main__":
-    RUN = ['base', 'google', 'OTHER'][0]
-    if RUN == 'base':
+    RUN = ['init', 'base', 'google', 'OTHER'][0]
+    if RUN == 'init':
         subprocess.run("pip install --upgrade pip", shell=True)
         subprocess.run("brew install tree", shell=True)
 
