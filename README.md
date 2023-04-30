@@ -2,11 +2,24 @@
 - by 台灣梯度下降第一品牌
 
 # 環境安裝
-## 版本控制
-- 下載 pyenv, pyenv-virtualenv:
+## 啟動pyenv
+1. 下載 pyenv, pyenv-virtualenv:
 
 ```brew install pyenv pyenv-virtualenv```
 
+2. Clone 專案並指定虛擬環境
+
+```git clone https://github.com/ts01174755/MLOPS.git MLOPS```
+
+3. pyenv 設定
+
+```cd MLOPS```
+
+```python3 pyenv_setting.py```
+
+4. 退出terminal重新進入
+
+## 版本控制
 - 使用 python 3.8.16
 
 ```pyenv install 3.8.16```
@@ -15,15 +28,11 @@
 
 ```pyenv virtualenv 3.8.16 MLOPS```
 
-- Clone 專案並指定虛擬環境
-
-```git clone https://github.com/ts01174755/MLOPS.git MLOPS```
-
 ```cd MLOPS```
     
 ```pyenv local MLOPS```
     
-    
+#見環境的時候，自動建資料夾
 
 env和 EnvironmentSetting不知道有什麼差異
 名稱：不要用駝峰式的方式
