@@ -9,15 +9,16 @@
 
 2. Clone 專案並指定虛擬環境
 
-```git clone https://github.com/ts01174755/MLOPS.git MLOPS```
+```git clone https://github.com/ts01174755/MLOPS.git [Your Project Path]```
 
 3. pyenv 設定
 
-```cd MLOPS```
+```cd [Your Project Path]```
 
 ```python3 pyenv_setting.py```
 
-4. 退出terminal重新進入
+```source ~/.zshrc```
+
 
 ## 版本控制
 - 使用 python 3.8.16
@@ -26,11 +27,11 @@
 
 - 為專案建立虛擬環境
 
-```pyenv virtualenv 3.8.16 MLOPS```
+```pyenv virtualenv 3.8.16 mlops_nsrd```
 
-```cd MLOPS```
+```cd [Your Project Path]```
     
-```pyenv local MLOPS```
+```pyenv local mlops_nsrd```
     
 #見環境的時候，自動建資料夾
 

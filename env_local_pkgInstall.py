@@ -1,5 +1,6 @@
 import sys
 import subprocess
+
 ## params
 # RUN = ['init', 'base', 'google', 'OTHER']
 RUN = 'init' if len(sys.argv) == 1 else sys.argv[1]
@@ -27,7 +28,6 @@ if __name__ == "__main__":
         ]
         for pkg_ in GOOGLE_PKG_LIST:
             subprocess.run(f"pip install {pkg_}", shell=True)
-
 
     elif RUN == 'OTHER':
         # 其他套件
