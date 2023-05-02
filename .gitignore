@@ -1,6 +1,6 @@
 /.DS_Store
 /virtual_machine/*
-
+/env_config.py
 /env/*
 /OLD/FS_pythonChatServer/
 /OLD/FS_pythonChatServer/*
