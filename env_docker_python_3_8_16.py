@@ -14,7 +14,7 @@ if __name__ == "__main__":
         # dockerCmd pull Images
         DockerCmd.dockerPull(tag=env_config.IMAGE_PYTHON_3_8_18_TAG)
 
-    elif RUN == 'build' or RUN == 'all':
+    if RUN == 'build' or RUN == 'all':
         subprocess.run(f"mkdir -p {env_config.CONTAINER_PYTHON_3_8_18_ROOT_MAP}", shell=True)
 
         DockerCmd.dockerRun(
@@ -43,7 +43,7 @@ if __name__ == "__main__":
             TTY=False
         )
 
-    elif RUN == 'init' or RUN == 'all':
+    if RUN == 'init' or RUN == 'all':
         # 更新apt-get
         DockerCmd.dockerExec(
             name=env_config.CONTAINER_PYTHON_3_8_18_NAME,
@@ -61,7 +61,7 @@ if __name__ == "__main__":
             TTY=False,
         )
 
-    elif RUN == 'gpt_base' or RUN == 'all':
+    if RUN == 'gpt_base' or RUN == 'all':
         # dockerCmd postgres:15.2 - 基礎安裝
         apt_install_package = ['tzdata', 'git', 'make', 'gcc', 'vim', 'wget', 'zlib1g-dev', '']
         for package in apt_install_package:
@@ -72,7 +72,7 @@ if __name__ == "__main__":
                 interactive=True,
                 TTY=False,
             )
-    elif RUN == 'python_package' or RUN == 'all':
+    if RUN == 'python_package' or RUN == 'all':
         # 更新pip
         python_install_package = [
             'python-dotenv', 'fastapi', 'uvicorn', 'psycopg2', 'pymongo', 'setuptools', 'requests', 'beautifulsoup4',
@@ -88,7 +88,7 @@ if __name__ == "__main__":
                 TTY=False,
             )
 
-    elif RUN == 'OTHER' or RUN == 'all':
+    if RUN == 'OTHER' or RUN == 'all':
         # docker 修改時區
         DockerCmd.dockerExec(
             name=env_config.CONTAINER_PYTHON_3_8_18_NAME,
@@ -98,7 +98,7 @@ if __name__ == "__main__":
             TTY=False,
         )  # 修改時區
 
-    elif RUN == 'TEMP':
+    if RUN == 'TEMP':
         # 顯示已安裝的python套件
         DockerCmd.dockerExec(
             name=env_config.CONTAINER_PYTHON_3_8_18_NAME,
