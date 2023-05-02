@@ -12,17 +12,18 @@ IMAGE_PYTHON_3_8_18_TAG = "python:3.8.16"
 CONTAINER_PYTHON_3_8_18_NAME = "python3.8.16"
 CONTAINER_PYTHON_3_8_18_PORT_LIST = [f'{port}:{port}' for port in range(8000, 8010)]
 CONTAINER_PYTHON_3_8_18_INTERPRETER = "python3.8"
-CONTAINER_PYTHON_3_8_18_ROOT = "/Users/peiyuwu"
-CONTAINER_PYTHON_3_8_18_ROOT_MAP = "/Users/peiyuwu/Development/docker/python3.8.16"
-CONTAINER_PYTHON_3_8_18_FILE_PATH = "Users/peiyuwu/Files"
-CONTAINER_PYTHON_3_8_18_DOWNLOAD_PATH = "Users/peiyuwu/Downloads"
+CONTAINER_PYTHON_3_8_18_ROOT = "/Users/ethanwu"
+CONTAINER_PYTHON_3_8_18_ROOT_MAP = "/Users/ethanwu/Documents/GitHub/MLOPS_NS_RD/virtual_machine/docker/python3.8.16"
+CONTAINER_PYTHON_3_8_18_FILE_PATH = "Users/ethanwu/Files"
+CONTAINER_PYTHON_3_8_18_DOWNLOAD_PATH = "Users/ethanwu/Downloads"
+
 
 ####################################################################################################################
 IMAGE_MONGODB_TAG = "mongo:5.0.15"
-CONTAINER_MONGODB_NAME = "mongodb"
+CONTAINER_MONGODB_NAME = "mongodb_nsrd" # (改)這個是docker container的名字
 CONTAINER_MONGODB_PORT_LIST = ['27017:27017']
-CONTAINER_MONGODB_ROOT = "/Users/peiyuwu"
-CONTAINER_MONGODB_ROOT_MAP = "/Users/peiyuwu/Development/docker/mongodb"
+CONTAINER_MONGODB_ROOT = "/Users/ethanwu"
+CONTAINER_MONGODB_ROOT_MAP = "/Users/ethanwu/Documents/GitHub/MLOPS_NS_RD/virtual_machine/docker/docker/mongodb"
 CONTAINER_MONGO_POSTGRES_NET = "mongo-postgres-net"
 CONTAINER_MONGO_ENV_DICT = {
     'MONGO_INITDB_ROOT_USERNAME': 'mongodb',
@@ -31,10 +32,10 @@ CONTAINER_MONGO_ENV_DICT = {
 
 ####################################################################################################################
 IMAGE_MONGODB_EXPRESS_TAG = "mongo-express:0.54.0"
-CONTAINER_MONGODB_EXPRESS_NAME = "mongo_express"
+CONTAINER_MONGODB_EXPRESS_NAME = "mongo_express_nsrd" # (改)這個是docker container的名字
 CONTAINER_MONGODB_EXPRESS_PORT_LIST = ['8081:8081']
-CONTAINER_MONGODB_EXPRESS_ROOT = "/Users/peiyuwu"
-CONTAINER_MONGODB_EXPRESS_ROOT_MAP = "/Users/peiyuwu/Development/docker/mongo_express"
+CONTAINER_MONGODB_EXPRESS_ROOT = "/Users/ethanwu"
+CONTAINER_MONGODB_EXPRESS_ROOT_MAP = "/Users/ethanwu/Documents/GitHub/MLOPS_NS_RD/virtual_machine/docker/mongo_express"
 CONTAINER_MONGO_EXPRESS_ENV_DICT = {
     'ME_CONFIG_MONGODB_SERVER': CONTAINER_MONGODB_NAME,
     'ME_CONFIG_MONGODB_ADMINUSERNAME': 'mongodb',
@@ -45,10 +46,10 @@ CONTAINER_MONGO_EXPRESS_ENV_DICT = {
 
 ####################################################################################################################
 IMAGE_POSTGRES_TAG = "postgres:15.2"
-CONTAINER_POSTGRES_NAME = "postgres15.2"
+CONTAINER_POSTGRES_NAME = "postgres15.2_nsrd" # (改)這個是docker container的名字
 CONTAINER_POSTGRES_PORT_LIST = ['5432:5432']
-CONTAINER_POSTGRES_ROOT = "/Users/peiyuwu"
-CONTAINER_POSTGRES_ROOT_MAP = "/Users/peiyuwu/Development/docker/postgres15.2"
+CONTAINER_POSTGRES_ROOT = "/Users/ethanwu"
+CONTAINER_POSTGRES_ROOT_MAP = "/Users/ethanwu/Documents/GitHub/MLOPS_NS_RD/virtual_machine/docker/postgres15.2"
 CONTAINER_POSTGRES_ENV_DICT = {
     'POSTGRES_USER': 'postgres',
     'POSTGRES_PASSWORD': 'postgres',
@@ -58,19 +59,19 @@ CONTAINER_POSTGRES_DB1 = "originaldb"
 
 ####################################################################################################################
 IMAGE_PGADMIN_TAG = "dpage/pgadmin4:6.20"
-CONTAINER_PGADMIN_NAME = "pgadmin4"
+CONTAINER_PGADMIN_NAME = "pgadmin4_nsrd" # (改)這個是docker container的名字
 CONTAINER_PGADMIN_PORT_LIST = ['5050:80']
-CONTAINER_PGADMIN_ROOT = "/Users/peiyuwu"
-CONTAINER_PGADMIN_ROOT_MAP = "/Users/peiyuwu/Development/docker/pgadmin4"
+CONTAINER_PGADMIN_ROOT = "/Users/ethanwu"
+CONTAINER_PGADMIN_ROOT_MAP = "/Users/ethanwu/Documents/GitHub/MLOPS_NS_RD/virtual_machine/docker/pgadmin4"
 CONTAINER_PGADMIN_ENV_DICT = {
     'PGADMIN_DEFAULT_EMAIL': 'pgadmin4@gmail.com',
     'PGADMIN_DEFAULT_PASSWORD': 'pgadmin4'
 }
 
 ####################################################################################################################
-MLOPS_ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
-MLOPS_ROOP_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
-GITHUB_URL = "https://github.com/ts01174755/MLOPS.git"
+MLOPS_ROOT_PATH_DOCKER = "/Users/ethanwu/MLOPS" # 目前沒用到
+MLOPS_ROOP_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS" # 目前沒用到
+GITHUB_URL = "https://github.com/ts01174755/MLOPS.git" # 目前沒用到
 
 MONGODB_DOCKER = MongoDB(
     user_name=os.getenv("MongoDB_USER"),
