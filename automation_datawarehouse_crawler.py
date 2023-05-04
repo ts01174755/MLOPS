@@ -11,8 +11,8 @@ RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
 # RUN = "local"
 
 # 執行環境 - 基本上不需要動
-CI_PY_NAME = f'{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/docker_CI_python3_8_16.py'
-PY_NAME = f"{env_config.CONTAINER_PYTHON_3_8_18_PROJECT_PATH}/datawarehouse_crawler.py"    # 執行的程式
+CI_PY_NAME = f'{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/CI_docker_python3_8_16.py'
+PY_NAME = f"{env_config.CONTAINER_PYTHON_3_8_18_PROJECT_PATH}/automation_datawarehouse_crawler.py"    # 執行的程式
 if RUN == "docker":
     # ------------------------ env_params ------------------------
     LOCAL_INTERPRETER = env_config.MLOPS_ROOT_PATH_LOCAL_INTERPRETER
