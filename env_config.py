@@ -8,14 +8,26 @@ load_dotenv(find_dotenv("env/.env"))
 pd.set_option("display.max_columns", None)
 
 ####################################################################################################################
+IMAGE_PYTHON_3_8_18_SERVER_TAG = "python:3.8.16"
+CONTAINER_PYTHON_3_8_18_SERVER_NAME = "python3_8_16_server"
+CONTAINER_PYTHON_3_8_18_SERVER_PORT_LIST = [f'{port}:{port}' for port in range(8000, 8010)]
+CONTAINER_PYTHON_3_8_18_SERVER_INTERPRETER = "python3.8"
+CONTAINER_PYTHON_3_8_18_SERVER_ROOT = "/Users/peiyuwu"
+CONTAINER_PYTHON_3_8_18_SERVER_ROOT_MAP = "/Users/peiyuwu/Development/docker/python3.8.16_server"
+CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH = "/Users/peiyuwu/MLOPS"
+CONTAINER_PYTHON_3_8_18_SERVER_FILE_PATH = "/Users/peiyuwu/Files"
+CONTAINER_PYTHON_3_8_18_SERVER_DOWNLOAD_PATH = "/Users/peiyuwu/Downloads"
+
+####################################################################################################################
 IMAGE_PYTHON_3_8_18_TAG = "python:3.8.16"
 CONTAINER_PYTHON_3_8_18_NAME = "python3.8.16"
-CONTAINER_PYTHON_3_8_18_PORT_LIST = [f'{port}:{port}' for port in range(8000, 8010)]
+CONTAINER_PYTHON_3_8_18_PORT_LIST = [f'7999:7999']
 CONTAINER_PYTHON_3_8_18_INTERPRETER = "python3.8"
 CONTAINER_PYTHON_3_8_18_ROOT = "/Users/peiyuwu"
 CONTAINER_PYTHON_3_8_18_ROOT_MAP = "/Users/peiyuwu/Development/docker/python3.8.16"
-CONTAINER_PYTHON_3_8_18_FILE_PATH = "Users/peiyuwu/Files"
-CONTAINER_PYTHON_3_8_18_DOWNLOAD_PATH = "Users/peiyuwu/Downloads"
+CONTAINER_PYTHON_3_8_18_PROJECT_PATH = "/Users/peiyuwu/MLOPS"
+CONTAINER_PYTHON_3_8_18_FILE_PATH = "/Users/peiyuwu/Files"
+CONTAINER_PYTHON_3_8_18_DOWNLOAD_PATH = "/Users/peiyuwu/Downloads"
 
 ####################################################################################################################
 IMAGE_MONGODB_TAG = "mongo:5.0.15"
@@ -68,8 +80,10 @@ CONTAINER_PGADMIN_ENV_DICT = {
 }
 
 ####################################################################################################################
-MLOPS_ROOT_PATH_DOCKER = "/Users/peiyuwu/MLOPS"
-MLOPS_ROOP_PATH_LOCAL = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
+MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS"
+MLOPS_ROOT_PATH_LOCAL_FILE_PATH = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/Files"
+MLOPS_ROOT_PATH_LOCAL_DOWNLOAD_PATH = "/Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/Downloads"
+MLOPS_ROOT_PATH_LOCAL_INTERPRETER = "/Users/peiyuwu/.pyenv/versions/mlops_nsrd/bin/python3.8"
 GITHUB_URL = "https://github.com/ts01174755/MLOPS.git"
 
 MONGODB_DOCKER = MongoDB(

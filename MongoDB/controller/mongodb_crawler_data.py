@@ -11,7 +11,6 @@ class CrawlerData:
     ):
         # 獲取網頁回應
         crawlerRes = requests.get(URL, cookies=COOKIES)
-
         # 獲取 mongodb 資料
         Mongodb.insert_document(
             COLLECTION,
@@ -26,7 +25,8 @@ class CrawlerData:
     def get_crawlerZipFile_to_fileSystem(self, URL, FILEPATH):
         # 獲取網頁回應
         crawlerRes = requests.get(URL, allow_redirects=True)
-        open(FILEPATH, "wb").write(crawlerRes.content)
+        with open(FILEPATH, "wb") as f:
+            f.write(crawlerRes.content)
 
         # 解壓縮
         subprocess.run(

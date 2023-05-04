@@ -3,7 +3,7 @@ import subprocess
 
 ## params
 # RUN = ['init', 'base', 'google', 'OTHER', 'all']
-RUN = 'init' if len(sys.argv) == 1 else sys.argv[1]
+RUN = 'pip' if len(sys.argv) == 1 else sys.argv[1]
 
 
 if __name__ == "__main__":
@@ -11,11 +11,11 @@ if __name__ == "__main__":
         subprocess.run("pip install --upgrade pip", shell=True)
         subprocess.run("brew install tree", shell=True)
 
-    if RUN == 'base' or RUN == 'all':
+    if RUN == 'pip' or RUN == 'all':
         PY_PKG_LIST = [
             'python-dotenv', 'psycopg2-binary', 'sqlalchemy', 'pymongo', 'fastapi', 'Jinja2==3.1.2',
             'uvicorn[standard]', 'aiofiles', 'requests', 'beautifulsoup4', 'pandas', 'black',
-            'setuptools', 'build'
+            'setuptools', 'build', 'pdfplumber', 'pypdf2'
         ]
         for pkg_ in PY_PKG_LIST:
             subprocess.run(f"pip install {pkg_}", shell=True)
