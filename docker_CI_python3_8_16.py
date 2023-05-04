@@ -6,8 +6,8 @@ from src.model.docker_cmd import DockerCmd
 if __name__ == "__main__":
     # ------------------------ env_params ------------------------
     CONTAINER_NAME = env_config.CONTAINER_PYTHON_3_8_18_NAME
-    ROOT_PATH_DOCKER = env_config.MLOPS_ROOT_PATH_DOCKER    # DOCKER 執行路徑
-    ROOT_PATH_LOCAL = env_config.MLOPS_ROOP_PATH_LOCAL      # LOCAL 執行路徑
+    ROOT_PATH_DOCKER = env_config.CONTAINER_PYTHON_3_8_18_PROJECT_PATH    # DOCKER 執行路徑
+    ROOT_PATH_LOCAL = env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH      # LOCAL 執行路徑
 
     # 重啟docker container
     DockerCmd.dockerRestart(CONTAINER_NAME)
