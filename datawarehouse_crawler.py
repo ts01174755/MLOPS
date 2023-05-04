@@ -46,53 +46,136 @@ if __name__ == "__main__":
     if RUN == "local":
         # --------------------- controller params ---------------------
         DATA_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        URL = os.getenv("ST_ALLURL")
-        COOKIES = {"ST": os.getenv("ST_TOKEN")}
-        COLLECTION = ["st_all_data", "tempdb", "google_form"][0]
+        DATA_DAY = time.strftime("%Y-%m-%d", time.localtime())
+        MONGODB_COLLECTION = ["google_form", "tempdb"][0]
+        MONGODB_QUERY = {
+            "dt": {
+                "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time())),
+                "$lt": time.strftime("%Y-%m-%d", time.localtime(time.time() + 86400))
+            }
+        }
+        PROGRESDB_TABLE = ["google_form", "tempdb"][0]
+        PROGRESDB_SCHEMA = "original"
+        PROGRESDB_SCHEMA_DICT = {
+            "dt": "資料更新時間",
+            "memo": "新申請課程",
+            "commondata1": '"GoogleForm表單"',
+            "uniquechar1": "填表日",
+            "uniquechar2": "申請人(Email)",
+            "uniquechar3": "所屬單位",
+            "uniquechar4": "上課地點",
+            "uniquechar5": "年級",
+            "uniquechar6": "課程",
+            "uniquechar7": "老師",
+            "uniquechar8": "學生",
+        }
 
         # --------------------- controller ---------------------
-        crawler_data = CrawlerData()
-        crawler_data.get_crawlerdata_to_mongodb(
-            URL=URL,
-            COOKIES=COOKIES,
-            Mongodb=MONGODB,
-            COLLECTION=COLLECTION,
-            DATATIME=DATA_TIME,
+        # 每日執行 - 爬蟲
+        posgresParseMongodbData = PosgresParseMongodbData()
+        googleFormDF = posgresParseMongodbData.parseGoogleSTFromData(
+            MONGODB=MONGODB,
+            DATA_TIME=DATA_TIME,
+            MONGODB_COLLECTION=MONGODB_COLLECTION,
+            MONGODB_QUERY=MONGODB_QUERY,
+            PROGRESDB_SCHEMA_DICT=PROGRESDB_SCHEMA_DICT,
+        )
+
+        # 連接PostgresDB與寫入資料
+        posgresParseMongodbData.insertPostgresData(
+            PROGRESDB=POSTGRESDB,
+            PROGRESDB_TABLE=PROGRESDB_TABLE,
+            PROGRESDB_SCHEMA=PROGRESDB_SCHEMA,
+            dataFrame=googleFormDF,
         )
 
         # --------------------- controller params ---------------------
         DATA_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        TOKEN = "env/token.json"
-        CLIENT_SECRET_FILE = "env/client_secret.json"
-        SCOPES = "https://www.googleapis.com/auth/forms.responses.readonly"
-        DISCOVERY_DOC = "https://forms.googleapis.com/$discovery/rest?version=v1"
-        COLLECTION = ["st_all_data", "tempdb", "google_form"][2]
-        FORMID = "1sqxcABwDaVFyGD1cTo0-O0BoJIGWJccioaXGkxKMZv8"
+        DATA_DAY = time.strftime("%Y-%m-%d", time.localtime())
+        MONGODB_COLLECTION = ["st_all_data", "tempdb"][0]
+        PROGRESDB_SCHEMA = "original"
+        PROGRESDB_TABLE = ["st_all_data", "tempdb"][0]
+        MONGODB_QUERY = {
+            "dt": {
+                "$gte": time.strftime("%Y-%m-%d", time.localtime(time.time())),
+                "$lt": time.strftime("%Y-%m-%d", time.localtime(time.time() + 86400))
+            }
+        }
+        PROGRESDB_SCHEMA_DICT = {
+            "dt": "資料更新時間",
+            "memo": "ST所有課程資料",
+            "commondata1": '"AdminCourses"',
+            "uniquechar1": "開始時間",
+            "uniquechar2": "結束時間",
+            "uniquechar3": "所屬單位",
+            "uniquechar4": "上課地點",
+            "uniquechar5": "年級",
+            "uniquechar6": "課程",
+            "uniquechar7": "老師",
+            "uniquechar8": "學生",
+            "uniquechar9": "課程",
+        }
 
         # --------------------- controller ---------------------
-        google_form_data = GoogleFormData()
-        google_form_data.get_googleformdata_to_mongodb(
-            TOKEN=TOKEN,
-            CLIENT_SECRET_FILE=CLIENT_SECRET_FILE,
-            SCOPES=SCOPES,
-            DISCOVERY_DOC=DISCOVERY_DOC,
-            Mongodb=MONGODB,
-            COLLECTION=COLLECTION,
-            FORMID=FORMID,
-            DATATIME=DATA_TIME,
+        # 每日執行 - 爬蟲
+        posgresParseMongodbData = PosgresParseMongodbData()
+        googleFormDF = posgresParseMongodbData.parseSTData(
+            MONGODB=MONGODB,
+            MONGODB_COLLECTION=MONGODB_COLLECTION,
+            MONGODB_QUERY=MONGODB_QUERY,
+            PROGRESDB_SCHEMA_DICT=PROGRESDB_SCHEMA_DICT,
+            DATA_TIME=DATA_TIME,
         )
 
-        for i in range(0, -1, -1):
-            # --------------------- controller params ---------------------
-            DATA_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            DATA_DAY = time.strftime("%Y_%m_%d", time.localtime(time.time() - 86400 * i))
-            FILE_NAME = f"Daily_{DATA_DAY}.zip"
-            URL = f"https://www.taifex.com.tw/file/taifex/Dailydownload/DailydownloadCSV/{FILE_NAME}"  # 下載檔案的網址
-            FILENAME = f"{FILE_NAME.split('.')[0]}"  # 下載檔案的路徑
+        # 連接PostgresDB與寫入資料
+        posgresParseMongodbData.insertPostgresData(
+            PROGRESDB=POSTGRESDB,
+            dataFrame=googleFormDF,
+            PROGRESDB_TABLE=PROGRESDB_TABLE,
+            PROGRESDB_SCHEMA=PROGRESDB_SCHEMA,
+        )
 
-            # --------------------- controller ---------------------
-            crawler_data = CrawlerData()
-            crawler_data.get_crawlerZipFile_to_fileSystem(
-                URL=URL,
-                FILEPATH=f'{DOWNLOAD_PATH}/{FILENAME}',
-            )
+        # --------------------- controller params ---------------------
+        DATA_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        DATA_DAY = time.strftime("%Y-%m-%d", time.localtime())
+        MONGODB_COLLECTION = ["st_all_data", "tempdb"][0]
+        PROGRESDB_SCHEMA = "original"
+        PROGRESDB_TABLE = ["st_all_data", "tempdb"][0]
+        COLUMNS_LIST = [
+            "dt", "memo",
+            "commondata1", "commondata2", "commondata3", "commondata4", "commondata5",
+            "commondata6", "commondata7", "commondata8", "commondata9", "commondata10",
+            "uniquechar1", "uniquechar2", "uniquechar3", "uniquechar4", "uniquechar5",
+            "uniquechar6", "uniquechar7", "uniquechar8", "uniquechar9", "uniquechar10",
+            "uniqueint1", "uniqueint2", "uniqueint3", "uniqueint4", "uniqueint5",
+            "uniqueint6", "uniqueint7", "uniqueint8", "uniqueint9", "uniqueint10",
+            "uniquefloat1", "uniquefloat2", "uniquefloat3", "uniquefloat4", "uniquefloat5",
+            "uniquefloat6", "uniquefloat7", "uniquefloat8", "uniquefloat9", "uniquefloat10",
+            "uniquefloat11", "uniquefloat12", "uniquefloat13", "uniquefloat14", "uniquefloat15",
+            "uniquestring1", "uniquestring2", "uniquestring3", "uniquestring4", "uniquestring5", "uniquejason",
+        ]
+        PROGRESDB_SCHEMA_FILE = f"{PROGRESDB_SCHEMA}.{PROGRESDB_TABLE}.csv"
+        PROGRESDB_SCHEMA_DICT = {
+            "dt": "資料更新時間",
+            "memo": "ST所有課程資料",
+            "commondata1": '"AdminCourses"',
+            "uniquechar1": "開始時間",
+            "uniquechar2": "結束時間",
+            "uniquechar3": "所屬單位",
+            "uniquechar4": "上課地點",
+            "uniquechar5": "年級",
+            "uniquechar6": "課程",
+            "uniquechar7": "老師",
+            "uniquechar8": "學生",
+            "uniquechar9": "課程",
+        }
+
+        # --------------------- controller ---------------------
+        posgresParseMongodbData = PosgresParseMongodbData()
+        posgresParseMongodbData.makeDataSchema(
+            PROGRESDB=POSTGRESDB,
+            tableName=PROGRESDB_TABLE,
+            schemaDict=PROGRESDB_SCHEMA_DICT,
+            columnList=COLUMNS_LIST,
+            schemaFilePath=f'{FILE_PATH}/{PROGRESDB_SCHEMA_FILE}',
+        )
