@@ -67,7 +67,7 @@ if __name__ == "__main__":
             "SCOPES": ['https://www.googleapis.com/auth/drive'],
         }
         NOTIFY_TOKEN_FILE = 'env/LineNotify.json'
-        NOTIFY_TOKEN_TYPE = ['私人Notify', '雲課堂 - Hana'][0]
+        NOTIFY_TOKEN_TYPE = ['私人Notify', '雲課堂 - Hana'][1]
         PROGRESDB_SCHEMA = PROGRESDB_SCHEMA
         PROGRESDB_TABLE = PROGRESDB_TABLE
         PROGRESDB_SCHEMA_DICT = {
@@ -96,6 +96,9 @@ if __name__ == "__main__":
             GOOGLE_DRIVE_INFO=GOOGLE_DRIVE_INFO,
             df=df
         )
+        if len(notifyInfo) == 0:
+            print("無資料更新")
+            sys.exit(0)
 
         line_message = st_google_drive.line_notify_message(notifyInfo)
 
