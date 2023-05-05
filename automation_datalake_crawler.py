@@ -83,7 +83,7 @@ if __name__ == "__main__":
             DATATIME=DATA_TIME,
         )
 
-        for i in range(0, -1, -1):
+        for i in range(1, 0, -1):
             # --------------------- controller params ---------------------
             DATA_TIME = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             DATA_DAY = time.strftime("%Y_%m_%d", time.localtime(time.time() - 86400 * i))
