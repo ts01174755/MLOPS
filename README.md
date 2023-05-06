@@ -1,6 +1,15 @@
 # This is MLOps project created by NS R&Ds.
 - by 台灣梯度下降第一品牌
 
+## Version-log
+- 1.1.7:
+  - 新增控制多個controller的架構
+  - 微調微服務的架構
+    - 新增log功能
+  - CICD
+    - 微調自動執行CI到container的方法
+    - 微調自動執行CD container 的方法
+
 # 環境安裝
 ## 啟動pyenv
 1. 下載 pyenv, pyenv-virtualenv:
