@@ -73,18 +73,6 @@ if RUN == "local":
         ]
     )
 
-app = FastAPI()
-app.add_middleware(LoggingMiddleware)
-
-
-# 部署測試服務
-@app.get("/")
-def get_hello_message():
-    return {"message": "Hello World"}
-
-
-@app.get("/stCloudCourse/totalCourse")
-def get_total_course():
     course_code_dict = {
         '國一數學(一)影片課程規劃': '0001',
         '國一數學(二)影片課程規劃': '0002',
@@ -99,36 +87,42 @@ def get_total_course():
         '學測地科影片課程規劃': '0011',
         '學測數學影片課程規劃': '0012',
         '學測物理影片課程規劃': '0013',
+        '指考化學影片課程規劃': '0014',
+        '指考物理影片課程規劃': '0015',
+        '學測生物影片課程規劃': '0016',
+        '學測英文影片課程規劃': '0017',
+        '學測國文影片課程規劃（古文十五+文化經典教材）': '0018',
+        '學測國文影片課程規劃（學測總複習）': '0019',
+        '學測數A影片課程規劃': '0020',
     }
+    course_detail_dict = {}
+    course_count = 0
+    for course_, course_code_ in course_code_dict.items():
+        with open(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{course_}.json", "r", encoding="utf-8") as f:
+            course_detail_dict[course_code_] = json.load(f)
+            # 計算課程數目
+            for course_ind_, courses_ in course_detail_dict[course_code_].items():
+                course_count += len(courses_)
+
+    pprint(f"現在有的影片數: {course_count}")
+
+app = FastAPI()
+app.add_middleware(LoggingMiddleware)
+
+
+# 部署測試服務
+@app.get("/")
+def get_hello_message():
+    return {"message": "Hello World"}
+
+
+@app.get("/stCloudCourse/totalCourse")
+def get_total_course():
     return CustomJSONResponse(content=course_code_dict)
 
 
 @app.get("/stCloudCourse/{courseCode}")
 def get_course_by_code(courseCode: str):
-    course_code_reverse_dict = {
-        '0001': '國一數學(一)影片課程規劃',
-        '0002': '國一數學(二)影片課程規劃',
-        '0003': '國二數學(三)影片課程規劃',
-        '0004': '國二數學(四)影片課程規劃',
-        '0005': '國二理化(三)影片課程規劃',
-        '0006': '國二理化(四)影片課程規劃',
-        '0007': '多益課程影片規劃',
-        '0008': '多益閱讀題型',
-        '0009': '學測化學影片課程規劃',
-        '0010': '學測國文影片課程規劃',
-        '0011': '學測地科影片課程規劃',
-        '0012': '學測數學影片課程規劃',
-        '0013': '學測物理影片課程規劃'
-    }
-    # 依據course_detail_dict[key]取得value
-    # value是 /Users/peiyuwu/Development/pyDev/py3_8_16/MLOPS/STPython_3_8_16_Server/files/xxx.json 的檔案名稱xxx
-    # 讀成dict後回傳
-    course_detail_dict = {}
-    for course_code_, course_ in course_code_reverse_dict.items():
-        with open(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{course_}.json", "r", encoding="utf-8") as f:
-            course_detail_dict[course_code_] = json.load(f)
-    pprint(course_detail_dict)
-
     return CustomJSONResponse(content=course_detail_dict[courseCode])
 
 
