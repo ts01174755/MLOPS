@@ -1,8 +1,8 @@
 import os
 import sys
 import env_config
-from STPythonServer.controller.st_google_drive import STGoogleDrive
-from STPythonServer.controller.st_line_notify import STLineNotify
+from STPython_3_8_16.controller.st_google_drive import STGoogleDrive
+from STPython_3_8_16.controller.st_line_notify import STLineNotify
 from src.model.docker_cmd import DockerCmd
 import subprocess
 import time

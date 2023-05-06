@@ -40,3 +40,5 @@
 /src/my_package.egg-info/top_level.txt
 /*.log
 /.python-version
+/STPython_3_8_16_Server/files/*.json
+/STPython_3_8_16_Server/files/*.pdf

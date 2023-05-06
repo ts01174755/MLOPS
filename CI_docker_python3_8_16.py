@@ -50,10 +50,9 @@ if __name__ == "__main__":
 
         for file in files:
             # 把現在執行的程式更新到container中
+            file_name = os.path.join(root, file).replace('(', '\\(').replace(')', '\\)')
             DockerCmd.dockerCopy(
                 name=CONTAINER_NAME,
-                filePath=os.path.join(root, file),
-                targetPath=os.path.join(root, file).replace(
-                    ROOT_PATH_LOCAL, ROOT_PATH_DOCKER
-                ),
+                filePath=file_name,
+                targetPath=file_name.replace(ROOT_PATH_LOCAL, ROOT_PATH_DOCKER),
             )
