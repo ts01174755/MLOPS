@@ -1,5 +1,6 @@
 import os
 import sys
+import pandas as pd
 import env_config
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
@@ -97,13 +98,22 @@ if RUN == "local":
     }
     course_detail_dict = {}
     course_count = 0
+    data = []
     for course_, course_code_ in course_code_dict.items():
         with open(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{course_}.json", "r", encoding="utf-8") as f:
             course_detail_dict[course_code_] = json.load(f)
             # 計算課程數目
             for course_ind_, courses_ in course_detail_dict[course_code_].items():
                 course_count += len(courses_)
+                for url_name_, url_list_ in courses_.items():
+                    for url_ in url_list_:
+                        data.append([course_, course_ind_, url_name_, url_])
 
+    course_df = pd.DataFrame(data, columns=["course", "course_ind", "url_name", "url"])
+    file_name = '課程列表.xlsx'
+    course_df.to_excel(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{file_name}", index=False, engine='openpyxl')
+
+    print(course_df)
     pprint(f"現在有的影片數: {course_count}")
 
 app = FastAPI()

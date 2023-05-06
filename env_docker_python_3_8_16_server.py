@@ -6,7 +6,7 @@ import subprocess
 
 ## params
 RUN = ['images', 'build', 'init', 'gpt_base', 'python_package', 'OTHER', 'all']
-RUN = 'all' if len(sys.argv) == 1 else sys.argv[1]
+RUN = 'python_package' if len(sys.argv) == 1 else sys.argv[1]
 
 if __name__ == "__main__":
     if RUN == 'images' or RUN == 'all':
@@ -72,12 +72,13 @@ if __name__ == "__main__":
                 interactive=True,
                 TTY=False,
             )
+
     if RUN == 'python_package' or RUN == 'all':
         # 更新pip
         python_install_package = [
             'python-dotenv', 'fastapi', 'uvicorn', 'psycopg2', 'pymongo', 'setuptools', 'requests', 'beautifulsoup4',
             'pandas', 'black', 'build', 'tree', 'google-api-python-client', 'google-auth', 'google-auth-oauthlib',
-            'google-auth-httplib2', 'oauth2client', 'aiofiles', 'Jinja2==3.1.2', 'sqlalchemy'
+            'google-auth-httplib2', 'oauth2client', 'aiofiles', 'Jinja2==3.1.2', 'sqlalchemy', 'openpyxl'
         ]
         for package in python_install_package:
             DockerCmd.dockerExec(
