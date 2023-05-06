@@ -1,9 +1,11 @@
+/.DS_Store
+/virtual_machine/*
+/env_config.py
 /env/*
 /OLD/FS_pythonChatServer/
 /OLD/FS_pythonChatServer/*
 /OLD/
 /OLD/*
-/.gitignore
 /OLD/FS_pythonChatServer/1_pythonChatServer.py
 /OLD/pythonServerExample/1_pythonServerExample.py
 /OLD/Modeling/Application/__init__.py
