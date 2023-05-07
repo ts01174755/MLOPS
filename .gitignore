@@ -17,7 +17,7 @@
 /OLD/__init__.py
 /OLD/ChatGPTCosPlay
 /OLD/FileSystem.py
-/OLD/FS_pythonChatServer/File/index.html
+/STPython_3_8_16_Server/template/index.html
 /OLD/pythonServerExample/templates/item.html
 /OLD/Modeling/Application/NoteByFile.py
 /OLD/Programming/NoteByFile.py
@@ -45,3 +45,4 @@
 /.python-version
 /STPython_3_8_16_Server/files/*.json
 /STPython_3_8_16_Server/files/*.pdf
+/env_config.py
