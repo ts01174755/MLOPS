@@ -8,7 +8,7 @@ import aiofiles
 import uvicorn
 import logging
 import json
-from STPython_3_8_16_Server.contorller.pythonChatServer import PythonChatServer, CustomJSONResponse
+from STPython_3_8_16_Server.contorller.py_server import PythonChatServer, CustomJSONResponse
 from STPython_3_8_16_Server.contorller.yt_video_info import YtVideoInfo
 from src.controller.logger import LoggingMiddleware
 from src.model.docker_cmd import DockerCmd
