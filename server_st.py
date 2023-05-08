@@ -2,13 +2,14 @@ import os
 import sys
 import pandas as pd
 import env_config
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 import aiofiles
 import uvicorn
 import logging
 import json
 from STPython_3_8_16_Server.contorller.pythonChatServer import PythonChatServer, CustomJSONResponse
+from STPython_3_8_16_Server.contorller.yt_video_info import YtVideoInfo
 from src.controller.logger import LoggingMiddleware
 from src.model.docker_cmd import DockerCmd
 import subprocess
@@ -122,7 +123,7 @@ async def get():
     return HTMLResponse(content=content)
 
 
-@app.websocket("/ws")
+@app.websocket("/stCloudCourse/courseCollection/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
@@ -141,6 +142,22 @@ async def websocket_endpoint(websocket: WebSocket):
             await manager.send_message(f"Client: {data}")
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
+
+
+@app.get("/stCloudCourse/ytChannelPlaylistCollection", response_class=HTMLResponse)
+async def get_yt_channel_playlist_collection(request: Request, channel_url: str):
+    YtVideoInfo.get_channel_all_videos_info(
+        channel_url=f'https://www.youtube.com/{channel_url}'
+        , output_folder=DOWNLOAD_PATH
+        , subtitle_langs='en,zh,zh-Hant'
+    )
+
+    # 如果您需要將結果渲染到HTML模板，可以使用以下代碼：
+    # return templates.TemplateResponse("your_template.html", {"request": request, "data": your_data})
+
+    # 如果您只想返回純文本響應，可以這樣做：
+    return "Successfully fetched YouTube channel playlist information."
+
 
 if __name__ == "__main__":
     if RUN.find('local') != -1:

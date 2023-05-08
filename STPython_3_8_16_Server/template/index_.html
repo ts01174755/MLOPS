@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        .button-wrapper {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Add gap between button and char-count */
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            padding: 0 20px;
+            padding-bottom: 50px; /* Add padding to the bottom for the button */
+            align-items: center;
+        }
+
+        .category-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-wrapper {
+            width: calc((100% - 100px) / 3);
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }}
+
+        .input-wrapper:last-child {
+            margin-right: 0;
+        }
+
+        .input-label {
+            display: block;
+        }
+
+        #ChatSystem,
+        #ChatPrompt,
+        #ChatResponse{
+            width: 100%;
+            height: 400px;
+        }
+
+        #ChatResponseCategory {
+            width: 100%;
+            height: 30px;
+        }
+
+        #ChatResponseCategoryList {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 200px;
+            overflow-y: auto;
+        }
+        .main-container {
+            margin-left: 210px;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.8em;
+        }
+
+        .category-input-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .add-category-btn {
+            margin-left: 5px;
+            height: 30px;
+        }
+
+        .categories-display {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+    <title>Chat App</title>
+</head>
+    <body>
+<!--        <ul id="messages"></ul>-->
+        <div id="ChatResponseCategoryList">
+            <div class="categories-display" id="categoriesDisplay"></div>
+        </div>
+        <div class="main-container">
+            <div class="input-container">
+                <div class="category-container">
+                    <label class="input-label" for="ChatResponseCategory">數據類別</label>
+                    <div class="category-input-wrapper">
+                        <input id="ChatResponseCategory" placeholder="類別" autocomplete="off" autofocus>
+<!--                        <button class="add-category-btn" onclick="addCategory()">+</button>-->
+                    </div>
+                </div>
+            </div>
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <label class="input-label" for="ChatSystem">背景知識</label>
+                    <textarea id="ChatSystem" placeholder="請輸入你的背景知識" autocomplete="off" autofocus
+                           oninput="updateCharCount(this);"></textarea>
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="ChatPrompt">提示詞</label>
+                    <textarea id="ChatPrompt" placeholder="請輸入你的提示（EX:題幹、要問的問題...等等）" autocomplete="off" autofocus
+                           oninput="updateCharCount(this);"></textarea>
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="ChatResponse">答案</label>
+                    <textarea id="ChatResponse" placeholder="請輸入你希望的答案（EX:題目內容、AI助手的回答）" autocomplete="off"
+                           autofocus oninput="updateCharCount(this);"></textarea>
+                </div>
+                <div class="button-wrapper">
+                    <span id="totalCharCount" class="char-count">0</span>/<span id="maxCharLimit"></span>
+                    <button onclick="sendMessage()">傳送</button>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        const MAX_CHAR_LIMIT = 1048576;
+    </script>
+    <script>
+        const socket = new WebSocket('ws://' + location.host + '/ws');
+        document.getElementById('maxCharLimit').innerText = MAX_CHAR_LIMIT;
+
+<!--        // Add category-->
+<!--        socket.addEventListener('message', (event) => {-->
+<!--            const msg = event.data;-->
+<!--            const messageElement = document.createElement('li');-->
+<!--            messageElement.innerText = msg;-->
+<!--            document.getElementById('messages').appendChild(messageElement);-->
+<!--        });-->
+
+        // Send message to server
+        function sendMessage() {
+            const chatSystem = document.getElementById('ChatSystem').value;
+            const chatPrompt = document.getElementById('ChatPrompt').value;
+            const chatResponse = document.getElementById('ChatResponse').value;
+            const chatResponseCategory = document.getElementById('ChatResponseCategory').value;
+            data = {
+                'dataXList': {
+                    'chatResponseCategory': chatResponseCategory,
+                    'chatSystem': chatSystem,
+                    'chatPrompt': chatPrompt,
+                },
+                'dataYList': {
+                    'chatResponse':chatResponse
+                },
+            }
+
+            socket.send(JSON.stringify(data));
+            console.log(JSON.stringify(data));
+
+            document.getElementById('ChatPrompt').value = '';
+            document.getElementById('ChatResponse').value = '';
+            document.getElementById('ChatResponseCategory').value = '';
+        }
+
+        // Update the character count
+        function updateCharCount() {
+            const chatSystem = document.getElementById('ChatSystem');
+            const chatPrompt = document.getElementById('ChatPrompt');
+            const chatResponse = document.getElementById('ChatResponse');
+
+            const totalCharCount = chatSystem.value.length + chatPrompt.value.length + chatResponse.value.length;
+            const countElement = document.getElementById('totalCharCount');
+            countElement.innerText = totalCharCount;
+
+            // Show an alert if the total character count exceeds the limit
+            if (totalCharCount > MAX_CHAR_LIMIT) {
+                alert('字符总数已超过限制!');
+            }
+        }
+
+        // Add a new category to the list
+        function addCategory() {
+            var categoryInput = document.getElementById("ChatResponseCategory");
+            var categoryDisplay = document.getElementById("categoriesDisplay");
+            var newCategory = categoryInput.value.trim();
+
+            if (newCategory.length > 0) {
+                var newCategoryElement = document.createElement("span");
+                newCategoryElement.textContent = newCategory;
+                newCategoryElement.className = "category-item";
+
+                var newCategoryRow = document.createElement("div");
+                newCategoryRow.appendChild(newCategoryElement);
+
+                categoryDisplay.appendChild(newCategoryRow);
+                categoryInput.value = ""; // Clear the input field
+            }
+        }
+    </script>
+</body>
+</html>

@@ -78,7 +78,8 @@ if __name__ == "__main__":
         python_install_package = [
             'python-dotenv', 'fastapi', 'uvicorn', 'psycopg2', 'pymongo', 'setuptools', 'requests', 'beautifulsoup4',
             'pandas', 'black', 'build', 'tree', 'google-api-python-client', 'google-auth', 'google-auth-oauthlib',
-            'google-auth-httplib2', 'oauth2client', 'aiofiles', 'Jinja2==3.1.2', 'sqlalchemy', 'openpyxl', 'uvicorn[standard]'
+            'google-auth-httplib2', 'oauth2client', 'aiofiles', 'Jinja2==3.1.2', 'sqlalchemy', 'openpyxl', 'uvicorn[standard]',
+            '--upgrade --force-reinstall "git+https://github.com/ytdl-org/youtube-dl.git"'
         ]
         for package in python_install_package:
             DockerCmd.dockerExec(
