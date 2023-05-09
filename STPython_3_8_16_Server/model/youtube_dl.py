@@ -1,6 +1,6 @@
 import json
 import subprocess
-
+import re
 
 class YoutubeDL:
 
@@ -53,5 +53,14 @@ class YoutubeDL:
             video_url,
         ]
         cmd_str = " ".join(subtitles_command)
-        subprocess.run(cmd_str, shell=True)
+        subtitles_output = subprocess.run(cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
+        # 提取字幕檔案名稱
+        subtitle_filenames = []
+
+        if subtitles_output.stdout:
+            for line in subtitles_output.stdout.strip().split("\n"):
+                if re.search(r'\.(vtt|srt)$', line):
+                    subtitle_filenames.append(line)
+
+        return subtitle_filenames

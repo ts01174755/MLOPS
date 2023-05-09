@@ -110,6 +110,12 @@
                 document.getElementById('CourseHistory').appendChild(courseElement);
             });
 
+            // Add a close event listener
+            socket.addEventListener('close', () => {
+                console.log('WebSocket connection closed');
+                alert('伺服器正在處理，請添加下部影片。');
+            });
+
             function submitCourse() {
                 const courseCategory = document.getElementById('CourseCategory').value;
                 const courseName = document.getElementById('CourseName').value;

@@ -13,7 +13,6 @@ from STPython_3_8_16_Server.contorller.yt_video_info import YtVideoInfo
 from src.controller.logger import LoggingMiddleware
 from src.model.docker_cmd import DockerCmd
 import subprocess
-from pprint import pprint
 import time
 
 # ---------------------- STEP - params -----------------------
@@ -98,7 +97,7 @@ if RUN.find('local') != -1:
     course_df = pd.DataFrame(data, columns=["course", "course_ind", "url_name", "url"])
     file_name = '課程列表.xlsx'
     course_df.to_excel(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{file_name}", index=False, engine='openpyxl')
-    print(f"現在有的影片數: {course_count}")
+    logging.info(f"現在有的影片數: {course_count}")
 
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)
@@ -130,7 +129,7 @@ async def course_collection_wsed(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
-            print(data)
+            logging.info(data)
             await manager.insert_document_mongdb(
                 mongoDBCtrl=MONGODB,
                 collection='course_collection',
@@ -170,6 +169,10 @@ async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
                 channel_url = course_data["courseUrl"]
                 courseContent = course_data["courseContent"]
                 await YtVideoInfo.get_channel_all_videos_info(channel_url, output_folder=DOWNLOAD_PATH, subtitle_langs="en,zh,zh-Hant")
+
+                # # Close the WebSocket connection after processing is complete
+                # await websocket.close()
+                # break
 
         except WebSocketDisconnect:
             break
