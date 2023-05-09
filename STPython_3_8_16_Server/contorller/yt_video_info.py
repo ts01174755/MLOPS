@@ -4,7 +4,7 @@ from STPython_3_8_16_Server.model.youtube_dl import YoutubeDL
 class YtVideoInfo:
 
     @classmethod
-    def get_channel_all_videos_info(cls, channel_url, output_folder, subtitle_langs):
+    async def get_channel_all_videos_info(cls, channel_url, output_folder, subtitle_langs):
         # 获取频道上的所有播放列表
         playlists = YoutubeDL.get_playlists(channel_url)
 

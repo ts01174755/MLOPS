@@ -24,7 +24,7 @@ RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
 # 執行環境 - 基本上不需要動
 CI_PY_NAME = f'{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/CI_docker_python3_8_16_server.py'
 PY_NAME = f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st.py"    # 執行的程式
-DEPLOY_DETACH = False
+DEPLOY_DETACH = True
 if RUN == "docker":
     # ------------------------ env_params ------------------------
     LOCAL_INTERPRETER = env_config.MLOPS_ROOT_PATH_LOCAL_INTERPRETER
@@ -103,6 +103,7 @@ if RUN.find('local') != -1:
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)
 manager = PythonChatServer()
+yt_collection_manager = PythonChatServer()
 
 
 # 部署測試服務
@@ -117,14 +118,14 @@ def get_total_course():
 
 
 @app.get("/stCloudCourse/courseCollection", response_class=HTMLResponse)
-async def get():
+async def course_collection():
     async with aiofiles.open(f"{PROJECT_PATH}/STPython_3_8_16_Server/template/index.html", mode="r") as f:
         content = await f.read()
     return HTMLResponse(content=content)
 
 
 @app.websocket("/stCloudCourse/courseCollection/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def course_collection_wsed(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
@@ -145,20 +146,35 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 @app.get("/stCloudCourse/ytChannelPlaylistCollection", response_class=HTMLResponse)
-async def get_yt_channel_playlist_collection(request: Request, channel_url: str):
-    YtVideoInfo.get_channel_all_videos_info(
-        channel_url=f'https://www.youtube.com/{channel_url}'
-        , output_folder=DOWNLOAD_PATH
-        , subtitle_langs='en,zh,zh-Hant'
-    )
+async def get_yt_channel_playlist_collection(request: Request):
+    async with aiofiles.open(
+            f"{PROJECT_PATH}/STPython_3_8_16_Server/template/chanellPlaylistCollection.html", mode="r"
+    ) as file_reader:
+        content = await file_reader.read()
+    return HTMLResponse(content=content)
 
-    # 如果您需要將結果渲染到HTML模板，可以使用以下代碼：
-    # return templates.TemplateResponse("your_template.html", {"request": request, "data": your_data})
 
-    # 如果您只想返回純文本響應，可以這樣做：
-    return "Successfully fetched YouTube channel playlist information."
+@app.websocket("/stCloudCourse/ytChannelPlaylistCollection/ws")
+async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        try:
+            message = await websocket.receive_text()
+            message_data = json.loads(message)
+
+            if message_data["action"] == "submit_course":
+                course_data = message_data["data"]
+                providerName = course_data["providerName"]
+                courseCategory = course_data["courseCategory"]
+                courseName = course_data["courseName"]
+                channel_url = course_data["courseUrl"]
+                courseContent = course_data["courseContent"]
+                await YtVideoInfo.get_channel_all_videos_info(channel_url, output_folder=DOWNLOAD_PATH, subtitle_langs="en,zh,zh-Hant")
+
+        except WebSocketDisconnect:
+            break
 
 
 if __name__ == "__main__":
     if RUN.find('local') != -1:
-        uvicorn.run(app, host="0.0.0.0", port=DEPLOY_PORT)
+        uvicorn.run('server_st:app', host="0.0.0.0", port=DEPLOY_PORT, workers=4)

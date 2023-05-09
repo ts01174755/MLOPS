@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+            body {
+                display: flex;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+
+            #CourseHistory {
+                flex: 1;
+                max-width: 250px;
+                overflow-y: auto;
+                padding: 10px;
+                border-right: 1px solid #ccc;
+                background-color: #333;
+                color: white;
+            }
+
+            .main-container {
+                flex: 3;
+                padding: 10px;
+                background-color: #f5f5f5;
+            }
+
+            .input-container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                max-width: 600px; /* 添加了这行代码来限制输入框的最大宽度 */
+                margin: 0 auto; /* 添加了这行代码来居中输入框 */
+            }
+
+            .input-wrapper {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .input-label {
+                display: block;
+            }
+
+            #CourseCategory,
+            #CourseName,
+            #CourseContent {
+                width: 100%;
+                height: 30px;
+            }
+
+            #CourseContent {
+                height: 100px;
+            }
+
+            button {
+                width: 100px;
+                height: 30px;
+            }
+        </style>
+</head>
+    <body>
+        <div id="CourseHistory"></div>
+        <div class="main-container">
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <label class="input-label" for="providerName">姓名</label>
+                    <input id="providerName" placeholder="你的姓名" autocomplete="off" autofocus>
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="CourseCategory">頻道類別</label>
+                    <input id="CourseCategory" placeholder="這裡請自定義頻道的類別" autocomplete="off" autofocus>
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="CourseName">頻道名稱</label>
+                    <input id="CourseName" placeholder="頻道名稱" autocomplete="off" autofocus>
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="CourseContent">頻道連結</label>
+                    <textarea id="CourseUrl" placeholder="這裡請放你想下載的頻道連結" autocomplete="off" autofocus></textarea>
+                </div>
+                <div class="input-wrapper">
+                    <label class="input-label" for="CourseContent">頻道內容</label>
+                    <textarea id="CourseContent" placeholder="頻道內容，你可以在這裡放任何你對頻道的描述。" autocomplete="off" autofocus></textarea>
+                </div>
+                <button onclick="submitCourse()">送出</button>
+            </div>
+        </div>
+        <script>
+            const socket = new WebSocket('ws://' + location.host + '/stCloudCourse/ytChannelPlaylistCollection/ws');
+
+
+            socket.addEventListener('open', () => {
+                console.log('WebSocket connection opened');
+            });
+
+            socket.addEventListener('message', (event) => {
+                const msg = event.data;
+                const parsedData = JSON.parse(msg);
+                const courseName = parsedData.courseName;
+                const providerName = parsedData.providerName;
+
+                const courseElement = document.createElement('div');
+                courseElement.innerHTML = `${courseName} - 提供者：${providerName}`;
+                document.getElementById('CourseHistory').appendChild(courseElement);
+            });
+
+            function submitCourse() {
+                const courseCategory = document.getElementById('CourseCategory').value;
+                const courseName = document.getElementById('CourseName').value;
+                const courseUrl = document.getElementById('CourseUrl').value;
+                const courseContent = document.getElementById('CourseContent').value;
+                const providerName = document.getElementById('providerName').value;
+
+                data = {
+                    'courseCategory': courseCategory,
+                    'courseName': courseName,
+                    'courseUrl': courseUrl,
+                    'courseContent': courseContent,
+                    'providerName': providerName
+                }
+                socket.send(JSON.stringify({action: 'submit_course', data: data}));
+
+                displayCourse(courseName, providerName); // Display the submitted course in the left panel
+
+                document.getElementById('CourseName').value = '';
+                document.getElementById('CourseUrl').value = '';
+                document.getElementById('CourseContent').value = '';
+            }
+
+            function displayCourse(courseName, providerName) {
+                const courseElement = document.createElement('div');
+                courseElement.innerHTML = `${courseName} - 提供者：${providerName}`;
+                document.getElementById('CourseHistory').appendChild(courseElement);
+            }
+
+
+        </script>
+    </body>
+</html>
