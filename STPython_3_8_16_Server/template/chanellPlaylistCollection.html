@@ -62,6 +62,19 @@
                 width: 100px;
                 height: 30px;
             }
+
+            #progressBar {
+                width: 100%;
+                background-color: #f3f3f3;
+                position: relative;
+            }
+
+            #progressBar div {
+                width: 0;
+                height: 30px;
+                background-color: #4caf50;
+                text-align: center;
+            }
         </style>
 </head>
     <body>
@@ -89,10 +102,14 @@
                     <textarea id="CourseContent" placeholder="頻道內容，你可以在這裡放任何你對頻道的描述。" autocomplete="off" autofocus></textarea>
                 </div>
                 <button onclick="submitCourse()">送出</button>
+                <div id="progressBar">
+                    <div>0%</div>
+                </div>
             </div>
         </div>
         <script>
             const socket = new WebSocket('ws://' + location.host + '/stCloudCourse/ytChannelPlaylistCollection/ws');
+            const courseName_ = document.getElementById('CourseName').value;
 
 
             socket.addEventListener('open', () => {
@@ -102,18 +119,30 @@
             socket.addEventListener('message', (event) => {
                 const msg = event.data;
                 const parsedData = JSON.parse(msg);
-                const courseName = parsedData.courseName;
-                const providerName = parsedData.providerName;
 
-                const courseElement = document.createElement('div');
-                courseElement.innerHTML = `${courseName} - 提供者：${providerName}`;
-                document.getElementById('CourseHistory').appendChild(courseElement);
+                if (parsedData.hasOwnProperty('progress')) {
+                    const progress = parsedData.progress;
+                    console.log('Progress:', progress);
+
+                    // Update the progress display on the client side
+                    const progressBar = document.getElementById('progressBar');
+                    const progressText = progressBar.getElementsByTagName('div')[0];
+                    progressText.style.width = progress + '%';
+                    progressText.innerHTML = progress + '%';
+                } else {
+                    const courseName = parsedData.courseName;
+                    const providerName = parsedData.providerName;
+
+                    const courseElement = document.createElement('div');
+                    courseElement.innerHTML = `${courseName} - 提供者：${providerName}`;
+                    document.getElementById('CourseHistory').appendChild(courseElement);
+                }
             });
 
             // Add a close event listener
             socket.addEventListener('close', () => {
                 console.log('WebSocket connection closed');
-                alert('伺服器正在處理，請添加下部影片。');
+                alert('伺服器已將' + 'courseName_' + '處理完畢，請添加下部影片。');
             });
 
             function submitCourse() {

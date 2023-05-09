@@ -117,7 +117,8 @@ if __name__ == "__main__":
     # COLLECTION = 'st_all_data'
     # COLLECTION = 'google_form'
     # COLLECTION = 'chat_server'
-    COLLECTION = 'course_collection'
+    # COLLECTION = 'course_collection'
+    COLLECTION = 'yt_channel_playlist_collection'
 
     # 刪除collection - 等價於刪除table
     print(mongodb.drop_collection(COLLECTION))

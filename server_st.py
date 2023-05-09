@@ -23,7 +23,7 @@ RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
 # 執行環境 - 基本上不需要動
 CI_PY_NAME = f'{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/CI_docker_python3_8_16_server.py'
 PY_NAME = f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st.py"    # 執行的程式
-DEPLOY_DETACH = True
+DEPLOY_DETACH = False
 if RUN == "docker":
     # ------------------------ env_params ------------------------
     LOCAL_INTERPRETER = env_config.MLOPS_ROOT_PATH_LOCAL_INTERPRETER
@@ -168,7 +168,28 @@ async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
                 courseName = course_data["courseName"]
                 channel_url = course_data["courseUrl"]
                 courseContent = course_data["courseContent"]
-                await YtVideoInfo.get_channel_all_videos_info(channel_url, output_folder=DOWNLOAD_PATH, subtitle_langs="en,zh,zh-Hant")
+                all_video_dict = await YtVideoInfo.get_channel_all_videos_info(
+                    channel_url,
+                    output_folder=DOWNLOAD_PATH,
+                    subtitle_langs="en,zh,zh-Hant",
+                    websocket=websocket
+                )
+
+                # 插入資料到MongoDB
+                await yt_collection_manager.insert_document_mongdb(
+                    mongoDBCtrl=MONGODB,
+                    collection='yt_channel_playlist_collection',
+                    document={
+                        "from": 'python_st_server',
+                        "dt": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                        "providerName": providerName,
+                        "channelCategory": courseCategory,
+                        "channelName": courseName,
+                        "channelContent": courseContent,
+                        "channel_url": channel_url,
+                        "data": all_video_dict
+                    }
+                )
 
                 # # Close the WebSocket connection after processing is complete
                 # await websocket.close()
