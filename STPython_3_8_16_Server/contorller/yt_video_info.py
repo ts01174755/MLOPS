@@ -46,8 +46,8 @@ class YtVideoInfo:
 
                     # 更新進度
                     processed_videos += 1
-                    progress = int((processed_videos / total_videos) * 100)
-                    await websocket.send_text(json.dumps({"progress": progress}))
+                    progress = (processed_videos / total_videos) * 100
+                    await websocket.send_text(json.dumps({"progress": round(progress, 2)}))
                     await run_in_threadpool(websocket.close)  # Add this line to flush the output buffer
 
             # 输出所有视频的信息

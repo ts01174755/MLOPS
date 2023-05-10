@@ -102,9 +102,9 @@
                     <textarea id="CourseContent" placeholder="頻道內容，你可以在這裡放任何你對頻道的描述。" autocomplete="off" autofocus></textarea>
                 </div>
                 <button onclick="submitCourse()">送出</button>
-                <div id="progressBar">
-                    <div>0%</div>
-                </div>
+                <div id="loadingMessage" style="display: none;">Loading...</div>
+                <div id="progressBar" style="display: none;"><div>0%</div></div>
+
             </div>
         </div>
         <script>
@@ -115,35 +115,6 @@
             socket.addEventListener('open', () => {
                 console.log('WebSocket connection opened');
             });
-
-            socket.addEventListener('message', (event) => {
-                const msg = event.data;
-                const parsedData = JSON.parse(msg);
-
-                if (parsedData.hasOwnProperty('progress')) {
-                    const progress = parsedData.progress;
-                    console.log('Progress:', progress);
-
-                    // Update the progress display on the client side
-                    const progressBar = document.getElementById('progressBar');
-                    const progressText = progressBar.getElementsByTagName('div')[0];
-                    progressText.style.width = progress + '%';
-                    progressText.innerHTML = progress + '%';
-                } else {
-                    const courseName = parsedData.courseName;
-                    const providerName = parsedData.providerName;
-
-                    const courseElement = document.createElement('div');
-                    courseElement.innerHTML = `${courseName} - 提供者：${providerName}`;
-                    document.getElementById('CourseHistory').appendChild(courseElement);
-                }
-            });
-
-<!--            // Add a close event listener-->
-<!--            socket.addEventListener('close', () => {-->
-<!--                console.log('WebSocket connection closed');-->
-<!--                alert('伺服器已將' + 'courseName_' + '處理完畢，請添加下部影片。');-->
-<!--            });-->
 
             function submitCourse() {
                 const courseCategory = document.getElementById('CourseCategory').value;
@@ -166,7 +137,51 @@
                 document.getElementById('CourseName').value = '';
                 document.getElementById('CourseUrl').value = '';
                 document.getElementById('CourseContent').value = '';
+
+                // Show the loading message and start the counter
+                document.getElementById('loadingMessage').style.display = 'block';
+                document.getElementById('loadingMessage').innerText = 'Loading...0s';
+                loadingTime = 0;
+                loadingInterval = setInterval(() => {
+                    loadingTime += 1;
+                    document.getElementById('loadingMessage').innerText = `Loading...${loadingTime}s`;
+                }, 1000);
+
+                // Hide the progress bar
+                document.getElementById('progressBar').style.display = 'none';
             }
+
+            socket.addEventListener('message', (event) => {
+                const msg = event.data;
+                const parsedData = JSON.parse(msg);
+
+                if (parsedData.hasOwnProperty('progress')) {
+                    // Show the progress bar
+                    document.getElementById('progressBar').style.display = 'block';
+
+                    const progress = parsedData.progress;
+                    console.log('Progress:', progress);
+
+                    // Update the progress display on the client side
+                    const progressBar = document.getElementById('progressBar');
+                    const progressText = progressBar.getElementsByTagName('div')[0];
+                    progressText.style.width = progress + '%';
+                    progressText.innerHTML = progress + '%';
+                } else {
+                    const courseName = parsedData.courseName;
+                    const providerName = parsedData.providerName;
+
+                    const courseElement = document.createElement('div');
+                    courseElement.innerHTML = `${courseName} - 提供者：${providerName}`;
+                    document.getElementById('CourseHistory').appendChild(courseElement);
+                }
+
+                // Hide the loading message and stop the counter
+                document.getElementById('loadingMessage').style.display = 'none';
+                clearInterval(loadingInterval);
+                loadingTime = 0;
+            });
+
 
             function displayCourse(courseName, providerName) {
                 const courseElement = document.createElement('div');

@@ -12,41 +12,40 @@ from STPython_3_8_16_Server.contorller.py_server import PythonChatServer, Custom
 from STPython_3_8_16_Server.contorller.yt_video_info import YtVideoInfo
 from src.controller.logger import LoggingMiddleware
 from src.model.docker_cmd import DockerCmd
+from src.model.cicd import CICD
 import subprocess
 import time
 
-# ---------------------- STEP - params -----------------------
+# --------------------- controller params ---------------------
 DEPLOY_PORT = 8000
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
 # RUN = "local"
 
-# 執行環境 - 基本上不需要動
-CI_PY_NAME = f'{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/CI_docker_python3_8_16_server.py'
-PY_NAME = f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st.py"    # 執行的程式
-DEPLOY_DETACH = False
-if RUN == "docker":
-    # ------------------------ env_params ------------------------
-    LOCAL_INTERPRETER = env_config.MLOPS_ROOT_PATH_LOCAL_INTERPRETER
-    subprocess.run(f"{LOCAL_INTERPRETER} {CI_PY_NAME}", shell=True)
-
-    CONTAINER_NAME = env_config.CONTAINER_PYTHON_3_8_18_SERVER_NAME     # 執行環境
-    ROOT_PATH_DOCKER = env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH    # DOCKER 執行路徑
-    DOCKER_INTERPRETER = env_config.CONTAINER_PYTHON_3_8_18_SERVER_INTERPRETER      # 執行的python解釋器
-    DockerCmd.dockerExec(
-        name=CONTAINER_NAME,
-        cmd=f'/bin/bash -c "cd {ROOT_PATH_DOCKER} && {DOCKER_INTERPRETER} {PY_NAME} docker_local"',
-        detach=DEPLOY_DETACH,
-        interactive=True,
-        TTY=False,
-    )
-
-# --------------------- controller env params ---------------------
-MONGODB = env_config.MONGODB_DOCKER if RUN.find('docker') != -1 else env_config.MONGODB_LOCAL    # mongodb連線資訊
-POSTGRESDB = env_config.POSTGRESDB_DOCKER if RUN.find('docker') != -1 else env_config.POSTGRESDB_LOCAL   # postgres連線資訊
+MONGODB = env_config.MONGODB_DOCKER if RUN.find('docker') != -1 else env_config.MONGODB_LOCAL  # mongodb連線資訊
+POSTGRESDB = env_config.POSTGRESDB_DOCKER if RUN.find('docker') != -1 else env_config.POSTGRESDB_LOCAL  # postgres連線資訊
 PROJECT_PATH = env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH if RUN.find('docker') != -1 else env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH  # 存放資料的位置
 FILE_PATH = env_config.CONTAINER_PYTHON_3_8_18_SERVER_FILE_PATH if RUN.find('docker') != -1 else env_config.MLOPS_ROOT_PATH_LOCAL_FILE_PATH  # 存放資料的位置
 DOWNLOAD_PATH = env_config.CONTAINER_PYTHON_3_8_18_SERVER_DOWNLOAD_PATH if RUN.find('docker') != -1 else env_config.MLOPS_ROOT_PATH_LOCAL_DOWNLOAD_PATH  # 存放資料的位置
-LOG_PATH = f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st_log.log" if RUN.find('docker') != -1 else f"{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/server_st_log.log"   # 執行的程式
+LOG_PATH = f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st_log.log" if RUN.find('docker') != -1 else f"{env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH}/server_st_log.log"  # 執行的程式
+
+# --------------------- docker env_params ---------------------
+# 執行環境 - 基本上不需要動
+if RUN == "docker":
+    cicd = CICD(
+        local_path=env_config.MLOPS_ROOT_PATH_LOCAL_PROJECT_PATH,
+        docker_path=env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH,
+        container_name=env_config.CONTAINER_PYTHON_3_8_18_SERVER_NAME,
+        container_interpreter=env_config.CONTAINER_PYTHON_3_8_18_SERVER_INTERPRETER,
+        gitHub_url=env_config.GITHUB_URL,
+        folder_ignore_list=["__pycache__", ".git", ".idea", "venv", "OLD"]
+    )
+    cicd.ci_run()
+    cicd.cd_run(
+        py_name=f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st.py",
+        py_params="docker_local",
+        detach=True
+    )
+
 
 # ------------------------- ROUTE ----------------------------
 if RUN.find('local') != -1:
@@ -58,46 +57,6 @@ if RUN.find('local') != -1:
             logging.StreamHandler()
         ]
     )
-
-    course_code_dict = {
-        '國一數學(一)影片課程規劃': '0001',
-        '國一數學(二)影片課程規劃': '0002',
-        '國二數學(三)影片課程規劃': '0003',
-        '國二數學(四)影片課程規劃': '0004',
-        '國二理化(三)影片課程規劃': '0005',
-        '國二理化(四)影片課程規劃': '0006',
-        '多益課程影片規劃': '0007',
-        '多益閱讀題型': '0008',
-        '學測化學影片課程規劃': '0009',
-        '學測國文影片課程規劃': '0010',
-        '學測地科影片課程規劃': '0011',
-        '學測數學影片課程規劃': '0012',
-        '學測物理影片課程規劃': '0013',
-        '指考化學影片課程規劃': '0014',
-        '指考物理影片課程規劃': '0015',
-        '學測生物影片課程規劃': '0016',
-        '學測英文影片課程規劃': '0017',
-        '學測國文影片課程規劃（古文十五+文化經典教材）': '0018',
-        '學測國文影片課程規劃（學測總複習）': '0019',
-        '學測數A影片課程規劃': '0020',
-    }
-    course_detail_dict = {}
-    course_count = 0
-    data = []
-    for course_, course_code_ in course_code_dict.items():
-        with open(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{course_}.json", "r", encoding="utf-8") as f:
-            course_detail_dict[course_code_] = json.load(f)
-            # 計算課程數目
-            for course_ind_, courses_ in course_detail_dict[course_code_].items():
-                course_count += len(courses_)
-                for url_name_, url_list_ in courses_.items():
-                    for url_ in url_list_:
-                        data.append([course_, course_ind_, url_name_, url_])
-
-    course_df = pd.DataFrame(data, columns=["course", "course_ind", "url_name", "url"])
-    file_name = '課程列表.xlsx'
-    course_df.to_excel(f"{PROJECT_PATH}/STPython_3_8_16_Server/files/{file_name}", index=False, engine='openpyxl')
-    logging.info(f"現在有的影片數: {course_count}")
 
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)
@@ -113,7 +72,13 @@ def get_hello_message():
 
 @app.get("/stCloudCourse/totalCourse")
 def get_total_course():
-    return CustomJSONResponse(content=data)
+
+    MONDODB_QUERY = {"from": "init_course_collection"}
+    data = MONGODB.find_document(
+        collection_name='course_collection',
+        query=MONDODB_QUERY
+    )
+    return CustomJSONResponse(content=data[0]['data'])
 
 
 @app.get("/stCloudCourse/courseCollection", response_class=HTMLResponse)
@@ -201,4 +166,4 @@ async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
 
 if __name__ == "__main__":
     if RUN.find('local') != -1:
-        uvicorn.run('server_st:app', host="0.0.0.0", port=DEPLOY_PORT, workers=4)
+        uvicorn.run('server_st:app', host="0.0.0.0", port=DEPLOY_PORT, workers=1)
