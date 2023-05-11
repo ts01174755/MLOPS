@@ -16,6 +16,7 @@ class YtVideoInfo:
 
             # 遍历播放列表并获取每个播放列表中的视频信息
             all_playlist = []
+            processed_videos = 0
             processed_playlists = 0
             for playlist in playlists:
                 await run_in_threadpool(logging.info, f"Fetching playlist: {playlist['title']}, url: {playlist['url']}")
@@ -25,8 +26,9 @@ class YtVideoInfo:
                 playlist['all_videos'] = videos
                 all_playlist.append(playlist)
 
-                processed_playlists += len(videos)
-                await websocket.send_text(json.dumps({"progress": processed_playlists}))
+                processed_videos += len(videos)
+                processed_playlists += 1
+                await websocket.send_text(json.dumps({"progress": processed_videos, "percent": round(processed_playlists / len(playlists), 4) * 100}))
 
             return all_playlist
 

@@ -44,7 +44,7 @@ if RUN == "docker":
     cicd.cd_run(
         py_name=f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st.py",
         py_params="docker_local",
-        detach=False
+        detach=True
     )
 
 

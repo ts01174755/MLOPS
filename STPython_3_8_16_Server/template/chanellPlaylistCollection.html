@@ -150,8 +150,12 @@
                     document.getElementById('loadingMessage').innerText = `Loading...${loadingTime}s`;
                 }, 1000);
 
-                // Hide the progress bar
-                document.getElementById('progressBar').style.display = 'none';
+                // Show the progress bar and reset its width and text
+                const progressBar = document.getElementById('progressBar');
+                const progressIndicator = progressBar.getElementsByTagName('div')[0];
+                progressIndicator.style.width = '0%';
+                document.getElementById('progressText').innerText = '';
+                progressBar.style.display = 'block';
             }
 
             socket.addEventListener('message', (event) => {
@@ -159,18 +163,22 @@
                 const parsedData = JSON.parse(msg);
 
                 if (parsedData.hasOwnProperty('progress')) {
-                    // Show the progress bar
-                    document.getElementById('progressBar').style.display = 'block';
-
                     const progress = parsedData.progress;
-                    console.log('Progress:', progress);
+                    const percent = parsedData.percent;
+                    console.log('Progress:', progress, 'Percent:', percent);
 
                     // Update the progress display on the client side
                     const progressBar = document.getElementById('progressBar');
-                    const progressText = document.getElementById('progressText');
                     const progressIndicator = progressBar.getElementsByTagName('div')[0];
-                    progressIndicator.style.width = progress + '%';
-                    progressText.innerText = '已收集 ' + progress + ' 個影片資料';
+                    progressIndicator.style.width = percent + '%';
+
+                    const progressText = document.getElementById('progressText');
+                    progressText.innerText = `已收集 ${progress} 個影片資料 (${percent}%)`;
+
+                    // Hide the loading message and stop the counter
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    clearInterval(loadingInterval);
+                    loadingTime = 0;
                 } else {
                     const courseName = parsedData.courseName;
                     const providerName = parsedData.providerName;
@@ -185,6 +193,7 @@
                 clearInterval(loadingInterval);
                 loadingTime = 0;
             });
+
 
 
 
