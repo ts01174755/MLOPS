@@ -5,6 +5,8 @@ import env_config
 from starlette.concurrency import run_in_threadpool
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 import aiofiles
 import uvicorn
 import logging
@@ -18,9 +20,9 @@ import subprocess
 import time
 
 # --------------------- controller params ---------------------
-DEPLOY_PORT = 8000
+DEPLOY_PORT = 5555
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
-# RUN = "local"
+RUN = "local"
 
 MONGODB = env_config.MONGODB_DOCKER if RUN.find('docker') != -1 else env_config.MONGODB_LOCAL  # mongodb連線資訊
 POSTGRESDB = env_config.POSTGRESDB_DOCKER if RUN.find('docker') != -1 else env_config.POSTGRESDB_LOCAL  # postgres連線資訊
@@ -64,16 +66,22 @@ app.add_middleware(LoggingMiddleware)
 manager = PythonChatServer()
 yt_collection_manager = PythonChatServer()
 
+# Mount static files
+app.mount("/css", StaticFiles(directory="STPython_3_8_16_Server/css"), name="css")
+app.mount("/js", StaticFiles(directory="STPython_3_8_16_Server/js"), name="js")
+app.mount("/template", StaticFiles(directory="STPython_3_8_16_Server/template"), name="template")
+
 
 # 部署測試服務
 @app.get("/")
-def get_hello_message():
-    return {"message": "Hello World"}
+async def get_index():
+    async with aiofiles.open("STPython_3_8_16_Server/template/index.html", mode="r") as file_reader:
+        content = await file_reader.read()
+    return HTMLResponse(content=content)
 
 
 @app.get("/stCloudCourse/totalCourse")
 def get_total_course():
-
     MONDODB_QUERY = {"from": "init_course_collection"}
     data = MONGODB.find_document(
         collection_name='course_collection',
@@ -82,11 +90,11 @@ def get_total_course():
     return CustomJSONResponse(content=data[0]['data'])
 
 
-@app.get("/stCloudCourse/courseCollection", response_class=HTMLResponse)
-async def course_collection():
-    async with aiofiles.open(f"{PROJECT_PATH}/STPython_3_8_16_Server/template/index.html", mode="r") as f:
-        content = await f.read()
-    return HTMLResponse(content=content)
+# @app.get("/stCloudCourse/courseCollection", response_class=HTMLResponse)
+# async def course_collection():
+#     async with aiofiles.open(f"{PROJECT_PATH}/STPython_3_8_16_Server/template/course_collection.html", mode="r") as f:
+#         content = await f.read()
+#     return HTMLResponse(content=content)
 
 
 @app.websocket("/stCloudCourse/courseCollection/ws")
@@ -110,13 +118,13 @@ async def course_collection_wsed(websocket: WebSocket):
         await manager.disconnect(websocket)
 
 
-@app.get("/stCloudCourse/ytChannelPlaylistCollection", response_class=HTMLResponse)
-async def get_yt_channel_playlist_collection(request: Request):
-    async with aiofiles.open(
-            f"{PROJECT_PATH}/STPython_3_8_16_Server/template/chanellPlaylistCollection.html", mode="r"
-    ) as file_reader:
-        content = await file_reader.read()
-    return HTMLResponse(content=content)
+# @app.get("/stCloudCourse/ytChannelPlaylistCollection", response_class=HTMLResponse)
+# async def get_yt_channel_playlist_collection(request: Request):
+#     async with aiofiles.open(
+#             f"{PROJECT_PATH}/STPython_3_8_16_Server/template/chanellPlaylistCollection.html", mode="r"
+#     ) as file_reader:
+#         content = await file_reader.read()
+#     return HTMLResponse(content=content)
 
 
 @app.websocket("/stCloudCourse/ytChannelPlaylistCollection/ws")

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="/css/st_base.css">
+</head>
+<body onload="initApp()">
+    <div class="flex-container">
+        <div id="CourseHistory"></div>
+        <div id="content"></div>
+    </div>
+    <script src="/js/chanellPlaylistCollection.js"></script>
+    <script src="/js/course_collection.js"></script>
+    <script>
+        // 儲存頁面名稱和初始化函數之間的映射
+        const pageInitFunctions = {
+            'template/chanellPlaylistCollection.html': initChannelPlaylistCollection,
+            'template/course_collection.html': course_collection
+        };
+
+        // 初始化應用程式
+        function initApp() {
+            // 初始化時創建分頁連結
+            Object.keys(pageInitFunctions).forEach(displayPage);
+        }
+
+        function loadPage(page) {
+            fetch(page)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('content').innerHTML = data;
+                    // 使用頁面名稱來找到並執行相應的初始化函數
+                    const initFunction = pageInitFunctions[page];
+                    if (initFunction) {
+                        initFunction();
+                    }
+                });
+        }
+
+        function displayPage(page) {
+            const pageElement = document.createElement('div');
+            pageElement.textContent = page;
+            pageElement.onclick = () => loadPage(page);
+            document.getElementById('CourseHistory').appendChild(pageElement);
+        }
+    </script>
+</body>
+</html>
