@@ -103,7 +103,10 @@
                 </div>
                 <button onclick="submitCourse()">送出</button>
                 <div id="loadingMessage" style="display: none;">Loading...</div>
-                <div id="progressBar" style="display: none;"><div>0%</div></div>
+                <div id="progressBar" style="display: none;">
+                    <div></div>
+                    <p id="progressText"></p>
+                </div>
 
             </div>
         </div>
@@ -164,9 +167,10 @@
 
                     // Update the progress display on the client side
                     const progressBar = document.getElementById('progressBar');
-                    const progressText = progressBar.getElementsByTagName('div')[0];
-                    progressText.style.width = progress + '%';
-                    progressText.innerHTML = progress + '%';
+                    const progressText = document.getElementById('progressText');
+                    const progressIndicator = progressBar.getElementsByTagName('div')[0];
+                    progressIndicator.style.width = progress + '%';
+                    progressText.innerText = '已收集 ' + progress + ' 個影片資料';
                 } else {
                     const courseName = parsedData.courseName;
                     const providerName = parsedData.providerName;
@@ -181,6 +185,7 @@
                 clearInterval(loadingInterval);
                 loadingTime = 0;
             });
+
 
 
             function displayCourse(courseName, providerName) {

@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import env_config
+from starlette.concurrency import run_in_threadpool
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 import aiofiles
@@ -43,7 +44,7 @@ if RUN == "docker":
     cicd.cd_run(
         py_name=f"{env_config.CONTAINER_PYTHON_3_8_18_SERVER_PROJECT_PATH}/server_st.py",
         py_params="docker_local",
-        detach=True
+        detach=False
     )
 
 
@@ -133,12 +134,13 @@ async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
                 courseName = course_data["courseName"]
                 channel_url = course_data["courseUrl"]
                 courseContent = course_data["courseContent"]
-                all_video_dict = await YtVideoInfo.get_channel_all_videos_info(
-                    channel_url,
-                    output_folder=DOWNLOAD_PATH,
-                    subtitle_langs="en,zh,zh-Hant",
-                    websocket=websocket
-                )
+                all_playlist = await YtVideoInfo.get_channel_playlists_info(channel_url, websocket=websocket)
+
+                # await YtVideoInfo.get_channel_all_videos_info(
+                #     all_playlist,
+                #     output_folder=DOWNLOAD_PATH,
+                #     subtitle_langs="en,zh,zh-Hant"
+                # )
 
                 # 插入資料到MongoDB
                 await yt_collection_manager.insert_document_mongdb(
@@ -152,9 +154,11 @@ async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
                         "channelName": courseName,
                         "channelContent": courseContent,
                         "channel_url": channel_url,
-                        "data": all_video_dict
+                        "data": all_playlist
                     }
                 )
+
+                await run_in_threadpool(logging.info, f"Done....")
 
                 # # Close the WebSocket connection after processing is complete
                 # await websocket.close()
