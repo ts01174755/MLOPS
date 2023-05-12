@@ -113,7 +113,7 @@ async def course_collection_wsed(websocket: WebSocket):
                     "data": data
                 }
             )
-            await manager.send_message(f"Client: {data}")
+            await manager.send_message(json.dumps({'Client': {data}}))
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
 

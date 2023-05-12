@@ -5,20 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/st_base.css">
 </head>
 <body onload="initApp()">
-    <div class="flex-container">
-        <div id="CourseHistory"></div>
-        <div id="content"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div id="CourseHistory" class="sidebar">
+                    <!-- Sidebar content goes here -->
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="content" class="main-content gray-background">
+                    <!-- Main content goes here -->
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/js/chanellPlaylistCollection.js"></script>
     <script src="/js/course_collection.js"></script>
     <script>
         // 儲存頁面名稱和初始化函數之間的映射
         const pageInitFunctions = {
-            'template/chanellPlaylistCollection.html': initChannelPlaylistCollection,
-            'template/course_collection.html': course_collection
+            'template/chanellPlaylistCollection.html': {
+                initFunction: initChannelPlaylistCollection,
+                label: '频道播放列表收集'
+            },
+            'template/course_collection.html': {
+                initFunction: course_collection,
+                label: '课程收集'
+            }
         };
 
         // 初始化應用程式
@@ -33,7 +50,7 @@
                 .then(data => {
                     document.getElementById('content').innerHTML = data;
                     // 使用頁面名稱來找到並執行相應的初始化函數
-                    const initFunction = pageInitFunctions[page];
+                    const initFunction = pageInitFunctions[page].initFunction;
                     if (initFunction) {
                         initFunction();
                     }
@@ -41,18 +58,26 @@
         }
 
         function displayPage(page) {
-            console.log(page);
             const pageElement = document.createElement('div');
+            pageElement.classList.add('sidebar-item');
 
-            console.log(pageElement);
-            pageElement.textContent = page;
+            const buttonElement = document.createElement('button');
+            buttonElement.onclick = () => loadPage(page);
+            buttonElement.classList.add('btn', 'btn-block', 'btn-transparent', 'btn-primary');
+            buttonElement.textContent = pageInitFunctions[page].label;
 
-            console.log(pageElement);
-            pageElement.onclick = () => loadPage(page);
+            buttonElement.addEventListener('mouseenter', () => {
+                buttonElement.classList.add('btn-highlight');
+            });
 
-            console.log(pageElement);
+            buttonElement.addEventListener('mouseleave', () => {
+                buttonElement.classList.remove('btn-highlight');
+            });
+
+            pageElement.appendChild(buttonElement);
             document.getElementById('CourseHistory').appendChild(pageElement);
         }
+
     </script>
 </body>
 </html>
