@@ -63,3 +63,10 @@
     margin-left: auto; /* 將左邊的間距設置為自動，將容器置於側邊欄右側和螢幕右側之間 */
     margin-right: 20px; /* 添加右邊的間距，使其與螢幕右側保持一定的距離 */
 }
+#progressBar {
+    margin-top: 10px; /* 調整進度條與上方元素的垂直間距 */
+}
+
+.progress {
+    background-color: #cccccc; /* 替換為你希望的顏色 */
+}
