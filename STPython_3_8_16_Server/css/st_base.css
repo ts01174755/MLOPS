@@ -11,6 +11,9 @@
     width: auto; /* 新增這行設定 */
 }
 
+.main-content {
+    margin-left: 250px;
+}
 
 /* 透明的按鈕 */
 .btn-transparent {
