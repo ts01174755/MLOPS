@@ -1,5 +1,6 @@
 /* 側邊欄的背景色和高度 */
 .sidebar {
+    z-index: 1;
     background-color: #343a40;
     color: #fff;
     height: 100vh;
@@ -12,8 +13,9 @@
 }
 
 .main-content {
-    margin-left: 250px;
+    padding-top: 20px; /* 這將給予內容上方一點間距 */
 }
+
 
 /* 透明的按鈕 */
 .btn-transparent {
@@ -37,14 +39,27 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa;
+    background-color: #e6e6e6;
 }
-
+.row {
+    background-color: #e6e6e6;
+}
 .gray-background {
-    background-color: #f8f9fa; /* 將背景色改為灰色 */
+    background-color: #e6e6e6; /* 將背景色改為灰色 */
+    min-height: 100vh; /* 新增這行，使元素至少有視窗的高度 */
 }
 
 .submit-button {
     margin-top: 10px; /* 調整送出按鈕的上方間距 */
     border-radius: 5px; /* 添加按鈕的圓角效果 */
+}
+
+.input-container {
+    background-color: #f0f0f0; /* 將背景色改為淺灰色 */
+    border: 1px solid #d0d0d0; /* 添加邊框，你可以根據需要調整顏色和寬度 */
+    padding: 15px; /* 添加內邊距，使內容與邊框有一定距離 */
+    border-radius: 5px; /* 添加邊框圓角 */
+    margin-bottom: 15px; /* 添加底部外邊距，使相鄰的元素有一定距離 */
+    margin-left: auto; /* 將左邊的間距設置為自動，將容器置於側邊欄右側和螢幕右側之間 */
+    margin-right: 20px; /* 添加右邊的間距，使其與螢幕右側保持一定的距離 */
 }
