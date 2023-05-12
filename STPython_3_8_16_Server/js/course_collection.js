@@ -1,7 +1,5 @@
 function course_collection() {
-
     const socket = new WebSocket('ws://' + location.host + '/stCloudCourse/courseCollection/ws');
-
 
     socket.addEventListener('open', () => {
         console.log('WebSocket connection opened');
@@ -9,7 +7,11 @@ function course_collection() {
 
     socket.addEventListener('message', (event) => {
         const msg = event.data;
+        console.log('msg:', msg);
+
         const parsedData = JSON.parse(msg);
+        console.log('parsedData:', parsedData);
+
         const courseName = parsedData.courseName;
         const providerName = parsedData.providerName;
 
@@ -18,7 +20,7 @@ function course_collection() {
         document.getElementById('SubmitConfirmation').appendChild(courseElement);
     });
 
-    function submitCourse() {
+    window.submitCourse4OneCourse = function() {
         const courseCategory = document.getElementById('CourseCategory').value;
         const courseName = document.getElementById('CourseName').value;
         const courseContent = document.getElementById('CourseContent').value;
@@ -38,6 +40,5 @@ function course_collection() {
 
         document.getElementById('CourseName').value = '';
         document.getElementById('CourseContent').value = '';
-
     }
 }

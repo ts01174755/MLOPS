@@ -1,6 +1,5 @@
 function initChannelPlaylistCollection() {
     const socket = new WebSocket('ws://' + location.host + '/stCloudCourse/ytChannelPlaylistCollection/ws');
-    const courseName_ = document.getElementById('CourseName').value;
 
     socket.addEventListener('open', () => {
         console.log('WebSocket connection opened');

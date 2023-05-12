@@ -20,7 +20,7 @@ import subprocess
 import time
 
 # --------------------- controller params ---------------------
-DEPLOY_PORT = 5555
+DEPLOY_PORT = 5556
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
 RUN = "local"
 

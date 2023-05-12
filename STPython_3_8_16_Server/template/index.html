@@ -41,9 +41,16 @@
         }
 
         function displayPage(page) {
+            console.log(page);
             const pageElement = document.createElement('div');
+
+            console.log(pageElement);
             pageElement.textContent = page;
+
+            console.log(pageElement);
             pageElement.onclick = () => loadPage(page);
+
+            console.log(pageElement);
             document.getElementById('CourseHistory').appendChild(pageElement);
         }
     </script>
