@@ -8,7 +8,9 @@
     left: 0;
     padding-left: 0;
     margin-left: 0;
+    width: auto; /* 新增這行設定 */
 }
+
 
 /* 透明的按鈕 */
 .btn-transparent {
