@@ -1,6 +1,5 @@
 /* 側邊欄的背景色和高度 */
 .sidebar {
-    z-index: 1;
     background-color: #343a40;
     color: #fff;
     height: 100vh;
@@ -26,6 +25,17 @@
 /* 按鈕滑過時的高亮效果 */
 .btn-transparent:hover {
     background-color: #f8f9fa;
+}
+
+.btn:focus,
+.btn:active {
+  outline-color: transparent;
+  box-shadow: none;
+}
+
+.btn-primary:active {
+    background-color: #f8f9fa; /* 將按鈕點擊時的顏色設置為原始的藍色 */
+    color: #fff; /* 將文字顏色設置為白色 */
 }
 
 /* 高亮時的淺灰色 */
