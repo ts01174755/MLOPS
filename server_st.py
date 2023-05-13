@@ -20,9 +20,9 @@ import subprocess
 import time
 
 # --------------------- controller params ---------------------
-DEPLOY_PORT = 5556
+DEPLOY_PORT = 8000
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
-RUN = "local"
+# RUN = "local"
 
 MONGODB = env_config.MONGODB_DOCKER if RUN.find('docker') != -1 else env_config.MONGODB_LOCAL  # mongodb連線資訊
 POSTGRESDB = env_config.POSTGRESDB_DOCKER if RUN.find('docker') != -1 else env_config.POSTGRESDB_LOCAL  # postgres連線資訊
