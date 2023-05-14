@@ -20,9 +20,9 @@ import subprocess
 import time
 
 # --------------------- controller params ---------------------
-DEPLOY_PORT = 5559
+DEPLOY_PORT = 8000
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
-RUN = "local"
+# RUN = "local"
 
 MONGODB = env_config.MONGODB_DOCKER if RUN.find('docker') != -1 else env_config.MONGODB_LOCAL  # mongodb連線資訊
 POSTGRESDB = env_config.POSTGRESDB_DOCKER if RUN.find('docker') != -1 else env_config.POSTGRESDB_LOCAL  # postgres連線資訊
@@ -178,4 +178,4 @@ async def yt_channel_playlist_collection_wsed(websocket: WebSocket):
 
 if __name__ == "__main__":
     if RUN.find('local') != -1:
-        uvicorn.run('server_st:app', host="0.0.0.0", port=DEPLOY_PORT, workers=1)
+        uvicorn.run('server_st:app', host="0.0.0.0", port=DEPLOY_PORT, workers=10)
