@@ -50,7 +50,14 @@ class FinanceCrawler:
 
 
 if __name__ == "__main__":
+    # 盤後交易行情
     FinanceCrawler().get_futures_data(
         get_futures_data_url="https://mis.taifex.com.tw/futures/AfterHoursSession/EquityIndices/FuturesDomestic/",
+        app_path="/Applications/Google\ Chrome.app"
+    )
+
+    # 一般交易行情
+    FinanceCrawler().get_futures_data(
+        get_futures_data_url="https://mis.taifex.com.tw/futures/RegularSession/EquityIndices/FuturesDomestic/",
         app_path="/Applications/Google\ Chrome.app"
     )
