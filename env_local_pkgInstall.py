@@ -16,7 +16,7 @@ if __name__ == "__main__":
             'python-dotenv', 'psycopg2-binary', 'sqlalchemy', 'pymongo', 'fastapi', 'Jinja2==3.1.2',
             'uvicorn[standard]', 'aiofiles', 'requests', 'beautifulsoup4', 'pandas', 'black',
             'setuptools', 'build', 'pdfplumber', 'pypdf2', 'openpyxl',
-            '--upgrade --force-reinstall "git+https://github.com/ytdl-org/youtube-dl.git"'
+            '--upgrade --force-reinstall "git+https://github.com/ytdl-org/youtube-dl.git"', 'selenium'
         ]
         for pkg_ in PY_PKG_LIST:
             subprocess.run(f"pip install {pkg_}", shell=True)
