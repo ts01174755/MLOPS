@@ -6,6 +6,8 @@ import env_config
 from STPython_3_8_16.model.futures_exchange_tw import FinanceCrawler, FuturesExchangeTW
 from src.model.cicd import CICD
 from multiprocessing import Process, Pipe
+import json
+import datetime
 
 # ---------------------- STEP - params -----------------------
 RUN = "docker" if len(sys.argv) == 1 else sys.argv[1]
@@ -90,18 +92,31 @@ if __name__ == "__main__":
         )
         opt_AH_crawler_process.start()
 
+
         # 在主进程中接收数据
         tw_index = None
         tw_index_AH = None
         futures_delta_AH = None
         opt_price = None
         opt_price_AH = None
-        exercisePrice = 16400
-        opt_n = 23
-        period = 23
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         while True:
             time.sleep(10)
+
+            # 讀取持有資產資料(Json)
+            with open('./STPython_3_8_16/files/hold_opt_data.json', 'r') as f:
+                opt_json = json.load(f)
+                TARGET_DATE = "2023/06/21"
+                TARGET_YEAR = TARGET_DATE.split('/')[0]
+                TARGET_MONTH = TARGET_DATE.split('/')[1]
+                TARGET_DAY = TARGET_DATE.split('/')[2]
+                TARGET_TIME = datetime.datetime(int(TARGET_YEAR), int(TARGET_MONTH), int(TARGET_DAY), 13, 30, 0)
+                period = TARGET_TIME - datetime.datetime.now()
+
+                period_days = round(period.days + period.seconds / 86400 - 10, 4)
+                exercisePrice = opt_json[TARGET_DATE][0]
+                opt_n = opt_json[TARGET_DATE][2]
+
             while finance_crawler_parent_conn.poll():
                 try:
                     time_now, tw_index_data = finance_crawler_parent_conn.recv()
@@ -196,7 +211,7 @@ if __name__ == "__main__":
                 noRiskRate=noRiskRate,
                 cashStockRate=cashStockRate,
                 dayType=dayType,
-                period=period,
+                period=period_days,
                 dayYear=dayYear,
                 callPut=callPut,
                 premium=premium
@@ -208,7 +223,7 @@ if __name__ == "__main__":
                 noRiskRate=noRiskRate,
                 cashStockRate=cashStockRate,
                 dayType=dayType,
-                period=period,
+                period=period_days,
                 dayYear=dayYear,
                 callPut=callPut,
             )
@@ -220,7 +235,7 @@ if __name__ == "__main__":
                 noRiskRate=noRiskRate,
                 cashStockRate=cashStockRate,
                 dayType=dayType,
-                period=period,
+                period=period_days,
                 dayYear=dayYear,
                 callPut=callPut,
             )
@@ -238,10 +253,11 @@ if __name__ == "__main__":
             print("##################################################")
             print(f"time_now: {time_now}")
             print(f"tw_index_price: {desLogPhysicalPrice}")
+            print(f"period_days: {period_days}")
             print(f"opt_price: {premium}")
             print(f"opt_iv: {opt_iv['call']['OptImpliedPrice']}")
-            print(f"delta: {delta*opt_n}")
-            print(f"theta: {theta*opt_n}")
+            print(f"delta: {round(delta*opt_n, 4)}")
+            print(f"theta: {round(theta*opt_n, 4)}")
 
         finance_crawler_process.join()
         finance_AH_crawler_process.join()
