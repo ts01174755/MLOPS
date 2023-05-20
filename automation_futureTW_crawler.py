@@ -40,226 +40,101 @@ if RUN == "docker":
 
 
 if __name__ == "__main__":
+    from STPython_3_8_16.controller.invest_dashboard import InvestDashboard
     if RUN.find('local') != -1:
-        # logfile = open("output.txt", "w")
-        # 创建管道
-        finance_crawler_parent_conn, finance_crawler_child_conn = Pipe()
-        finance_AH_crawler_parent_conn, finance_AH_crawler_child_conn = Pipe()
-        opt_crawler_parent_conn, opt_crawler_child_conn = Pipe()
-        opt_AH_crawler_parent_conn, opt_AH_crawler_child_conn = Pipe()
+        # 讀取資料
+        with open('STPython_3_8_16/files/hold_opt_data.json', 'r') as f:
+            opt_json = json.load(f)
 
-        # 启动爬虫进程
-        finance_crawler_process = Process(
-            target=FinanceCrawler.get_futures_data,
-            args=(
-                "https://mis.taifex.com.tw/futures/RegularSession/EquityIndices/FuturesDomestic/",
-                "/Applications/Google\ Chrome.app",
-                finance_crawler_child_conn
-            )
-        )
-        finance_crawler_process.start()
+        # 建立爬蟲物件
+        invest_dashboard = InvestDashboard()
 
-        # 启动爬虫进程
-        finance_AH_crawler_process = Process(
-            target=FinanceCrawler.get_futures_data,
-            args=(
-                "https://mis.taifex.com.tw/futures/AfterHoursSession/EquityIndices/FuturesDomestic/",
-                "/Applications/Google\ Chrome.app",
-                finance_AH_crawler_child_conn
-            )
-        )
-        finance_AH_crawler_process.start()
-
-        # 启动爬虫进程
-        opt_crawler_process = Process(
-            target=FinanceCrawler.get_opts_data,
-            args=(
-                "https://mis.taifex.com.tw/futures/RegularSession/EquityIndices/Options/",
-                "/Applications/Google\ Chrome.app",
-                opt_crawler_child_conn
-            )
-        )
-        opt_crawler_process.start()
-
-        # 启动爬虫进程
-        opt_AH_crawler_process = Process(
-            target=FinanceCrawler.get_opts_data,
-            args=(
-                "https://mis.taifex.com.tw/futures/AfterHoursSession/EquityIndices/Options/",
-                "/Applications/Google\ Chrome.app",
-                opt_AH_crawler_child_conn
-            )
-        )
-        opt_AH_crawler_process.start()
-
-
-        # 在主进程中接收数据
-        tw_index = None
-        tw_index_AH = None
-        futures_delta_AH = None
-        opt_price = None
-        opt_price_AH = None
-        time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        # 建立爬蟲進程
+        invest_dashboard_flag = False
+        invest_dashboard_AH_flag = False
+        futures_data = None
+        futures_AH_data = None
+        opt_data = None
+        opt_AH_data = None
         while True:
+            time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            time_localtime_now = time.localtime().tm_hour * 60 + time.localtime().tm_min
+            print('time_now: ', time_now, 'time_localtime_now: ', time_localtime_now)
+
             time.sleep(10)
+            # 日盤
+            if 520 <= time_localtime_now <= 830:
+                # 如果爬蟲進程沒有啟動，則啟動爬蟲進程
+                if not invest_dashboard_flag:
+                    invest_dashboard_flag = True
+                    invest_dashboard.run_futures_crawler()
 
-            # 讀取持有資產資料(Json)
-            with open('./STPython_3_8_16/files/hold_opt_data.json', 'r') as f:
-                opt_json = json.load(f)
-                TARGET_DATE = "2023/06/21"
-                TARGET_YEAR = TARGET_DATE.split('/')[0]
-                TARGET_MONTH = TARGET_DATE.split('/')[1]
-                TARGET_DAY = TARGET_DATE.split('/')[2]
-                TARGET_TIME = datetime.datetime(int(TARGET_YEAR), int(TARGET_MONTH), int(TARGET_DAY), 13, 30, 0)
-                period = TARGET_TIME - datetime.datetime.now()
+                # # 關掉盤後爬蟲進程
+                # if invest_dashboard_AH_flag:
+                #     invest_dashboard.close_futures_AH_crawler()
 
-                period_days = round(period.days + period.seconds / 86400 - 10, 4)
-                exercisePrice = opt_json[TARGET_DATE][0]
-                opt_n = opt_json[TARGET_DATE][2]
-
-            while finance_crawler_parent_conn.poll():
-                try:
-                    time_now, tw_index_data = finance_crawler_parent_conn.recv()
-                    tw_index = None if tw_index_data['成交價'][0] == '--' else float(tw_index_data['成交價'][0].replace(',', ''))
-                except Exception as e:
-                    print(e)
-                    pass
-
-            while finance_AH_crawler_parent_conn.poll():
-                try:
-                    time_now, futures_data = finance_AH_crawler_parent_conn.recv()
-                    tw_index_AH_ = None if futures_data['參考價'][0] == '--' else float(futures_data['參考價'][0].replace(',', ''))
-                    futures_buy_price = None if futures_data['買進'][10] == '--' else float(futures_data['買進'][10].replace(',', ''))
-                    futures_sell_price = None if futures_data['賣出'][10] == '--' else float(futures_data['賣出'][10].replace(',', ''))
-                    futures_price = None if futures_data['成交價'][10] == '--' else float(futures_data['成交價'][10].replace(',', ''))
-                    futures_delta = None if futures_data['漲跌'][10] == '--' else float(futures_data['漲跌'][10].replace(',', ''))
-                    if futures_buy_price is None or futures_sell_price is None:
-                        futures_delta_AH = None
-                        tw_index_AH = tw_index_AH_
-                    else:
-                        futures_delta_AH = (futures_buy_price + futures_sell_price) / 2 - futures_price + futures_delta
-                        tw_index_AH = tw_index_AH_ + futures_delta_AH
-                except Exception as e:
-                    print(e)
-                    pass
-
-            while opt_crawler_parent_conn.poll():
-                try:
-                    time_now, opt_data = opt_crawler_parent_conn.recv()
-                    opt_target_index = 0
-                    for key_, val_ in opt_data['履約價'].items():
-                        if val_.find(str(exercisePrice)) != -1:
-                            opt_target_index = key_
-                            break
-                    opt_buy_price = None if opt_data['買權_買進'][opt_target_index] == '--' else float(opt_data['買權_買進'][opt_target_index].replace(',', ''))
-                    opt_sell_price = None if opt_data['買權_賣出'][opt_target_index] == '--' else float(opt_data['買權_賣出'][opt_target_index].replace(',', ''))
-                    if opt_buy_price is None or opt_sell_price is None:
-                        opt_price = None
-                    else:
-                        opt_price = (opt_buy_price + opt_sell_price) / 2
-                except Exception as e:
-                    print(e)
-                    pass
-
-            while opt_AH_crawler_parent_conn.poll():
-                try:
-                    time_now, opt_data = opt_AH_crawler_parent_conn.recv()
-                    opt_target_index = 0
-                    for key_, val_ in opt_data['履約價'].items():
-                        if val_.find(str(exercisePrice)) != -1:
-                            opt_target_index = key_
-                            break
-                    opt_buy_price = None if opt_data['買權_買進'][opt_target_index] == '--' else float(opt_data['買權_買進'][opt_target_index].replace(',', ''))
-                    opt_sell_price = None if opt_data['買權_賣出'][opt_target_index] == '--' else float(opt_data['買權_賣出'][opt_target_index].replace(',', ''))
-                    if opt_buy_price is None or opt_sell_price is None:
-                        opt_price_AH = None
-                    else:
-                        opt_price_AH = (opt_buy_price + opt_sell_price) / 2
-                except Exception as e:
-                    print(e)
-                    pass
-
-            if 525 <= time.localtime().tm_hour * 60 + time.localtime().tm_min <= 825:
-                if tw_index and opt_price is not None:
-                    desLogPhysicalPrice = tw_index
-                    premium = opt_price
-                else:
+                # 如果爬蟲進程已經啟動，則取得爬蟲資料
+                futures_data, opt_data = invest_dashboard.get_invest_data(futures_data, opt_data)
+                if futures_data is None or opt_data is None:
                     continue
-            elif 900 <= time.localtime().tm_hour * 60 + time.localtime().tm_min:
-                if tw_index_AH and opt_price_AH is not None:
-                    desLogPhysicalPrice = tw_index_AH
-                    premium = opt_price_AH
-                else:
+
+                # 計算資料
+                opt_theory_data = []
+                for data_ in opt_json:
+                    opt_expire_date = data_[0]
+                    opt_strike_price = data_[1]
+                    opt_type = data_[2]
+                    opt_n = data_[3]
+
+                    tw_index = invest_dashboard.compute_futures_data(futures_data)
+                    opt_price = invest_dashboard.compute_opt_data(opt_strike_price, opt_data)
+                    opt_iv, delta, theta = invest_dashboard.opt_opt_theory_data(opt_strike_price, opt_expire_date, opt_type, tw_index, opt_price)
+                    opt_theory_data.append([
+                        f"台灣加權指數:{tw_index}",
+                        f"選擇權標的時間:{opt_expire_date}",
+                        f"選擇權履約價格:{opt_strike_price}",
+                        f"選擇權類別:{opt_type}",
+                        f"選擇權現價:{opt_price}",
+                        f"選擇權波動率:{opt_iv}",
+                        f"選擇權Delta總計:{delta*opt_n}",
+                        f"選擇權時間價值總計:{theta*opt_n}"
+                    ])
+                print(opt_theory_data)
+
+            elif (900 <= time_localtime_now) or (time_localtime_now <= 240):
+                # 如果爬蟲進程沒有啟動，則啟動爬蟲進程
+                if not invest_dashboard_AH_flag:
+                    invest_dashboard_AH_flag = True
+                    invest_dashboard.run_futures_AH_crawler()
+
+                # # 關掉盤後爬蟲進程
+                # if invest_dashboard_flag:
+                #     invest_dashboard.close_futures_crawler()
+
+                # 如果爬蟲進程已經啟動，則取得爬蟲資料
+                futures_AH_data, opt_AH_data = invest_dashboard.get_invest_AH_data(futures_AH_data, opt_AH_data)
+                if futures_AH_data is None or opt_AH_data is None:
                     continue
-            elif time.localtime().tm_hour * 60 + time.localtime().tm_min <= 240:
-                if tw_index_AH and opt_price_AH is not None:
-                    desLogPhysicalPrice = tw_index_AH
-                    premium = opt_price_AH
-                else:
-                    continue
-            else:
-                continue
 
-            noRiskRate = 1.5
-            cashStockRate = 0
-            dayType = "Period"
-            dayYear = "DAY"
-            callPut = "call"
-            opt_iv = FuturesExchangeTW.get_opt_IV(
-                desLogPhysicalPrice=desLogPhysicalPrice,
-                exercisePrice=exercisePrice,
-                noRiskRate=noRiskRate,
-                cashStockRate=cashStockRate,
-                dayType=dayType,
-                period=period_days,
-                dayYear=dayYear,
-                callPut=callPut,
-                premium=premium
-            )
-            delta = FuturesExchangeTW.get_opt_delta(
-                desLogPhysicalPrice=desLogPhysicalPrice,
-                exercisePrice=exercisePrice,
-                actionRate=opt_iv['call']['OptImpliedPrice'],
-                noRiskRate=noRiskRate,
-                cashStockRate=cashStockRate,
-                dayType=dayType,
-                period=period_days,
-                dayYear=dayYear,
-                callPut=callPut,
-            )
+                # 計算資料
+                opt_theory_data = []
+                for data_ in opt_json:
+                    opt_expire_date = data_[0]
+                    opt_strike_price = data_[1]
+                    opt_type = data_[2]
+                    opt_n = data_[3]
 
-            theta = FuturesExchangeTW.get_opt_theta(
-                desLogPhysicalPrice=desLogPhysicalPrice,
-                exercisePrice=exercisePrice,
-                actionRate=opt_iv['call']['OptImpliedPrice'],
-                noRiskRate=noRiskRate,
-                cashStockRate=cashStockRate,
-                dayType=dayType,
-                period=period_days,
-                dayYear=dayYear,
-                callPut=callPut,
-            )
-            # logfile.write(f"tw_index_price: {tw_index_price}\n")
-            # logfile.write(f"futures_price_end: {futures_price_end}\n")
-            # logfile.write(f"futures_price: {futures_price}\n")
-            # logfile.write(f"opt_price: {opt_price}\n")
-            # logfile.write(f"opt_iv: {opt_iv['call']['OptImpliedPrice']}\n")
-            # logfile.write(f"delta: {delta*opt_n}\n")
-            # logfile.write(f"theta: {theta*opt_n}\n")
-            # logfile.write("##################################################\n")
-            # logfile.flush()
-
-            print()
-            print("##################################################")
-            print(f"time_now: {time_now}")
-            print(f"tw_index_price: {desLogPhysicalPrice}")
-            print(f"period_days: {period_days}")
-            print(f"opt_price: {premium}")
-            print(f"opt_iv: {opt_iv['call']['OptImpliedPrice']}")
-            print(f"delta: {round(delta*opt_n, 4)}")
-            print(f"theta: {round(theta*opt_n, 4)}")
-
-        finance_crawler_process.join()
-        finance_AH_crawler_process.join()
-        opt_crawler_process.join()
-        opt_AH_crawler_process.join()
+                    tw_index = invest_dashboard.compute_futures_AH_data(futures_AH_data)
+                    opt_price = invest_dashboard.compute_opt_AH_data(opt_strike_price, opt_AH_data)
+                    opt_iv, delta, theta = invest_dashboard.opt_opt_theory_data(opt_strike_price, opt_expire_date, opt_type, tw_index, opt_price)
+                    opt_theory_data.append([
+                        f"台灣加權指數:{tw_index}",
+                        f"選擇權標的時間:{opt_expire_date}",
+                        f"選擇權履約價格:{opt_strike_price}",
+                        f"選擇權類別:{opt_type}",
+                        f"選擇權現價:{opt_price}",
+                        f"選擇權波動率:{opt_iv}",
+                        f"選擇權Delta總計:{delta*opt_n}",
+                        f"選擇權時間價值總計:{theta*opt_n}"
+                    ])
+                print(opt_theory_data)
