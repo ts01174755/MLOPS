@@ -121,6 +121,17 @@ class InvestDashboard:
     def compute_futures_data(self, futures_data):
         # TWII指數價格
         tw_index = None if futures_data['成交價'][0] == '--' else float(futures_data['成交價'][0].replace(',', ''))
+        if tw_index is None:
+            tw_index_ = None if futures_data['參考價'][0] == '--' else float(futures_data['參考價'][0].replace(',', ''))
+            futures_buy_price = None if futures_data['買進'][10] == '--' else float(futures_data['買進'][10].replace(',', ''))
+            futures_sell_price = None if futures_data['賣出'][10] == '--' else float(futures_data['賣出'][10].replace(',', ''))
+            futures_price = None if futures_data['成交價'][10] == '--' else float(futures_data['成交價'][10].replace(',', ''))
+            futures_delta = None if futures_data['漲跌'][10] == '--' else float(futures_data['漲跌'][10].replace(',', ''))
+            if futures_buy_price is None or futures_sell_price is None:
+                tw_index = tw_index_
+            else:
+                futures_delta_ = (futures_buy_price + futures_sell_price) / 2 - futures_price + futures_delta
+                tw_index = tw_index_ + futures_delta_
 
         return tw_index
 
