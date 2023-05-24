@@ -3,6 +3,9 @@ from STPython_3_8_16.model.futures_exchange_tw import FinanceCrawler, FuturesExc
 import json
 import datetime
 import time
+import pandas as pd
+import numpy as np
+
 
 class InvestDashboard:
     def __init__(self):
@@ -152,36 +155,55 @@ class InvestDashboard:
         return tw_index
 
     # 計算選擇權價格
-    def compute_opt_data(self, opt_strike_price, opt_data):
+    def compute_opt_data(self, opt_strike_price, opt_type, opt_data):
         # 選擇權價格
         opt_target_index = 0
         for key_, val_ in opt_data['履約價'].items():
             if val_.find(str(opt_strike_price)) != -1:
                 opt_target_index = key_
                 break
-        opt_buy_price = None if opt_data['買權_買進'][opt_target_index] == '--' else float(opt_data['買權_買進'][opt_target_index].replace(',', ''))
-        opt_sell_price = None if opt_data['買權_賣出'][opt_target_index] == '--' else float(opt_data['買權_賣出'][opt_target_index].replace(',', ''))
-        if opt_buy_price is None or opt_sell_price is None:
-            opt_price = None
-        else:
-            opt_price = (opt_buy_price + opt_sell_price) / 2
+        opt_price = 0
+        if opt_type == 'call':
+            opt_buy_price = None if opt_data['買權_買進'][opt_target_index] == '--' else float(opt_data['買權_買進'][opt_target_index].replace(',', ''))
+            opt_sell_price = None if opt_data['買權_賣出'][opt_target_index] == '--' else float(opt_data['買權_賣出'][opt_target_index].replace(',', ''))
+            if opt_buy_price is None or opt_sell_price is None:
+                opt_price = None
+            else:
+                opt_price = (opt_buy_price + opt_sell_price) / 2
+        elif opt_type == 'put':
+            opt_buy_price = None if opt_data['賣權_買進'][opt_target_index] == '--' else float(opt_data['賣權_買進'][opt_target_index].replace(',', ''))
+            opt_sell_price = None if opt_data['賣權_賣出'][opt_target_index] == '--' else float(opt_data['賣權_賣出'][opt_target_index].replace(',', ''))
+            if opt_buy_price is None or opt_sell_price is None:
+                opt_price = None
+            else:
+                opt_price = (opt_buy_price + opt_sell_price) / 2
 
         return opt_price
 
     # 計算盤後選擇權價格
-    def compute_opt_AH_data(self, opt_strike_price, opt_AH_data):
+    def compute_opt_AH_data(self, opt_strike_price, opt_type, opt_AH_data):
         # 選擇權價格
         opt_target_index = 0
         for key_, val_ in opt_AH_data['履約價'].items():
             if val_.find(str(opt_strike_price)) != -1:
                 opt_target_index = key_
                 break
-        opt_buy_price = None if opt_AH_data['買權_買進'][opt_target_index] == '--' else float(opt_AH_data['買權_買進'][opt_target_index].replace(',', ''))
-        opt_sell_price = None if opt_AH_data['買權_賣出'][opt_target_index] == '--' else float(opt_AH_data['買權_賣出'][opt_target_index].replace(',', ''))
-        if opt_buy_price is None or opt_sell_price is None:
-            opt_price = None
-        else:
-            opt_price = (opt_buy_price + opt_sell_price) / 2
+
+        opt_price = 0
+        if opt_type == 'call':
+            opt_buy_price = None if opt_AH_data['買權_買進'][opt_target_index] == '--' else float(opt_AH_data['買權_買進'][opt_target_index].replace(',', ''))
+            opt_sell_price = None if opt_AH_data['買權_賣出'][opt_target_index] == '--' else float(opt_AH_data['買權_賣出'][opt_target_index].replace(',', ''))
+            if opt_buy_price is None or opt_sell_price is None:
+                opt_price = None
+            else:
+                opt_price = (opt_buy_price + opt_sell_price) / 2
+        elif opt_type == 'put':
+            opt_buy_price = None if opt_AH_data['賣權_買進'][opt_target_index] == '--' else float(opt_AH_data['賣權_買進'][opt_target_index].replace(',', ''))
+            opt_sell_price = None if opt_AH_data['賣權_賣出'][opt_target_index] == '--' else float(opt_AH_data['賣權_賣出'][opt_target_index].replace(',', ''))
+            if opt_buy_price is None or opt_sell_price is None:
+                opt_price = None
+            else:
+                opt_price = (opt_buy_price + opt_sell_price) / 2
 
         return opt_price
 
@@ -192,9 +214,16 @@ class InvestDashboard:
         opt_expire_month = int(opt_expire_date.split('/')[1])
         opt_expire_day = int(opt_expire_date.split('/')[2])
         opt_expire_time = datetime.datetime(opt_expire_year, opt_expire_month, opt_expire_day, 13, 30, 0)
-        period = opt_expire_time - datetime.datetime.now()
-        period_days = round(period.days + period.seconds / 86400 - 10, 4)
 
+        # 計算假日的數量
+        start_date = pd.to_datetime('today').normalize()
+        end_date = opt_expire_date.replace('/', '-')
+        date_range = pd.date_range(start=start_date, end=end_date)
+        weekend_days = np.isin(date_range.weekday, [5, 6])
+        num_holidays = np.sum(weekend_days)
+
+        period = opt_expire_time - datetime.datetime.now()
+        period_days = round(period.days + period.seconds / 86400 - num_holidays, 4)
         opt_iv = FuturesExchangeTW.get_opt_IV(
             desLogPhysicalPrice=tw_index,    # 標的物現價
             exercisePrice=opt_strike_price,            # 履約價
@@ -209,7 +238,7 @@ class InvestDashboard:
         delta = FuturesExchangeTW.get_opt_delta(
             desLogPhysicalPrice=tw_index,
             exercisePrice=opt_strike_price,
-            actionRate=opt_iv['call']['OptImpliedPrice'],
+            actionRate=opt_iv[opt_type]['OptImpliedPrice'],
             noRiskRate=1.5,
             cashStockRate=0,
             dayType="Period",
@@ -220,7 +249,7 @@ class InvestDashboard:
         theta = FuturesExchangeTW.get_opt_theta(
             desLogPhysicalPrice=tw_index,
             exercisePrice=opt_strike_price,
-            actionRate=opt_iv['call']['OptImpliedPrice'],
+            actionRate=opt_iv[opt_type]['OptImpliedPrice'],
             noRiskRate=1.5,
             cashStockRate=0,
             dayType="Period",
@@ -228,5 +257,5 @@ class InvestDashboard:
             dayYear="DAY",
             callPut=opt_type,
         )
-        return opt_iv['call']['OptImpliedPrice'], delta, theta
+        return opt_iv[opt_type]['OptImpliedPrice'], delta, theta, period_days
 

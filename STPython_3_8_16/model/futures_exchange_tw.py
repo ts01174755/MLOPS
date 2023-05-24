@@ -33,8 +33,8 @@ class FuturesExchangeTW:
         # 在這個 table 中找到所有的 td 標籤
         tds = table.find_all('td')
         data = {
-            tds[0].text.strip().lower(): float(tds[2].text.strip()),
-            tds[1].text.strip().lower(): float(tds[3].text.strip())
+            tds[0].text.strip().lower(): float(tds[2].text.strip().replace(',', '')),
+            tds[1].text.strip().lower(): float(tds[3].text.strip().replace(',', ''))
         }
         return data
 
@@ -151,12 +151,12 @@ class FinanceCrawler:
                 # 塞入當今實現還有資料
                 conn.send((time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), futures_df.to_dict()))
 
-                time.sleep(2.5)
+                time.sleep(1)
 
             except Exception as e:
                 print(e)
-                time.sleep(2.5)
-                break
+                time.sleep(1)
+                continue
         # driver.quit()     # 關閉瀏覽器
 
     @classmethod
@@ -202,11 +202,11 @@ class FinanceCrawler:
                 # send the data frame to the parent process
                 conn.send((time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), futures_df.to_dict()))
 
-                time.sleep(2.5)
+                time.sleep(1)
             #  印出錯誤
             except Exception as e:
                 print(e)
-                time.sleep(2.5)
+                time.sleep(1)
                 continue
 
         # driver.quit()     # 關閉瀏覽器

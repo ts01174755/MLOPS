@@ -42,10 +42,6 @@ if RUN == "docker":
 if __name__ == "__main__":
     from STPython_3_8_16.controller.invest_dashboard import InvestDashboard
     if RUN.find('local') != -1:
-        # 讀取資料
-        with open('STPython_3_8_16/files/hold_opt_data.json', 'r') as f:
-            opt_json = json.load(f)
-
         # 建立爬蟲物件
         invest_dashboard = InvestDashboard()
 
@@ -57,8 +53,15 @@ if __name__ == "__main__":
         opt_data = None
         opt_AH_data = None
         while True:
+            # 讀取資料
+            fileName = 'hold_opt_data.json' if len(sys.argv) == 1 else sys.argv[1]
+            with open(f'STPython_3_8_16/files/{fileName}', 'r') as f:
+                opt_json = json.load(f)
+
             time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             time_localtime_now = time.localtime().tm_hour * 60 + time.localtime().tm_min
+            print()
+            print('#############################################')
             print('time_now: ', time_now, 'time_localtime_now: ', time_localtime_now)
 
             time.sleep(10)
@@ -87,11 +90,12 @@ if __name__ == "__main__":
                     opt_n = data_[3]
 
                     tw_index = invest_dashboard.compute_futures_data(futures_data)
-                    opt_price = invest_dashboard.compute_opt_data(opt_strike_price, opt_data)
-                    opt_iv, delta, theta = invest_dashboard.opt_opt_theory_data(opt_strike_price, opt_expire_date, opt_type, tw_index, opt_price)
+                    opt_price = invest_dashboard.compute_opt_data(opt_strike_price, opt_type, opt_data)
+                    opt_iv, delta, theta, period_days = invest_dashboard.opt_opt_theory_data(opt_strike_price, opt_expire_date, opt_type, tw_index, opt_price)
                     opt_theory_data.append([
                         f"台灣加權指數:{tw_index}",
                         f"選擇權標的時間:{opt_expire_date}",
+                        f"選擇權標的殘餘時間:{period_days}",
                         f"選擇權履約價格:{opt_strike_price}",
                         f"選擇權類別:{opt_type}",
                         f"選擇權現價:{opt_price}",
@@ -99,9 +103,17 @@ if __name__ == "__main__":
                         f"選擇權Delta總計:{delta*opt_n}",
                         f"選擇權時間價值總計:{theta*opt_n}"
                     ])
-                print(opt_theory_data)
+                # delta = 0
+                # theta = 0
+                for data_ in opt_theory_data:
+                    for data__ in data_:
+                        print(data__)
+                        # delta += float(data_[7].split(':')[1])
+                        # theta += float(data_[8].split(':')[1])
+                # print(f"選擇權Delta總計:{delta}")
+                # print(f"選擇權時間價值總計:{theta}")
 
-            elif (900 <= time_localtime_now) or (time_localtime_now <= 240):
+            elif (845 <= time_localtime_now) or (time_localtime_now <= 240):
                 # 如果爬蟲進程沒有啟動，則啟動爬蟲進程
                 if not invest_dashboard_AH_flag:
                     invest_dashboard_AH_flag = True
@@ -125,11 +137,12 @@ if __name__ == "__main__":
                     opt_n = data_[3]
 
                     tw_index = invest_dashboard.compute_futures_AH_data(futures_AH_data)
-                    opt_price = invest_dashboard.compute_opt_AH_data(opt_strike_price, opt_AH_data)
-                    opt_iv, delta, theta = invest_dashboard.opt_opt_theory_data(opt_strike_price, opt_expire_date, opt_type, tw_index, opt_price)
+                    opt_price = invest_dashboard.compute_opt_AH_data(opt_strike_price, opt_type, opt_AH_data)
+                    opt_iv, delta, theta, period_days = invest_dashboard.opt_opt_theory_data(opt_strike_price, opt_expire_date, opt_type, tw_index, opt_price)
                     opt_theory_data.append([
                         f"台灣加權指數:{tw_index}",
                         f"選擇權標的時間:{opt_expire_date}",
+                        f"選擇權標的殘餘時間:{period_days}",
                         f"選擇權履約價格:{opt_strike_price}",
                         f"選擇權類別:{opt_type}",
                         f"選擇權現價:{opt_price}",
@@ -137,4 +150,6 @@ if __name__ == "__main__":
                         f"選擇權Delta總計:{delta*opt_n}",
                         f"選擇權時間價值總計:{theta*opt_n}"
                     ])
-                print(opt_theory_data)
+                for data_ in opt_theory_data:
+                    for data__ in data_:
+                        print(data__)
