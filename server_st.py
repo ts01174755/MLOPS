@@ -13,6 +13,7 @@ import logging
 import json
 from STPython_3_8_16_Server.contorller.py_server import PythonChatServer, CustomJSONResponse
 from STPython_3_8_16_Server.contorller.yt_video_info import YtVideoInfo
+from STPython_3_8_16_Server.contorller.get_course_url import GetCourseUrl
 from src.controller.logger import LoggingMiddleware
 from src.model.docker_cmd import DockerCmd
 from src.model.cicd import CICD
@@ -61,6 +62,45 @@ if RUN.find('local') != -1:
         ]
     )
 
+    query = f'SELECT * FROM original.course_url'
+
+    data_get = GetCourseUrl()
+    df_dict = data_get.get_course_url(POSTGRESDB, query)
+    user_status = {
+        'stpeteam_student_00000001': {
+            # 觀看課程權限
+            'course': [
+                [2287, '2023/06/01', '2023/06/30', '', '', '', ''],
+                [2288, '2023/06/01', '2023/06/30', '', '', '', ''],
+                [2289, '2023/06/03', '2023/06/10', '', '', '', ''],
+                [2290, '2023/06/03', '2023/06/10', '', '', '', ''],
+                [2291, '2023/06/03', '2023/06/10', '', '', '', ''],
+                [2292, '2023/06/03', '2023/06/10', '', '', '', ''],
+                [2293, '2023/06/03', '2023/06/10', '', '', '', ''],
+                [2294, '2023/06/10', '2023/06/17', '', '', '', ''],
+                [2295, '2023/06/10', '2023/06/17', '', '', '', ''],
+                [2296, '2023/06/10', '2023/06/17', '', '', '', ''],
+                [2297, '2023/06/10', '2023/06/17', '', '', '', ''],
+                [2298, '2023/06/10', '2023/06/17', '', '', '', ''],
+                [2299, '2023/06/17', '2023/06/24', '', '', '', ''],
+                [2300, '2023/06/17', '2023/06/24', '', '', '', ''],
+                [2301, '2023/06/17', '2023/06/24', '', '', '', ''],
+                [2302, '2023/06/24', '2023/06/30', '', '', '', ''],
+                [2303, '2023/06/24', '2023/06/30', '', '', '', ''],
+                [2304, '2023/06/24', '2023/06/30', '', '', '', ''],
+                [2305, '2023/06/24', '2023/06/30', '', '', '', ''],
+                [2306, '2023/06/24', '2023/06/30', '', '', '', ''],
+            ]
+        }
+    }
+
+    for _user in user_status.keys():
+        for _course in user_status[_user]['course']:
+            _course[3] = df_dict[_course[0]]['uniquechar2']
+            _course[4] = df_dict[_course[0]]['uniquechar3']
+            _course[5] = df_dict[_course[0]]['uniquechar4']
+            _course[6] = df_dict[_course[0]]['uniquestring1']
+
 app = FastAPI()
 app.add_middleware(LoggingMiddleware)
 manager = PythonChatServer()
@@ -89,6 +129,18 @@ def get_total_course():
     )
     return CustomJSONResponse(content=data[0]['data'])
 
+
+@app.get("/temp/getUsersID")
+def get_users_id():
+    user_id = {
+        '陳宥勳': 'stpeteam_student_00000001'
+    }
+    return CustomJSONResponse(content=user_id)
+
+
+@app.get("/temp/getUsersIDCourses")
+def get_users_id_courses():
+    return CustomJSONResponse(content=user_status)
 
 # @app.get("/stCloudCourse/courseCollection", response_class=HTMLResponse)
 # async def course_collection():

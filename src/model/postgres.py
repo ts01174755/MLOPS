@@ -124,11 +124,13 @@ if __name__ == "__main__":
         host=os.getenv("POSTGRES_HOST"),
         user=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
+        port=os.getenv("POSTGRES_PORT"),
         database="originaldb",
     )
     db.connect()
 
-    TABLE = "temptb"  # 這是測試用的table
+    # TABLE = "temptb"  # 這是測試用的table
+    TABLE = "course_url"  # 這是測試用的table
     # TABLE = 'st_all_data' # 這是正式用的table
     # TABLE = 'google_form' # 這是正式用的table
 

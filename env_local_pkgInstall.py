@@ -3,7 +3,7 @@ import subprocess
 
 ## params
 # RUN = ['init', 'base', 'google', 'OTHER', 'all']
-RUN = 'pip' if len(sys.argv) == 1 else sys.argv[1]
+RUN = 'all' if len(sys.argv) == 1 else sys.argv[1]
 
 
 if __name__ == "__main__":
